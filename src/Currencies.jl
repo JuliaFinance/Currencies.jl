@@ -1,7 +1,7 @@
 module Currencies
 
 using MacroTools
-import Base: +, -, *
+import Base: +, -, *, /, ==
 
 
 DATA = Dict(
@@ -184,27 +184,72 @@ DATA = Dict(
     :ZAR => (2, "South African rand"),
     :ZMW => (2, "Zambian kwacha"))
 
+# monetary type and low-level operations
+"""
+A representation of a monetary value, denominated in some currency. The
+currency used is part of the type and not the object. The value is internally
+represented as a quantity of some integer type. The usual way to construct a
+`Monetary` directly, if needed, is:
+
+    Monetary(:USD, 100)  # 1.00 USD
+
+Be careful about the decimal point, as the `Monetary` constructor takes an
+integer, representing the number of smallest denominations of the currency.
+Typically, this constructor is not called directly. It is easier to use the
+`@usingcurrencies` macro and the `100USD` form instead.
+
+Although this type is flexible enough to support values internally represented
+as any integer type, such as `BigInt`, it is recommended to use the built-in
+`Int` type on your architecture unless you need a bigger type. Do not mix
+different kinds of internal types. To use a different internal representation,
+give the internal type as a second type parameter to `Monetary`:
+
+    Monetary{:USD, BigInt}(100)
+"""
 immutable Monetary{T, U<:Integer}
     amt::U
 end
-
 Monetary(T::Symbol, x) = Monetary{T, typeof(x)}(x)
 
+"""
+Return a symbol (of uppercase letters) corresponding to the ISO 4217 currency
+code of the currency that the given monetary amount is representing. For
+example, `currency(80USD)` will return `:USD`.
+"""
 currency{T}(m::Monetary{T}) = T
+decimals(c::Symbol) = DATA[c][1]
+
+# numeric operations
 Base.zero{T}(::Type{Monetary{T}}) = Monetary(T, 0)
 Base.zero{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(0)
 Base.one{T}(::Type{Monetary{T}}) = Monetary(T, 10^decimals(T))
 Base.one{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(10^decimals(T))
 Base.int(m::Monetary) = m.amt
-decimals(c::Symbol) = DATA[c][1]
 
+# nb: for BigInt to work, we have to define == in terms of ==
+=={T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt == n.amt
+Base.isless{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = isless(m.amt, n.amt)
+
+
+# arithmetic operations
 +{T}(m::Monetary{T}, n::Monetary{T}) = Monetary(T, m.amt + n.amt)
 -{T}(m::Monetary{T}, n::Monetary{T}) = Monetary(T, m.amt - n.amt)
 -{T}(m::Monetary{T}) = Monetary(T, -m.amt)
-*{T}(m::Monetary{T}, i::Integer) = Monetary(T, m.amt * i)
-*{T}(i::Integer, m::Monetary{T}) = Monetary(T, i * m.amt)
-*{T, U}(f::Real, m::Monetary{T,U}) = Monetary{T,U}(round(f * m.amt))
-*{T, U}(m::Monetary{T,U}, f::Real) = Monetary{T,U}(round(m.amt * f))
+*{T,U}(m::Monetary{T,U}, i::Integer) = Monetary{T,U}(m.amt * i)
+*{T,U}(i::Integer, m::Monetary{T,U}) = Monetary{T,U}(i * m.amt)
+*{T,U}(f::Real, m::Monetary{T,U}) = Monetary{T,U}(round(f * m.amt))
+*{T,U}(m::Monetary{T,U}, f::Real) = Monetary{T,U}(round(m.amt * f))
+/{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt / n.amt
+/(m::Monetary, f::Real) = m * (1/f)
+
+# Note that quotient is an integer, but remainder is a monetary value.
+function Base.divrem{T,U}(m::Monetary{T,U}, n::Monetary{T,U})
+    quotient, remainder = divrem(m.amt, n.amt)
+    quotient, Monetary{T,U}(remainder)
+end
+Base.div{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = div(m.amt, n.amt)
+Base.rem{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) =
+    Monetary{T,U}(rem(m.amt, n.amt))
 
 function curdisplay(num, dec)
     if dec == 0
@@ -226,6 +271,15 @@ function Base.show(io::IO, m::Monetary)
     write(io, "$(curdisplay(m.amt, decimals(cur))) $cur")
 end
 
+"""
+Export each given currency symbol into the current namespace. The individual
+unit exported will be a full unit of the currency specified, not the smallest
+possible unit. For instance, `@usingcurrencies EUR` will export `EUR`, a
+currency unit worth 1€, not a currency unit worth 0.01€.
+
+    @usingcurrencies EUR, GBP, AUD
+    7AUD  # 7.00 AUD
+"""
 macro usingcurrencies(curs)
     if isexpr(curs, Symbol)
         curs = Expr(:tuple, curs)
@@ -238,9 +292,50 @@ macro usingcurrencies(curs)
     end |> esc
 end
 
-@usingcurrencies CAD, USD
+# investment math
 
+"""
+Compute the future value of the given monetary amount, at the given interest
+rate, compounded each period on the principal only. This is known as "simple
+interest"; note that this is very rare in practice. For example, to find the
+future value of \$1000 (US) invested today in 12 years, at a simple interest
+rate of 5% per year, compute:
+
+    simplefv(1000USD, 0.05, 12)
+
+This computation rounds only once at the end. If the amounts in practice are
+rounded, then this result of this function will be incorrect.
+
+This method is generic; any type for the PV is accepted provided that it is
+compatible with real multiplication. Negative values for the rate and the period
+are allowed.
+"""
+function simplefv(pv, rate::Real, periods::Integer)
+    pv * (one(rate) + rate * periods)
+end
+
+"""
+Compute the future value of the given monetary amount, at the given interest
+rate, compounded each period. For example, to find the future value of \$1000
+(US) invested today in 12 years, at a rate of 3% per year, compute:
+
+    compoundfv(1000USD, 0.03, 12)
+
+This computation assumes exact compounding, and rounds only once at the end. If
+the compounding method in practice is rounded, then this result of this function
+will be incorrect.
+
+This method is generic; any type for the PV is accepted provided that it is
+compatible with real multiplication. Negative values for the rate and the period
+are allowed.
+"""
+function compoundfv(pv, rate::Real, periods::Integer)
+    pv * (one(rate) + rate)^periods
+end
+
+
+# exports
 export currency, Monetary, @usingcurrencies
-export CAD, USD
+export simplefv, compoundfv
 
 end # module
