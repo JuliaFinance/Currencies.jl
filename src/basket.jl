@@ -56,10 +56,11 @@ Base.convert(::Type{StaticBasket}, b::Basket) = StaticBasket(collect(b))
 """
 A mutable collection of `Monetary` values of various currencies. `DynamicBasket`
 values support all operations on `StaticBasket` values, in addition to the
-ability to mutate the basket with index notation.
+ability to mutate the basket with index notation, or with `push!`.
 
     basket = DynamicBasket([1USD, 2EUR])
-    basket[:USD] = 3USD
+    basket[:USD] = 3USD  # DynamicBasket([3USD, 2EUR])
+    push!(basket, 10GBP) # DynamicBasket([3USD, 2EUR, 10GBP])
 """
 immutable DynamicBasket <: Basket
     table::Dict{Symbol, Monetary}
@@ -74,7 +75,7 @@ Base.convert(::Type{DynamicBasket}, b::Basket) = DynamicBasket(collect(b))
 # access methods (for all baskets)
 Base.haskey(b::Basket, k) =
     haskey(b.table, k) && !iszero(b.table[k])
-Base.getindex(b::Basket, k::Symbol) = b.table[k]
+Base.getindex(b::Basket, k::Symbol) = get(b.table, k, zero(Monetary{k}))
 Base.start(b::Basket) = start(b.table)
 function Base.next(b::Basket, s)
     (k, v), s = next(b.table, s)
@@ -114,7 +115,14 @@ Base.promote_rule(::Type{DynamicBasket}, ::Type{StaticBasket}) = DynamicBasket
 /{T<:Basket}(b::T, k::Real) = T([x / k for x in collect(b)])
 
 # methods for dynamic baskets
-Base.setindex!(b::DynamicBasket, m::Monetary, k::Symbol) = (b.table[k] = m)
+function Base.setindex!(b::DynamicBasket, m::Monetary, k::Symbol)
+    @assert currency(m) == k "Monetary value type does not match currency"
+    b.table[k] = m
+end
+function Base.push!(b::DynamicBasket, m::Monetary)
+    b[currency(m)] += m
+    b
+end
 
 # other methods (eltype, iszero, zero, ==)
 iszero(b::Basket) = isempty(collect(b))

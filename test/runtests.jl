@@ -2,7 +2,7 @@ using Currencies
 using Base.Test
 
 # get currencies
-@usingcurrencies USD, CAD, EUR, GBP
+@usingcurrencies USD, CAD, EUR, GBP, JPY
 
 # arithmetic
 @test 1USD + 2USD == 3USD
@@ -49,3 +49,9 @@ basket_g = basket_f / 4
 basket_dyn = DynamicBasket() + basket_g
 basket_dyn[:CAD] = 10CAD
 @test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD])
+push!(basket_dyn, 15JPY)
+@test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD, 15JPY])
+push!(basket_dyn, -10EUR)
+@test basket_dyn == DynamicBasket([25USD, -15EUR, 10CAD, 15JPY])
+
+@test_throws AssertionError basket_dyn[:USD] = 100CAD

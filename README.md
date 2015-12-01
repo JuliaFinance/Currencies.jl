@@ -43,11 +43,19 @@ Baskets, effectively collections of many different currencies, are supported in 
     basket = StaticBasket(money)  # StaticBasket([100USD])
     basket += 20CAD               # StaticBasket([100USD, 20CAD])
 
-To access an individual component of a basket, indexing notation is supported:
+To access an individual component of a basket, indexing notation is supported. Note that only `DynamicBasket` allows `setindex!`.
 
     @usingcurrencies USD, EUR, GBP
     sdr = DynamicBasket([1USD, 2EUR, 3GBP])
     sdr[:USD] = 3USD
     sdr[:GBP]  # 3.00 GBP
 
-Because of the nature of holding multiple currencies, some operations are not supported. In particular, one cannot divide baskets by baskets or compare baskets with baskets (equality, however, is still allowed).
+Because of the nature of holding multiple currencies, some operations are not supported. In particular, one cannot divide baskets by baskets or compare baskets with baskets (equality, however, is still supported). Baskets however can be iterated over to get their components, in undefined order. `DynamicBasket` objects additionally support `push!`.
+
+    @usingcurrencies USD, EUR, GBP, JPY
+    basket = DynamicBasket([300USD, 400EUR, 500GBP, 600JPY])
+    for amount::Monetary in basket
+        println(amount)
+    end
+    push!(basket, 200USD)
+    basket[:USD]
