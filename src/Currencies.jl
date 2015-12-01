@@ -8,6 +8,9 @@ export currency, Monetary, @usingcurrencies
 export simplefv, compoundfv
 export StaticBasket, DynamicBasket
 
+# Abstract class for Monetary-like things
+abstract AbstractMonetary
+
 # Currency data
 include("data.jl")
 

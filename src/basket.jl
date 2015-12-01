@@ -3,7 +3,7 @@ A collection of `Monetary` values of various currencies. This is an abstract
 type; if an immutable variant is desired, use `StaticBasket`, and if a mutable
 one is desired, use `DynamicBasket`.
 """
-abstract Basket
+abstract Basket <: AbstractMonetary
 
 # helper method
 iszero(x) = x == zero(x)
@@ -106,10 +106,13 @@ end
 
 # arithmetic methods (for static & dynamic baskets)
 Base.promote_rule(::Type{DynamicBasket}, ::Type{StaticBasket}) = DynamicBasket
+Base.promote_rule{T<:Monetary}(::Type{StaticBasket}, ::Type{T}) = StaticBasket
+Base.promote_rule{T<:Monetary}(::Type{DynamicBasket}, ::Type{T}) = DynamicBasket
+
 +{T<:Basket}(b::T, c::T) = T([collect(b); collect(c)])
-+{T<:Basket,U<:Basket}(b::T, c::U) = +(promote(b, c)...)
++{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = +(promote(b, c)...)
 -{T<:Basket}(b::T) = T([-x for x in collect(b)])
--{T<:Basket,U<:Basket}(b::T, c::U) = b + (-c)
+-{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = b + (-c)
 *{T<:Basket}(b::T, k::Real) = T([x * k for x in collect(b)])
 *{T<:Basket}(k::Real, b::T) = T([k * x for x in collect(b)])
 /{T<:Basket}(b::T, k::Real) = T([x / k for x in collect(b)])
@@ -126,7 +129,10 @@ end
 
 # other methods (eltype, iszero, zero, ==)
 iszero(b::Basket) = isempty(collect(b))
+=={T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = iszero(b - c)
 =={T<:Basket,U<:Basket}(b::T, c::U) = iszero(b - c)
+
+
 EMPTY_BASKET = StaticBasket()
 Base.zero(::Type{StaticBasket}) = EMPTY_BASKET
 Base.zero(::Type{DynamicBasket}) = DynamicBasket()

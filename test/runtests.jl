@@ -1,20 +1,25 @@
 using Currencies
 using Base.Test
 
-# get currencies
+# Get currencies for tests
 @usingcurrencies USD, CAD, EUR, GBP, JPY
 
-# arithmetic
+# Basic arithmetic
 @test 1USD + 2USD == 3USD
 @test 1.5USD * 3 == 4.5USD
 @test 1.11USD * 999 == 1108.89USD
 @test -1USD == -(1USD)
+@test 1USD == one(USD)
 
 # no mixing types
-@test_throws MethodError 1USD + 1CAD
+@test_throws ArgumentError 1USD + 1CAD
+@test_throws ArgumentError 100JPY - 0USD  # even when zero!
 
 # comparisons
 @test 1EUR < 2EUR
+@test 3JPY > 2JPY
+@test 3JPY >= 3JPY
+@test -1USD != 0USD
 @test sort([0.5EUR, 0.7EUR, 0.3EUR]) == [0.3EUR, 0.5EUR, 0.7EUR]
 @test currency(2GBP) == :GBP
 
@@ -37,11 +42,32 @@ basket_d = 4 * basket_c
 basket_e = compoundfv(basket_c, 0.02, 12)
 basket_f = basket_a - basket_b
 basket_g = basket_f / 4
+
 @test basket_c == StaticBasket([100USD, 20EUR])
 @test basket_d == StaticBasket([400USD, 80EUR])
 @test basket_e == StaticBasket([126.82USD, 25.36EUR])
 @test basket_f == StaticBasket([100USD, -20EUR])
 @test basket_g == StaticBasket([25USD, -5EUR])
+
+# false positive tests for comparison
+@test basket_c != StaticBasket()
+@test basket_c != StaticBasket([100USD, 20EUR, 20GBP])
+@test StaticBasket([100USD, 20EUR, 20GBP]) != basket_c
+
+# mixed arithmetic
+basket_h = basket_f + 20JPY
+basket_i = basket_h - 100USD
+basket_j = -20EUR - basket_i
+basket_k = DynamicBasket() + basket_j
+
+@test basket_h == StaticBasket([100USD, -20EUR, 20JPY])
+@test basket_i == StaticBasket([-20EUR, 20JPY])
+@test basket_j == -20JPY
+@test basket_j == basket_k
+
+# false positive tests for comparison
+@test basket_i != -20EUR
+@test basket_j != -20USD
 
 # iteration, access, & dynamic
 @test isempty(collect(StaticBasket([100USD, -100USD])))
@@ -54,4 +80,5 @@ push!(basket_dyn, 15JPY)
 push!(basket_dyn, -10EUR)
 @test basket_dyn == DynamicBasket([25USD, -15EUR, 10CAD, 15JPY])
 
+# errors
 @test_throws AssertionError basket_dyn[:USD] = 100CAD

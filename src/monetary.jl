@@ -21,7 +21,7 @@ give the internal type as a second type parameter to `Monetary`:
 
     Monetary{:USD, BigInt}(100)
 """
-immutable Monetary{T, U<:Integer}
+immutable Monetary{T, U<:Integer} <: AbstractMonetary
     amt::U
 end
 Monetary(T::Symbol, x) = Monetary{T, typeof(x)}(x)
@@ -40,6 +40,7 @@ Base.zero{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(0)
 Base.zero{T,U}(m::Monetary{T,U}) = Monetary{T,U}(0)
 Base.one{T}(::Type{Monetary{T}}) = Monetary(T, 10^decimals(T))
 Base.one{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(10^decimals(T))
+Base.one{T,U}(m::Monetary{T,U}) = Monetary{T,U}(10^decimals(T))
 Base.int(m::Monetary) = m.amt
 
 # nb: for BigInt to work, we have to define == in terms of ==
@@ -56,6 +57,12 @@ Base.isless{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = isless(m.amt, n.amt)
 *{T,U}(m::Monetary{T,U}, f::Real) = Monetary{T,U}(round(m.amt * f))
 /{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt / n.amt
 /(m::Monetary, f::Real) = m * (1/f)
+
+# descriptive error messages for mixed arithmetic
++{T,U}(::Monetary{T}, ::Monetary{U}) = throw(ArgumentError(
+    "cannot add Monetary values of different currencies $T and $U"))
+-{T,U}(::Monetary{T}, ::Monetary{U}) = throw(ArgumentError(
+    "cannot subtract Monetary values of different currencies $T and $U"))
 
 # Note that quotient is an integer, but remainder is a monetary value.
 function Base.divrem{T,U}(m::Monetary{T,U}, n::Monetary{T,U})
