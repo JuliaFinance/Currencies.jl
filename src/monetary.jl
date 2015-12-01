@@ -37,11 +37,13 @@ decimals(c::Symbol) = DATA[c][1]
 # numeric operations
 Base.zero{T}(::Type{Monetary{T}}) = Monetary(T, 0)
 Base.zero{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(0)
-Base.zero{T,U}(m::Monetary{T,U}) = Monetary{T,U}(0)
 Base.one{T}(::Type{Monetary{T}}) = Monetary(T, 10^decimals(T))
 Base.one{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(10^decimals(T))
-Base.one{T,U}(m::Monetary{T,U}) = Monetary{T,U}(10^decimals(T))
 Base.int(m::Monetary) = m.amt
+
+# on types
+Base.zero{T<:AbstractMonetary}(::T) = zero(T)
+Base.one{T<:AbstractMonetary}(::T) = one(T)
 
 # nb: for BigInt to work, we have to define == in terms of ==
 =={T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt == n.amt

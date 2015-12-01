@@ -1,6 +1,7 @@
 # Currencies
 
 [![Build Status](https://travis-ci.org/TotalVerb/Currencies.jl.svg?branch=master)](https://travis-ci.org/TotalVerb/Currencies.jl)
+[![Coverage Status](https://coveralls.io/repos/TotalVerb/Currencies.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/TotalVerb/Currencies.jl?branch=master)
 
 ## Purpose
 This package is not intended to replace the excellent [FinancialMarkets.jl](https://github.com/imanuelcostigan/FinancialMarkets.jl) package. Instead, this package provides a much simpler interface to using a wide variety of currencies with checked arithmetic in Julia. The motivation for this package comes from the nasty trap of the relative convenience of using floating point arithmetic for currency computations, combined with the perils of using floating point comparisons. Instead, fixed point decimals should be preferred.

@@ -77,9 +77,12 @@ basket_k = DynamicBasket() + basket_j
 @test basket_i != -20EUR
 @test basket_j != -20USD
 
-# basket constructor
+# basket constructor & zero
 basket_l = StaticBasket([basket_i, basket_j, 100JPY])
+basket_m = zero(StaticBasket)
+basket_n = zero(basket_l)
 @test basket_l == StaticBasket([-20EUR, 100JPY])
+@test basket_m == basket_n == StaticBasket()
 
 # iteration, access, & dynamic
 @test isempty(collect(StaticBasket([100USD, -100USD])))

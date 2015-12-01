@@ -55,7 +55,6 @@ basket.
 immutable StaticBasket <: Basket
     table::Dict{Symbol, Monetary}
     StaticBasket(ms::AbstractArray) = new(buildtable(ms))
-    StaticBasket(d::Dict{Symbol, Monetary}) = new(d)
     StaticBasket() = StaticBasket(Monetary[])
 end
 
@@ -76,7 +75,6 @@ way.
 immutable DynamicBasket <: Basket
     table::Dict{Symbol, Monetary}
     DynamicBasket(ms::AbstractArray) = new(buildtable(ms))
-    DynamicBasket(d::Dict{Symbol, Monetary}) = new(d)
     DynamicBasket() = DynamicBasket(Monetary[])
 end
 
@@ -147,5 +145,6 @@ iszero(b::Basket) = isempty(collect(b))
 EMPTY_BASKET = StaticBasket()
 Base.zero(::Type{StaticBasket}) = EMPTY_BASKET
 Base.zero(::Type{DynamicBasket}) = DynamicBasket()
+Base.zero{T<:AbstractMonetary}(::T) = zero(T)
 Base.eltype(::Type{StaticBasket}) = Monetary
 Base.eltype(::Type{DynamicBasket}) = Monetary
