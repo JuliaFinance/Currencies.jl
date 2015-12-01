@@ -98,10 +98,15 @@ basket_o = zero(DynamicBasket)
 basket_dyn = DynamicBasket() + basket_g
 basket_dyn[:CAD] = 10CAD
 @test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD])
+@test haskey(basket_dyn, :USD)
+@test !haskey(basket_dyn, :JPY)
 push!(basket_dyn, 15JPY)
 @test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD, 15JPY])
 push!(basket_dyn, -10EUR)
 @test basket_dyn == DynamicBasket([25USD, -15EUR, 10CAD, 15JPY])
+push!(basket_dyn, -10CAD)
+@test !haskey(basket_dyn, :CAD)  # zero keys should act invisible
+@test length(collect(basket_dyn)) == 3
 
 # errors
 @test_throws AssertionError basket_dyn[:USD] = 100CAD
@@ -137,3 +142,22 @@ sum([k*v for (k, v) in change(167.25EUR)])  # 167.25EUR
 @test contains(string(StaticBasket([1USD, 1CAD])), "CAD")
 @test contains(string(DynamicBasket([1USD, 1CAD])), "USD")
 @test !contains(string(StaticBasket([1USD, 1CAD, -1CAD])), "CAD")
+
+# Custom currencies
+@usingcustomcurrency xbt "Bitcoin (100 satoshi unit)" 2
+
+@test contains(string(10xbt), "xbt")
+@test contains(string(10xbt), "10.00")
+@test 10xbt - 5xbt == 5xbt
+@test StaticBasket([10xbt, 10USD]) - 10USD == 10xbt
+
+custom = newcurrency!(:custom, "Custom Currency", 6)
+
+@test contains(string(custom), "1.000000")
+@test contains(string(custom), "custom")
+@test 10custom / 10000000 == 0.000001custom
+
+@test currencyinfo(:USD) == "United States dollar"
+@test currencyinfo(:custom) == "Custom Currency"
+@test currencyinfo(10custom) == "Custom Currency"
+@test currencyinfo(Monetary{:xbt}) == "Bitcoin (100 satoshi unit)"

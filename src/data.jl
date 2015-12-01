@@ -1,4 +1,4 @@
-DATA = Dict(
+const DATA = Dict{Symbol, Tuple{Int, UTF8String}}(
     :AED => (2, "United Arab Emirates dirham"),
     :AFN => (2, "Afghan afghani"),
     :ALL => (2, "Albanian lek"),

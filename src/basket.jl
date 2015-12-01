@@ -141,7 +141,7 @@ iszero(b::Basket) = isempty(collect(b))
 =={T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = iszero(b - c)
 =={T<:Basket,U<:Basket}(b::T, c::U) = iszero(b - c)
 
-EMPTY_BASKET = StaticBasket()
+const EMPTY_BASKET = StaticBasket()
 Base.zero(::Type{StaticBasket}) = EMPTY_BASKET
 Base.zero(::Type{DynamicBasket}) = DynamicBasket()
 Base.eltype(::Type{StaticBasket}) = Monetary
