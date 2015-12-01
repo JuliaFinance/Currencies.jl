@@ -73,3 +73,13 @@ end
 push!(basket, 200USD)
 basket[:USD]
 ```
+
+For convenience, it's possible to add `Basket` values to regular `Monetary` values. But as seen earlier, adding two `Monetary` values does not result in a `Basket` value. If it's desired to combine two values of unknown type (either `Basket` or `Monetary`), the constructors for `StaticBasket` and `DynamicBasket` can be used directly:
+
+```julia
+@usingcurrencies USD, EUR, GBP
+a = DynamicBasket([20USD, 20EUR])
+b = 10USD
+c = StaticBasket([5EUR, 40GBP])
+StaticBasket([a, b, c])  # StaticBasket([30USD, 25EUR, 40GBP])
+```

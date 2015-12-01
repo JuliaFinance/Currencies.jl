@@ -11,10 +11,17 @@ iszero(x) = x == zero(x)
 # build monetary table
 function buildtable!(table::Dict{Symbol, Monetary}, ms)
     for m in ms
-        if haskey(table, currency(m))
-            table[currency(m)] += m
+        if isa(m, Monetary)
+            if haskey(table, currency(m))
+                table[currency(m)] += m
+            else
+                table[currency(m)] = m
+            end
+        elseif isa(m, Basket)
+            buildtable!(table, m)
         else
-            table[currency(m)] = m
+            throw(ArgumentError(
+                "Value $m cannot be interpreted as a monetary value."))
         end
     end
     table
@@ -28,7 +35,9 @@ end
 """
 An immutable collection of `Monetary` values of various currencies. Like
 regular `Monetary` values, `StaticBasket` values support basic arithmetic
-operations, with both other baskets and with raw monetary values.
+operations, with both other baskets and with raw monetary values. The
+constructor for `StaticBasket` accepts either a monetary value or a vector of
+monetary values.
 
     basket = StaticBasket([1USD, 5EUR])  # \$1 + 5€
     basket += 2EUR                       # \$1 + 7€
@@ -45,7 +54,7 @@ basket.
 """
 immutable StaticBasket <: Basket
     table::Dict{Symbol, Monetary}
-    StaticBasket{T<:Monetary}(ms::AbstractArray{T}) = new(buildtable(ms))
+    StaticBasket(ms::AbstractArray) = new(buildtable(ms))
     StaticBasket(d::Dict{Symbol, Monetary}) = new(d)
     StaticBasket() = StaticBasket(Monetary[])
 end
@@ -56,7 +65,9 @@ Base.convert(::Type{StaticBasket}, b::Basket) = StaticBasket(collect(b))
 """
 A mutable collection of `Monetary` values of various currencies. `DynamicBasket`
 values support all operations on `StaticBasket` values, in addition to the
-ability to mutate the basket with index notation, or with `push!`.
+ability to mutate the basket with index notation, or with `push!`. There is no
+other difference between the two types, and they are constructed in the same
+way.
 
     basket = DynamicBasket([1USD, 2EUR])
     basket[:USD] = 3USD  # DynamicBasket([3USD, 2EUR])
@@ -64,7 +75,7 @@ ability to mutate the basket with index notation, or with `push!`.
 """
 immutable DynamicBasket <: Basket
     table::Dict{Symbol, Monetary}
-    DynamicBasket{T<:Monetary}(ms::AbstractArray{T}) = new(buildtable(ms))
+    DynamicBasket(ms::AbstractArray) = new(buildtable(ms))
     DynamicBasket(d::Dict{Symbol, Monetary}) = new(d)
     DynamicBasket() = DynamicBasket(Monetary[])
 end
