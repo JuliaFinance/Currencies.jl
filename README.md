@@ -35,3 +35,19 @@ Certain useful computations are exported by default:
     annualinterest = 0.02
     investmentyears = 20
     futurevalue = compoundfv(presentvalue, annualinterest, investmentyears)
+
+Baskets, effectively collections of many different currencies, are supported in two variants: `StaticBasket` and `DynamicBasket`, differing only in mutability. To catch likely errors, `Monetary` objects don't support mixed arithmetic. But if mixed arithmetic is desired, it is still possible by promoting one of the objects to a `Basket` type:
+
+    @usingcurrencies USD, CAD
+    money = 100USD
+    basket = StaticBasket(money)  # StaticBasket([100USD])
+    basket += 20CAD               # StaticBasket([100USD, 20CAD])
+
+To access an individual component of a basket, indexing notation is supported:
+
+    @usingcurrencies USD, EUR, GBP
+    sdr = DynamicBasket([1USD, 2EUR, 3GBP])
+    sdr[:USD] = 3USD
+    sdr[:GBP]  # 3.00 GBP
+
+Because of the nature of holding multiple currencies, some operations are not supported. In particular, one cannot divide baskets by baskets or compare baskets with baskets (equality, however, is still allowed).

@@ -43,6 +43,7 @@ decimals(c::Symbol) = DATA[c][1]
 # numeric operations
 Base.zero{T}(::Type{Monetary{T}}) = Monetary(T, 0)
 Base.zero{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(0)
+Base.zero{T,U}(m::Monetary{T,U}) = Monetary{T,U}(0)
 Base.one{T}(::Type{Monetary{T}}) = Monetary(T, 10^decimals(T))
 Base.one{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(10^decimals(T))
 Base.int(m::Monetary) = m.amt
@@ -50,7 +51,6 @@ Base.int(m::Monetary) = m.amt
 # nb: for BigInt to work, we have to define == in terms of ==
 =={T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt == n.amt
 Base.isless{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = isless(m.amt, n.amt)
-
 
 # arithmetic operations
 +{T}(m::Monetary{T}, n::Monetary{T}) = Monetary(T, m.amt + n.amt)
@@ -116,8 +116,12 @@ end
 # investment math
 include("investments.jl")
 
+# baskets & basket math
+include("basket.jl")
+
 # exports
 export currency, Monetary, @usingcurrencies
 export simplefv, compoundfv
+export StaticBasket, DynamicBasket
 
 end # module

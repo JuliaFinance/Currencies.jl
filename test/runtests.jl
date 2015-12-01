@@ -8,6 +8,7 @@ using Base.Test
 @test 1USD + 2USD == 3USD
 @test 1.5USD * 3 == 4.5USD
 @test 1.11USD * 999 == 1108.89USD
+@test -1USD == -(1USD)
 
 # no mixing types
 @test_throws MethodError 1USD + 1CAD
@@ -24,3 +25,27 @@ using Base.Test
 # big int monetary
 BI_USD = Monetary{:USD, BigInt}(100)
 @test BigInt(2)^100 * BI_USD + 10BI_USD == (BigInt(2)^100 + 10) * BI_USD
+
+# baskets
+@test StaticBasket([100USD, 200USD]) == StaticBasket(300USD)
+@test contains(string(StaticBasket([100USD, 200EUR])), "200.00 EUR")
+
+basket_a = StaticBasket(100USD)
+basket_b = StaticBasket(20EUR)
+basket_c = basket_a + basket_b
+basket_d = 4 * basket_c
+basket_e = compoundfv(basket_c, 0.02, 12)
+basket_f = basket_a - basket_b
+basket_g = basket_f / 4
+@test basket_c == StaticBasket([100USD, 20EUR])
+@test basket_d == StaticBasket([400USD, 80EUR])
+@test basket_e == StaticBasket([126.82USD, 25.36EUR])
+@test basket_f == StaticBasket([100USD, -20EUR])
+@test basket_g == StaticBasket([25USD, -5EUR])
+
+# iteration, access, & dynamic
+@test isempty(collect(StaticBasket([100USD, -100USD])))
+@test basket_g[:EUR] == -5EUR
+basket_dyn = DynamicBasket() + basket_g
+basket_dyn[:CAD] = 10CAD
+@test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD])
