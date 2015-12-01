@@ -10,10 +10,18 @@ using Base.Test
 @test 1.11USD * 999 == 1108.89USD
 @test -1USD == -(1USD)
 @test 1USD == one(USD)
+@test 10USD / 1USD == 10.0
+@test div(10USD, 3USD) == 3
+@test rem(10USD, 3USD) == 1USD
 
 # no mixing types
 @test_throws ArgumentError 1USD + 1CAD
 @test_throws ArgumentError 100JPY - 0USD  # even when zero!
+@test_throws MethodError 1USD + 1
+@test_throws MethodError 2 - 1JPY
+@test_throws MethodError 1USD / 1CAD
+@test_throws MethodError div(10USD, 5)    # meaningless
+@test_throws MethodError 10USD % 5        # meaningless
 
 # comparisons
 @test 1EUR < 2EUR
@@ -86,3 +94,24 @@ push!(basket_dyn, -10EUR)
 
 # errors
 @test_throws AssertionError basket_dyn[:USD] = 100CAD
+
+# manual control (from README)
+money = 1USD
+magn = int(money)
+symb = currency(money)
+a = π * magn
+b = π * a
+@test Monetary(symb, round(Int, b)) == 9.87USD
+
+# give change (from README)
+COINS = [500EUR, 200EUR, 100EUR, 50EUR, 20EUR, 10EUR, 5EUR, 2EUR, 1EUR, 0.5EUR,
+    0.2EUR, 0.1EUR, 0.05EUR, 0.02EUR, 0.01EUR]
+function change(amount::Monetary{:EUR,Int})
+    coins = Dict{Monetary{:EUR,Int}, Int}()
+    for denomination in COINS
+        coins[denomination], amount = divrem(amount, denomination)
+    end
+    coins
+end
+
+sum([k*v for (k, v) in change(167.25EUR)])  # 167.25EUR
