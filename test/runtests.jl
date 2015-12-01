@@ -3,6 +3,7 @@ using Base.Test
 
 # Get currencies for tests
 @usingcurrencies USD, CAD, EUR, GBP, JPY
+@usingcurrencies CNY
 
 # Basic arithmetic
 @test 1USD + 2USD == 3USD
@@ -13,6 +14,7 @@ using Base.Test
 @test 10USD / 1USD == 10.0
 @test div(10USD, 3USD) == 3
 @test rem(10USD, 3USD) == 1USD
+@test one(Monetary{:USD}) == USD
 
 # no mixing types
 @test_throws ArgumentError 1USD + 1CAD
@@ -30,6 +32,7 @@ using Base.Test
 @test -1USD != 0USD
 @test sort([0.5EUR, 0.7EUR, 0.3EUR]) == [0.3EUR, 0.5EUR, 0.7EUR]
 @test currency(2GBP) == :GBP
+@test currency(zero(Monetary{:CNY})) == :CNY
 
 # investment
 @test compoundfv(1000USD, 0.02, 12) == 1268.24USD
@@ -81,8 +84,13 @@ basket_k = DynamicBasket() + basket_j
 basket_l = StaticBasket([basket_i, basket_j, 100JPY])
 basket_m = zero(StaticBasket)
 basket_n = zero(basket_l)
+basket_o = zero(DynamicBasket)
 @test basket_l == StaticBasket([-20EUR, 100JPY])
-@test basket_m == basket_n == StaticBasket()
+@test basket_m == basket_n == StaticBasket() == basket_o
+
+# errors
+@test_throws ArgumentError StaticBasket([1, 2, 3])
+@test_throws ArgumentError DynamicBasket([1USD, (1USD, 2USD, 3)])
 
 # iteration, access, & dynamic
 @test isempty(collect(StaticBasket([100USD, -100USD])))
@@ -106,6 +114,10 @@ a = π * magn
 b = π * a
 @test Monetary(symb, round(Int, b)) == 9.87USD
 
+# decimals
+@test int(100JPY) == 100
+@test int(100USD) == 10000
+
 # give change (from README)
 COINS = [500EUR, 200EUR, 100EUR, 50EUR, 20EUR, 10EUR, 5EUR, 2EUR, 1EUR, 0.5EUR,
     0.2EUR, 0.1EUR, 0.05EUR, 0.02EUR, 0.01EUR]
@@ -118,3 +130,10 @@ function change(amount::Monetary{:EUR,Int})
 end
 
 sum([k*v for (k, v) in change(167.25EUR)])  # 167.25EUR
+
+# Display
+@test contains(string(1USD), "1.00")
+@test contains(string(1JPY), "1")
+@test contains(string(StaticBasket([1USD, 1CAD])), "CAD")
+@test contains(string(DynamicBasket([1USD, 1CAD])), "USD")
+@test !contains(string(StaticBasket([1USD, 1CAD, -1CAD])), "CAD")
