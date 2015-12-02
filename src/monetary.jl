@@ -47,6 +47,7 @@ Base.one{T<:AbstractMonetary}(::T) = one(T)
 
 # nb: for BigInt to work, we have to define == in terms of ==
 =={T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt == n.amt
+=={T,U,V,W}(m::Monetary{T,U}, n::Monetary{V,W}) = false
 Base.isless{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = isless(m.amt, n.amt)
 
 # arithmetic operations
