@@ -135,6 +135,12 @@ function Base.push!(b::DynamicBasket, m::Monetary)
     b[currency(m)] += m
     b
 end
+function Base.push!(b::DynamicBasket, c::Basket)
+    for m in collect(c)
+        b[currency(m)] += m
+    end
+    b
+end
 
 # other methods (eltype, iszero, zero, ==)
 iszero(b::Basket) = isempty(collect(b))

@@ -85,6 +85,8 @@ c = StaticBasket([5EUR, 40GBP])
 StaticBasket([a, b, c])  # StaticBasket([30USD, 25EUR, 40GBP])
 ```
 
+Note that for consistency with the constructor, `push!` for `DynamicBasket` accepts a `Basket` object as an argument. This is somewhat inconsistent with other containers, which use `append!` or `union!`.
+
 ## Using `Monetary` in Practice
 `Monetary` types behave a lot like integer types, and they can be used like them for a lot of practical situations. For example, here is a (quite fast) function to give optimal change using the common European system of having coins and bills worth 0.01€, 0.02€, 0.05€, 0.10€, 0.20€, 0.50€, 1.00€, and so forth until 500.00€ (this algorithm doesn't necessarily work for all combinations of coin values).
 

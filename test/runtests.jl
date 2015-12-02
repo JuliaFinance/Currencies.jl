@@ -107,6 +107,8 @@ push!(basket_dyn, -10EUR)
 push!(basket_dyn, -10CAD)
 @test !haskey(basket_dyn, :CAD)  # zero keys should act invisible
 @test length(collect(basket_dyn)) == 3
+push!(basket_dyn, StaticBasket([25USD, 25EUR]))
+@test basket_dyn == StaticBasket([50USD, 10EUR, 15JPY])
 
 # errors
 @test_throws AssertionError basket_dyn[:USD] = 100CAD
