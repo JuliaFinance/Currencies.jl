@@ -105,6 +105,18 @@ end
 sum([k*v for (k, v) in change(167.25EUR)])  # 167.25EUR
 ```
 
+## Valuation
+Sometimes it is useful to value a `Basket` or a single `Monetary` value into a different currency, using an exchange rate. One way to do this is with the `valuate` function, and by constructing an `ExchangeRateTable`. An example follows:
+
+```julia
+@usingcurrencies USD, CAD, JPY
+rates = ExchangeRateTable(
+    :USD => 1.0,
+    :CAD => 0.7,
+    :JPY => 0.02)
+valuate(rates, :USD, 100JPY)  # 2.00 USD
+```
+
 ## Floating Points & Other Reals
 Although the goal of this package is to provide integer operations on monetary amounts, in practice, decimal operations are unavoidable. For instance, there is no good way to compute interest or commissions with just integer arithmetic. By default, this package enables multiplying and dividing `Basket` and `Monetary` objects with all numbers descending from `Real`, including floating points. In fact, the recommended way to construct `Monetary` objects is by implicit floating point multiplication. This isn't a problem unless the floating point numbers are so big that floating points lose precision:
 
