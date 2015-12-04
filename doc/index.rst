@@ -28,6 +28,15 @@ ISO 4217 codes, write::
 
   @usingcurrencies USD, EUR, GBP
 
+Basic usage of this package is quite simple. For example, for a simple sum of
+`Monetary` values, we can write::
+
+  subtotal = 100USD
+  tax = 10USD
+  total = subtotal + tax
+
+The usual arithmetic operators are available.
+
 Contents
 --------
 

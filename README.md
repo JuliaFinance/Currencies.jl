@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/TotalVerb/Currencies.jl.svg?branch=master)](https://travis-ci.org/TotalVerb/Currencies.jl)
 [![Coverage Status](https://coveralls.io/repos/TotalVerb/Currencies.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/TotalVerb/Currencies.jl?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/currenciesjl/badge/?version=latest)](http://currenciesjl.readthedocs.org/en/latest/?badge=latest)
 
 ## Purpose
 Please see [FinancialMarkets.jl](https://github.com/imanuelcostigan/FinancialMarkets.jl) package in case that suits your needs better.
