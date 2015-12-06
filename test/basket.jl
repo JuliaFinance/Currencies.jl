@@ -1,6 +1,5 @@
 # Baskets
 @test StaticBasket([100USD, 200USD]) == StaticBasket(300USD)
-@test contains(string(StaticBasket([100USD, 200EUR])), "200.00 EUR")
 
 basket_a = StaticBasket(100USD)
 basket_b = StaticBasket(20EUR)

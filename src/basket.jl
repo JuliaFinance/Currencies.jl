@@ -82,6 +82,13 @@ Base.convert(::Type{DynamicBasket}, m::Monetary) = DynamicBasket([m])
 Base.convert(::Type{DynamicBasket}, b::Basket) = DynamicBasket(collect(b))
 
 # access methods (for all baskets)
+function Base.length(b::Basket)
+    acc = 0
+    for _ in b
+        acc += 1
+    end
+    acc
+end
 Base.haskey(b::Basket, k) =
     haskey(b.table, k) && !iszero(b.table[k])
 Base.getindex(b::Basket, k::Symbol) = get(b.table, k, zero(Monetary{k}))
@@ -102,15 +109,18 @@ function Base.done(b::Basket, s)
         iszero(v) && done(b, s)
     end
 end
-function Base.show(io::IO, b::StaticBasket)
-    write(io, "StaticBasket([")
+function Base.print(io::IO, b::Basket)
+    write(io, "$(typeof(b).name)([")
     write(io, join(b, ","))
-    write(io, "])")
+    print(io, "])")
 end
-function Base.show(io::IO, b::DynamicBasket)
-    write(io, "DynamicBasket([")
-    write(io, join(b, ","))
-    write(io, "])")
+function Base.show(io::IO, b::Basket)
+    len = length(b)
+    write(io, "$len-currency $(typeof(b).name):")
+    for val in b
+        write(io, "\n ")
+        show(io, val)
+    end
 end
 
 # arithmetic methods (for static & dynamic baskets)

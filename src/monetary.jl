@@ -93,5 +93,11 @@ end
 
 function Base.show(io::IO, m::Monetary)
     cur = currency(m)
-    write(io, "$(curdisplay(m.amt, decimals(cur))) $cur")
+    print(io, "$(curdisplay(m.amt, decimals(cur))) $cur")
+end
+
+function Base.print(io::IO, m::Monetary)
+    cur = currency(m)
+    print(io, int(m) / 10^decimals(cur))
+    print(io, cur)
 end

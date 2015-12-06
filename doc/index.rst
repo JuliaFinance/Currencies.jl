@@ -37,6 +37,12 @@ Basic usage of this package is quite simple. For example, for a simple sum of
 
 The usual arithmetic operators are available.
 
+Baskets
+-------
+
+The `StaticBasket` and `DynamicBasket` types are most similar to multisets or
+bags in terms of how they operate.
+
 Contents
 --------
 
