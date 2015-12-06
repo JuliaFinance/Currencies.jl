@@ -14,7 +14,7 @@ macro usingcurrencies(curs)
     @assert isexpr(curs, :tuple)
 
     quote
-        $([:($cur = one(Monetary{$(Expr(:quote, cur))}))
+        $([:(const $cur = one(Monetary{$(Expr(:quote, cur))}))
             for cur in curs.args]...)
     end |> esc
 end

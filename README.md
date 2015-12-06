@@ -8,7 +8,7 @@
 ## Purpose
 Please see [FinancialMarkets.jl](https://github.com/imanuelcostigan/FinancialMarkets.jl) package in case that suits your needs better.
 
-This package provides a much simpler interface to using a wide variety of currencies with checked arithmetic in Julia. It provides a clean interface for creating currency objects and manipulating them. It is user-friendly and provides some basic but useful features for calculating investments in the REPL.
+This package provides a much simpler interface to using a wide variety of currencies with performant checked arithmetic in Julia. It provides a clean interface for creating currency objects and manipulating them. It is user-friendly and provides some basic but useful features for calculating investments in the REPL.
 
 ## Data Source
 The currency-related information for this package comes from [this Wikipedia page](https://en.wikipedia.org/wiki/ISO_4217#cite_note-divby5-9).

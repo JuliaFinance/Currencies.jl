@@ -61,7 +61,7 @@ Contents
    :maxdepth: 2
 
    rounding
-
+   performance
 
 
 Indices and tables
