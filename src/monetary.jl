@@ -98,6 +98,6 @@ end
 
 function Base.print(io::IO, m::Monetary)
     cur = currency(m)
-    print(io, int(m) / 10^decimals(cur))
+    print(io, int(m) / 10.0^decimals(cur))
     print(io, cur)
 end

@@ -153,7 +153,7 @@ function Base.push!(b::DynamicBasket, c::Basket)
 end
 
 # other methods (eltype, iszero, zero, ==)
-iszero(b::Basket) = isempty(collect(b))
+iszero(b::Basket) = isempty(b)
 =={T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = iszero(b - c)
 =={T<:Basket,U<:Basket}(b::T, c::U) = iszero(b - c)
 

@@ -1,6 +1,7 @@
 # Currencies
 
 [![Build Status](https://travis-ci.org/TotalVerb/Currencies.jl.svg?branch=master)](https://travis-ci.org/TotalVerb/Currencies.jl)
+[![Build status](https://ci.appveyor.com/api/projects/status/ofn6irk62gfe5v0o?svg=true)](https://ci.appveyor.com/project/TotalVerb/currencies-jl)
 [![Coverage Status](https://coveralls.io/repos/TotalVerb/Currencies.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/TotalVerb/Currencies.jl?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/currenciesjl/badge/?version=latest)](http://currenciesjl.readthedocs.org/en/latest/?badge=latest)
 
