@@ -3,3 +3,6 @@
 *.jl.mem
 
 doc/_build
+
+# for -e package install
+doc/src
