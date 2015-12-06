@@ -12,54 +12,15 @@ convenient for currency computations, there are common problems with using
 floating point comparisons. This package addresses those issues by treating
 monetary amounts as fixed-point decimals.
 
-Installation & Usage
---------------------
-
-In Julia, execute::
-
-  Pkg.add("Currencies")
-
-Then in your project (or in the REPL), use the package with::
-
-  using Currencies
-
-At this point you can import the currency symbols that you will need. Using the
-ISO 4217 codes, write::
-
-  @usingcurrencies USD, EUR, GBP
-
-Basic usage of this package is quite simple. For example, for a simple sum of
-:class:`Monetary` values, we can write::
-
-  subtotal = 100USD
-  tax = 10USD
-  total = subtotal + tax
-
-The usual arithmetic operators are available.
-
-Displaying Currencies
----------------------
-
-There are two ways to display a :class:`Monetary` value. The representation used
-by :func:`show` and :func:`print` is the same, and is fairly compact. For a
-richer display, use :func:`writemime`, which has a more user-friendly
-representation. To get the :func:`writemime` representation into a string, use
-the :func:`sprint` function::
-
-  sprint(writemime, "text/plain", 100USD)  # "100.00 USD"
-
-Baskets
--------
-
-The :class:`StaticBasket` and :class:`DynamicBasket` types are similar to
-multisets or bags in terms of how they operate.
-
 Contents
 --------
 
 .. toctree::
    :maxdepth: 2
 
+   install
+   display
+   basket
    rounding
    performance
 
