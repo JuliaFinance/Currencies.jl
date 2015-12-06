@@ -93,11 +93,11 @@ end
 
 function Base.show(io::IO, m::Monetary)
     cur = currency(m)
-    print(io, "$(curdisplay(m.amt, decimals(cur))) $cur")
-end
-
-function Base.print(io::IO, m::Monetary)
-    cur = currency(m)
     print(io, int(m) / 10.0^decimals(cur))
     print(io, cur)
+end
+
+function Base.writemime(io::IO, ::MIME"text/plain", m::Monetary)
+    cur = currency(m)
+    print(io, "$(curdisplay(m.amt, decimals(cur))) $cur")
 end

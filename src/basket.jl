@@ -109,17 +109,17 @@ function Base.done(b::Basket, s)
         iszero(v) && done(b, s)
     end
 end
-function Base.print(io::IO, b::Basket)
-    write(io, "$(typeof(b).name)([")
+function Base.show(io::IO, b::Basket)
+    write(io, "$(typeof(b))([")
     write(io, join(b, ","))
     print(io, "])")
 end
-function Base.show(io::IO, b::Basket)
+function Base.writemime(io::IO, ::MIME"text/plain", b::Basket)
     len = length(b)
-    write(io, "$len-currency $(typeof(b).name):")
+    write(io, "$len-currency $(typeof(b)):")
     for val in b
         write(io, "\n ")
-        show(io, val)
+        writemime(io, "text/plain", val)
     end
 end
 

@@ -76,14 +76,19 @@ rates_d = ExchangeRateTable(
 @test_throws KeyError valuate(rates_a, :JPY, 100USD)
 
 # Display
-@test contains(sprint(show, 1USD), "1.00")
-@test contains(sprint(show, 1JPY), "1")
-@test contains(sprint(show, StaticBasket([1USD, 1CAD])), "CAD")
-@test contains(sprint(show, DynamicBasket([1USD, 1CAD])), "USD")
-@test contains(sprint(show, StaticBasket([100USD, 200EUR])), "200.00 EUR")
-@test !contains(sprint(show, StaticBasket([1USD, 1CAD, -1CAD])), "CAD")
-@test sprint(show, 1USD) == "1.00 USD"
-@test sprint(show, -1USD) == "−1.00 USD"
+@test contains(sprint(writemime, "text/plain", 1USD), "1.00")
+@test contains(sprint(writemime, "text/plain", 1JPY), "1")
+@test contains(
+    sprint(writemime, "text/plain", StaticBasket([1USD, 1CAD])), "CAD")
+@test contains(
+    sprint(writemime, "text/plain", DynamicBasket([1USD, 1CAD])), "USD")
+@test contains(
+    sprint(writemime, "text/plain", StaticBasket([100USD, 200EUR])),
+    "200.00 EUR")
+@test !contains(
+    sprint(writemime, "text/plain", StaticBasket([1USD, 1CAD, -1CAD])), "CAD")
+@test sprint(writemime, "text/plain", 1USD) == "1.00 USD"
+@test sprint(writemime, "text/plain", -1USD) == "−1.00 USD"
 
 @test string(1USD) == "1.0USD"
 @test string(0.01USD) == "0.01USD"
