@@ -29,7 +29,7 @@ ISO 4217 codes, write::
   @usingcurrencies USD, EUR, GBP
 
 Basic usage of this package is quite simple. For example, for a simple sum of
-`Monetary` values, we can write::
+:class:`Monetary` values, we can write::
 
   subtotal = 100USD
   tax = 10USD
@@ -40,17 +40,17 @@ The usual arithmetic operators are available.
 Displaying Currencies
 ---------------------
 
-There are two ways to display a :code:`Monetary` value, :code:`show` and
-:code:`print`. The representation used by :code:`print` is more compact, but the
-representation used by :code:`show` is more user-friendly. To get the
-:code:`show` representation into a string, use the :code:`sprint` function::
+There are two ways to display a :class:`Monetary` value, :func:`show` and
+:func:`print`. The representation used by :func:`print` is more compact, but the
+representation used by :func:`show` is more user-friendly. To get the
+:func:`show` representation into a string, use the :func:`sprint` function::
 
   sprint(show, 100USD)  # "100.00 USD"
 
 Baskets
 -------
 
-The :code:`StaticBasket` and :code:`DynamicBasket` types are most similar to
+The :class:`StaticBasket` and :class:`DynamicBasket` types are similar to
 multisets or bags in terms of how they operate.
 
 Contents
@@ -58,6 +58,8 @@ Contents
 
 .. toctree::
    :maxdepth: 2
+
+   rounding
 
 
 
