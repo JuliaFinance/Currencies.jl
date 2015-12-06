@@ -12,7 +12,7 @@ currencies should consist of only lowercase letters.
 
     btc = newcurrency!(:btc, "Bitcoin", 8)  # 1.00000000 BTC
 """
-function newcurrency!(symb::Symbol, name::AbstractString, expt::Int64)
+function newcurrency!(symb::Symbol, name::AbstractString, expt::Int)
     DATA[symb] = (expt, UTF8String(name))
     one(Monetary{symb})
 end
