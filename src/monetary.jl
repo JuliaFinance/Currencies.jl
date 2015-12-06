@@ -21,7 +21,7 @@ give the internal type as a second type parameter to `Monetary`:
 
     Monetary{:USD, BigInt}(100)
 """
-immutable Monetary{T, U<:Integer} <: AbstractMonetary
+immutable Monetary{T, U} <: AbstractMonetary
     amt::U
 end
 Monetary(T::Symbol, x) = Monetary{T, typeof(x)}(x)
@@ -45,27 +45,30 @@ Base.int(m::Monetary) = m.amt
 Base.zero{T<:AbstractMonetary}(::T) = zero(T)
 Base.one{T<:AbstractMonetary}(::T) = one(T)
 
-# nb: for BigInt to work, we have to define == in terms of ==
-=={T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt == n.amt
-=={T,U,V,W}(m::Monetary{T,U}, n::Monetary{V,W}) = false
+# comparisons
+Base. =={T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt == n.amt
+Base. =={T,U,V,W}(m::Monetary{T,U}, n::Monetary{V,W}) = false
 Base.isless{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = isless(m.amt, n.amt)
 
-# arithmetic operations
-+{T}(m::Monetary{T}, n::Monetary{T}) = Monetary(T, m.amt + n.amt)
--{T}(m::Monetary{T}, n::Monetary{T}) = Monetary(T, m.amt - n.amt)
--{T}(m::Monetary{T}) = Monetary(T, -m.amt)
-*{T,U}(m::Monetary{T,U}, i::Integer) = Monetary{T,U}(m.amt * i)
-*{T,U}(i::Integer, m::Monetary{T,U}) = Monetary{T,U}(i * m.amt)
-*{T,U}(f::Real, m::Monetary{T,U}) = Monetary{T,U}(round(f * m.amt))
-*{T,U}(m::Monetary{T,U}, f::Real) = Monetary{T,U}(round(m.amt * f))
-/{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt / n.amt
-/(m::Monetary, f::Real) = m * (1/f)
+# unary plus/minus
+Base. +(m::AbstractMonetary) = m
+Base. -{T,U}(m::Monetary{T,U}) = Monetary{T,U}(-m.amt)
 
 # descriptive error messages for mixed arithmetic
-+{T,U}(::Monetary{T}, ::Monetary{U}) = throw(ArgumentError(
+Base. +{T,U}(::Monetary{T}, ::Monetary{U}) = throw(ArgumentError(
     "cannot add Monetary values of different currencies $T and $U"))
--{T,U}(::Monetary{T}, ::Monetary{U}) = throw(ArgumentError(
+Base. -{T,U}(::Monetary{T}, ::Monetary{U}) = throw(ArgumentError(
     "cannot subtract Monetary values of different currencies $T and $U"))
+
+# arithmetic operations
+Base. +{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = Monetary{T,U}(m.amt + n.amt)
+Base. -{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = Monetary{T,U}(m.amt - n.amt)
+Base. *{T,U}(m::Monetary{T,U}, i::Integer) = Monetary{T,U}(m.amt * i)
+Base. *{T,U}(i::Integer, m::Monetary{T,U}) = Monetary{T,U}(i * m.amt)
+Base. *{T,U}(f::Real, m::Monetary{T,U}) = Monetary{T,U}(round(f * m.amt))
+Base. *{T,U}(m::Monetary{T,U}, f::Real) = Monetary{T,U}(round(m.amt * f))
+Base. /{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt / n.amt
+Base. /(m::Monetary, f::Real) = m * (1/f)
 
 # Note that quotient is an integer, but remainder is a monetary value.
 function Base.divrem{T,U}(m::Monetary{T,U}, n::Monetary{T,U})

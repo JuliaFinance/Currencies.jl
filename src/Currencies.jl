@@ -1,7 +1,6 @@
 module Currencies
 
 using MacroTools
-import Base: +, -, *, /, ==
 
 # Exports
 export AbstractMonetary, Monetary

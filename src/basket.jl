@@ -128,13 +128,14 @@ Base.promote_rule(::Type{DynamicBasket}, ::Type{StaticBasket}) = DynamicBasket
 Base.promote_rule{T<:Monetary}(::Type{StaticBasket}, ::Type{T}) = StaticBasket
 Base.promote_rule{T<:Monetary}(::Type{DynamicBasket}, ::Type{T}) = DynamicBasket
 
-+{T<:Basket}(b::T, c::T) = T([collect(b); collect(c)])
-+{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = +(promote(b, c)...)
--{T<:Basket}(b::T) = T([-x for x in collect(b)])
--{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = b + (-c)
-*{T<:Basket}(b::T, k::Real) = T([x * k for x in collect(b)])
-*{T<:Basket}(k::Real, b::T) = T([k * x for x in collect(b)])
-/{T<:Basket}(b::T, k::Real) = T([x / k for x in collect(b)])
+Base. +{T<:Basket}(b::T, c::T) = T([collect(b); collect(c)])
+Base. +{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) =
+    +(promote(b, c)...)
+Base. -{T<:Basket}(b::T) = T([-x for x in collect(b)])
+Base. -{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = b + (-c)
+Base. *{T<:Basket}(b::T, k::Real) = T([x * k for x in collect(b)])
+Base. *{T<:Basket}(k::Real, b::T) = T([k * x for x in collect(b)])
+Base. /{T<:Basket}(b::T, k::Real) = T([x / k for x in collect(b)])
 
 # methods for dynamic baskets
 function Base.setindex!(b::DynamicBasket, m::Monetary, k::Symbol)
@@ -154,8 +155,8 @@ end
 
 # other methods (eltype, iszero, zero, ==)
 iszero(b::Basket) = isempty(b)
-=={T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = iszero(b - c)
-=={T<:Basket,U<:Basket}(b::T, c::U) = iszero(b - c)
+Base. =={T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = iszero(b - c)
+Base. =={T<:Basket,U<:Basket}(b::T, c::U) = iszero(b - c)
 
 const EMPTY_BASKET = StaticBasket()
 Base.zero(::Type{StaticBasket}) = EMPTY_BASKET
