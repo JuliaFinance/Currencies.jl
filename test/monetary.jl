@@ -10,8 +10,8 @@
 @test -1USD == -(1USD)
 @test 1USD == one(USD)
 @test 10USD / 1USD == 10.0
-@test div(10USD, 3USD) == 3
-@test rem(10USD, 3USD) == 1USD
+@test 10USD ÷ 3USD == 3
+@test 10USD % 3USD == 1USD
 @test one(Monetary{:USD}) == USD
 
 # Type safety
@@ -22,13 +22,14 @@
 @test_throws MethodError 1USD + 1
 @test_throws MethodError 2 - 1JPY
 @test_throws MethodError 1USD / 1CAD
-@test_throws MethodError div(10USD, 5)    # meaningless
+@test_throws MethodError 10USD ÷ 5    # meaningless
 @test_throws MethodError 10USD % 5        # meaningless
 
 # Comparisons
 @test 1EUR < 2EUR
 @test 3JPY > 2JPY
-@test 3JPY >= 3JPY
+@test 3JPY ≥ 3JPY
+@test 9USD ≤ 9.01USD
 @test -1USD ≠ 0USD
 @test sort([0.5EUR, 0.7EUR, 0.3EUR]) == [0.3EUR, 0.5EUR, 0.7EUR]
 
@@ -38,7 +39,7 @@
 @test 5USD ≠ 500
 
 @test_throws MethodError EUR > USD
-@test_throws MethodError GBP >= USD
+@test_throws MethodError GBP ≥ USD
 @test_throws MethodError JPY < USD
 
 # Big int monetary
