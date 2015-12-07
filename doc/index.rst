@@ -23,6 +23,7 @@ Contents
    basket
    rounding
    valuation
+   custom
    performance
 
 

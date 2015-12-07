@@ -32,4 +32,8 @@ values::
   10.0USD
   20.0CAD
 
-Note that the iteration order is undefined.
+Note that the iteration order is undefined. Baskets support indexing notation,
+using a currency symbol as the index::
+
+  julia> basket[:USD]
+  10.00 USD
