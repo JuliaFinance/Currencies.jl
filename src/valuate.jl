@@ -11,10 +11,8 @@ for which they apply. If this isn't provided, then the current date is used.
 immutable ExchangeRateTable <: Associative{Symbol, Float64}
     date::Date
     table::Dict{Symbol, Float64}
-
-    ExchangeRateTable(date, table) = new(date, table)
-    ExchangeRateTable(table) = new(Date(now()), table)
 end
+ExchangeRateTable(table) = ExchangeRateTable(Date(now()), table)
 ExchangeRateTable(entries::Pair{Symbol, Float64}...) =
     ExchangeRateTable(Dict(entries...))
 ExchangeRateTable(date::Date, entries::Pair{Symbol, Float64}...) =
@@ -38,13 +36,13 @@ if the connection fails for any reason.
 
 Data is retrieved from https://fixer.io/, and then cached in memory to avoid
 excessive network traffic. Because of the nature of cached data, an application
-running for a long period of time may receive data that is two to four days out
-of date.
+running for a long period of time may receive data that is several days (one to
+six) out of date.
 """
 function ecbrates()
-    # try last three days
+    # try last five days
     date = Date(now())
-    for _ in 1:3
+    for _ in 1:5
         if haskey(ECBCache, date)
             return ECBCache[date]
         end
