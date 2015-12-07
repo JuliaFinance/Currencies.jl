@@ -11,7 +11,11 @@ takes a list of :class:`Monetary` or other :class:`Basket` values::
    10.00 USD
    2.00 CAD
 
-The basket types support arithmetic with all kinds of currencies::
+For Arithmetic
+--------------
+
+The basket types support arithmetic with all kinds of currencies, just like
+plain :class:`Monetary` values do::
 
   julia> basket = StaticBasket([10USD, 20CAD])
   2-currency Currencies.StaticBasket:
@@ -22,6 +26,14 @@ The basket types support arithmetic with all kinds of currencies::
   2-currency Currencies.StaticBasket:
    13.00 USD
    20.00 CAD
+
+  julia> basket * 2
+  2-currency Currencies.StaticBasket:
+   20.00 USD
+   40.00 CAD
+
+As a Collection
+---------------
 
 They can also be iterated over, as if they were an array of :class:`Monetary`
 values::
@@ -37,3 +49,25 @@ using a currency symbol as the index::
 
   julia> basket[:USD]
   10.00 USD
+
+Static and Dynamic
+------------------
+
+There are two kinds of :class:`Basket`: :class:`StaticBasket` and
+:class:`DynamicBasket`. They differ only in mutability. :class:`StaticBasket`
+objects are immutable and represent an unchanging collection of currencies,
+whereas :class:`DynamicBasket` objects can be updated to modify currency weights
+or to add new currencies. In many ways, :class:`DynamicBasket` objects behave
+like dictionaries::
+
+  julia> dyn = DynamicBasket([100USD, 200CAD])
+  julia> push!(dyn, 100USD)
+  2-currency Currencies.DynamicBasket:
+   200.00 USD
+   200.00 CAD
+
+  julia> dyn[:CAD] = -1CAD
+  julia> dyn
+  2-currency Currencies.DynamicBasket:
+   200.00 USD
+   −1.00 CAD
