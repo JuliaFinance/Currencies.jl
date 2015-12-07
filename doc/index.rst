@@ -22,6 +22,7 @@ Contents
    display
    basket
    rounding
+   valuation
    performance
 
 

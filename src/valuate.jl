@@ -9,11 +9,11 @@ Optionally, `ExchangeRateTable` objects may contain information about the date
 for which they apply. If this isn't provided, then the current date is used.
 """
 immutable ExchangeRateTable <: Associative{Symbol, Float64}
-    table::Dict{Symbol, Float64}
     date::Date
+    table::Dict{Symbol, Float64}
 
-    ExchangeRateTable(date, table) = new(table, date)
-    ExchangeRateTable(table) = new(table, Date(now()))
+    ExchangeRateTable(date, table) = new(date, table)
+    ExchangeRateTable(table) = new(Date(now()), table)
 end
 ExchangeRateTable(entries::Pair{Symbol, Float64}...) =
     ExchangeRateTable(Dict(entries...))
@@ -26,6 +26,45 @@ Base.done(ert::ExchangeRateTable, s) = done(ert.table, s)
 Base.length(ert::ExchangeRateTable) = length(ert.table)
 Base.haskey(ert::ExchangeRateTable, k) = haskey(ert.table, k)
 Base.getindex(ert::ExchangeRateTable, k) = ert.table[k]
+
+const ECBCache = Dict{Date, ExchangeRateTable}()
+
+"""
+Get an `ExchangeRateTable` from European Central Bank data for the most recent
+day available. European Central Bank data is not available for all currencies,
+and it is often out of date. This function requires a connection to the
+Internet, and reraises whatever exception is thrown from the `Requests` package
+if the connection fails for any reason.
+
+Data is retrieved from https://fixer.io/, and then cached in memory to avoid
+excessive network traffic. Because of the nature of cached data, an application
+running for a long period of time may receive data that is two to four days out
+of date.
+"""
+function ecbrates()
+    # try last three days
+    date = Date(now())
+    for _ in 1:3
+        if haskey(ECBCache, date)
+            return ECBCache[date]
+        end
+        date -= Dates.Day(1)
+    end
+
+    # get fixer.io data
+    resp = Requests.json(get("https://api.fixer.io/latest", timeout=15))
+    date = Date(resp["date"])
+    table = Dict{Symbol, Float64}()
+    for (k, v) in resp["rates"]
+        table[symbol(k)] = 1.0/v
+    end
+    table[symbol(resp["base"])] = 1.0
+
+    # cache and return
+    ert = ExchangeRateTable(date, table)
+    ECBCache[date] = ert
+    return ert
+end
 
 """
 Reduces the given `Monetary` or `Basket` to a value in a single specified

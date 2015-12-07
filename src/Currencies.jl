@@ -1,11 +1,12 @@
 module Currencies
 
 using MacroTools
+using Requests
 
 # Exports
 export AbstractMonetary, Monetary
 export currency, currencyinfo, @usingcurrencies
-export valuate, ExchangeRateTable
+export valuate, ExchangeRateTable, ecbrates
 export Basket, StaticBasket, DynamicBasket
 export simplefv, compoundfv
 export newcurrency!, @usingcustomcurrency

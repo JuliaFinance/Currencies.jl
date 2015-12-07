@@ -1,0 +1,41 @@
+Valuation
+=========
+
+One important operation on monetary amounts is the ability to valuate them. Both
+baskets and single :class:`Monetary` objects can be "converted" (in some sense)
+to a reference currency using the :func:`valuate` function. This function takes
+some table mapping currency symbols to a simple floating point, which represents
+its value to some particular reference. It uses the table to compute the ratio
+between any two currencies that are both in the table, and then reduces each
+currency present in the basket into the desired basis currency. An example would
+explain it better than any words::
+
+  @usingcurrencies USD, JPY, EUR
+  usdmoney = 100USD
+  mybasket = StaticBasket([100USD, 100JPY, 100EUR])
+  rates = ExchangeRateTable(
+    :USD => 1.0,
+    :JPY => 0.02,
+    :EUR => 1.2)
+
+  valuate(rates, :EUR, usdmoney)  # 83.33 EUR
+  valuate(rates, :JPY, mybasket)  # 11100 JPY
+
+The :func:`ExchangeRateTable` type is a provided type that acts very similarly
+to a dictionary, but a plain dictionary would suffice too.
+
+Using the Internet
+------------------
+
+Often, it isn't practical to provide the data into the program itself. In these
+cases, it is helpful to download reputable data from the Internet. If an
+Internet connection is available, this package provides the :func:`ecbrates`
+function, which gets some recent exchange rate data provided by the European
+Central Bank, using the `fixer.io <https://fixer.io/>`_ API::
+
+  @usingcurrencies USD, JPY
+  usdmoney = 100USD
+  valuate(ecbrates(), :EUR, usdmoney)  # 12299 JPY (results may vary)
+
+This data is not live and may be delayed several days, but for most currencies
+and for most uses it is acceptably recent.

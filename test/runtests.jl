@@ -14,6 +14,9 @@ include("basket.jl")
 # Tests for currencies (name, info, registration)
 include("currencies.jl")
 
+# Valuation tests
+include("valuation.jl")
+
 # investment
 @test compoundfv(1000USD, 0.02, 12) == 1268.24USD
 @test simplefv(1000USD, 0.04, 12) == 1480USD
@@ -42,38 +45,6 @@ function change(amount::Monetary{:EUR,Int})
 end
 
 sum([k*v for (k, v) in change(167.25EUR)])  # 167.25EUR
-
-# Valuation
-rates_a = ExchangeRateTable(:USD => 1.0, :CAD => 0.75)
-rates_b = ExchangeRateTable(Dict(
-    :USD => 1.0,
-    :EUR => 1.3,
-    :GBP => 1.5))
-rates_c = ExchangeRateTable(Date(2015, 12, 02), Dict(
-    :USD => 1.0,
-    :EUR => 1.3,
-    :GBP => 1.5,
-    :CAD => 0.7,
-    :JPY => 0.01))
-rates_d = ExchangeRateTable(
-    Date(2015, 12, 02),
-    :USD => 1.0,
-    :CAD => 0.75)
-
-@test valuate(rates_a, :CAD, 21USD) == 28CAD
-@test valuate(rates_a, :CAD, DynamicBasket([21USD, 10CAD])) == 38CAD
-@test valuate(rates_b, :USD, 10USD) == 10USD
-@test valuate(rates_b, :EUR, 0.13USD) == 0.1EUR
-@test valuate(rates_c, :USD, StaticBasket([USD, EUR, GBP])) == 3.8USD
-@test valuate(rates_c, :EUR, 100CAD) == 53.85EUR
-@test valuate(rates_c, :JPY, 1USD) == 100JPY
-@test valuate(rates_c, :USD, StaticBasket([200JPY, EUR])) == 3.3USD
-@test valuate(rates_c, :JPY, 0USD) == 0JPY
-@test valuate(rates_d, :CAD, 3.14CAD) == 3.14CAD
-@test contains(string(rates_d), ":USD=>1.0")
-@test contains(string(rates_d), ":CAD=>0.75")
-
-@test_throws KeyError valuate(rates_a, :JPY, 100USD)
 
 # Display
 @test contains(sprint(writemime, "text/plain", 1USD), "1.00")
