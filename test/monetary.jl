@@ -14,6 +14,7 @@
     @test 10USD ÷ 3USD == 3
     @test 10USD % 3USD == 1USD
     @test one(Monetary{:USD}) == USD
+    @test zero(Monetary{:USD}) == 0USD
 end
 
 # Type safety
@@ -51,8 +52,30 @@ end
 end
 
 # Big int monetary
-BI_USD = Monetary{:USD, BigInt}(100)
+BI_USD = Monetary(:USD, BigInt(100))
 @testset "BigInt Monetary" begin
     @test BigInt(2)^100 * BI_USD + 10BI_USD == (BigInt(2)^100 + 10) * BI_USD
     @test_throws ArgumentError BI_USD + USD
+end
+
+# Custom decimals
+@testset "Custom precision" begin
+    flatusd = one(Monetary{:USD, Int, 0})
+    millusd = one(Monetary{:USD, Int, 3})
+
+    # Constructor equivalence
+    @test flatusd == Monetary(:USD, 1; precision=0)
+    @test millusd == Monetary(:USD, 1000; precision=3)
+    @test flatusd ≠ millusd
+
+    # Custom precision arithmetic
+    @test 1.111millusd + 1.222millusd == 2.333millusd
+    @test 0.1flatusd == 0flatusd
+    @test 0.001millusd ≠ 0.002millusd
+
+    # Absolutely no mixing (surprising behaviour?)
+    @test zero(flatusd) ≠ 0USD
+    @test_throws MethodError flatusd ≥ USD
+    @test_throws ArgumentError flatusd + millusd
+    @test_throws MethodError flatusd / millusd
 end

@@ -50,3 +50,48 @@ For example::
   a = π * magn                   # 314.159265...
   b = π * a                      # 986.960440...
   Monetary(symb, round(Int, b))  # 9.87 USD
+
+Custom Precision
+----------------
+
+The default precision for most currencies is down to the minor currency unit.
+For example, for the United States dollar, this minor currency unit is the
+cent. This is acceptable for most purposes, but in some situations more or less
+precision is necessary. The precision (the number of decimal points after the
+major currency unit) can be controlled as a third type parameter to
+:class:`Monetary`::
+
+  julia> USD_M = one(Monetary{:USD, Int, 3})
+  1.000 USD
+
+  julia> 10USD_M + 11.004USD_M
+  21.004 USD
+
+Sometimes it is useful to override the second parameter too, to change the
+underlying storage precision::
+
+  julia> USD_M = one(Monetary{:USD, Int128, 3})
+  1.000 USD
+
+  julia> 1267650600228229401496703205376USD_M
+  1267650600228229401496703205376.000 USD
+
+However, it's important to note that mixed arithmetic is absolutely not
+supported, even when both types have the same currency. This is because there is
+no canonical way to promote both types to an acceptable precision and storage
+representation. Note the errors and the surprising behavior for equality::
+
+  julia> USD_M + USD
+  ERROR: ArgumentError: [...]
+   in + at ~/.julia/v0.5/Currencies/src/monetary.jl:81
+   in eval at ./boot.jl:263
+
+  julia> USD_M == USD
+  false
+
+Instead, it's better to explicitly convert using the :func:`int` function.
+
+.. warning::
+
+   Mixing different representations or precisions of the same currency in a
+   :class:`StaticBasket` or :class:`DynamicBasket` is undefined behavior.

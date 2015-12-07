@@ -65,7 +65,7 @@ function ecbrates()
 end
 
 """
-Reduces the given `Monetary` or `Basket` to a value in a single specified
+Reduce the given `Monetary` or `Basket` to a value in a single specified
 currency, using the given exchange rate table. The exchange rate table can
 either be an `ExchangeRateTable` or any other `Associative` mapping `Symbol`
 to `Real`.
@@ -73,17 +73,16 @@ to `Real`.
     rates = ExchangeRateTable(:USD => 1.0, :CAD => 0.75)
     valuate(rates, :CAD, 21USD)  # 28CAD
 """
-function valuate{T,U}(table, as::Symbol, amount::Monetary{T,U})
+function valuate{T}(table, as::Symbol, amount::Monetary{T})
     rate = table[T] / table[as]
-    (int(amount) * rate / 10^decimals(T)) * one(Monetary{as,U})
+    amount / one(amount) * rate * one(Monetary{as})
 end
 
 function valuate(table, as::Symbol, amount::Basket)
     acc = 0.0
     for m in amount
         from = currency(m)
-        rate = table[from] / table[as]
-        acc += int(m) * rate / 10^decimals(from)
+        acc += m / one(m) * table[from]
     end
-    acc * one(Monetary{as})
+    acc / table[as] * one(Monetary{as})
 end

@@ -12,8 +12,13 @@
         "200.00 EUR")
     @test !contains(
         sprint(writemime, "text/plain", StaticBasket([1USD, 1CAD, -1CAD])), "CAD")
-    @test sprint(writemime, "text/plain", 1USD) == "1.00 USD"
-    @test sprint(writemime, "text/plain", -1USD) == "−1.00 USD"
+    @test sprint(writemime, "text/plain", +USD) == "1.00 USD"
+    @test sprint(writemime, "text/plain", -USD) == "−1.00 USD"
+
+    @test sprint(writemime, "text/plain", one(Monetary{:USD, BigInt, 5})) ==
+        "1.00000 USD"
+    @test sprint(writemime, "text/plain", -one(Monetary{:JPY, Int, 2})) ==
+        "−1.00 JPY"
 end
 
 @testset "Display as text/latex" begin
@@ -23,6 +28,8 @@ end
         "\$-100\\,\\mathrm{JPY}\$"
     @test sprint(writemime, "text/latex", 0GBP) ==
         "\$0.00\\,\\mathrm{GBP}\$"
+    @test sprint(writemime, "text/latex", zero(Monetary{:EUR, Int, 0})) ==
+        "\$0\\,\\mathrm{EUR}\$"
 end
 
 @testset "Display as text/markdown" begin

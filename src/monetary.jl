@@ -20,11 +20,24 @@ different kinds of internal types. To use a different internal representation,
 give the internal type as a second type parameter to `Monetary`:
 
     Monetary{:USD, BigInt}(100)
+
+In some applications, the minor denomination of a currency is not precise
+enough. It is sometimes useful to override the number of decimal points stored.
+For these applications, a third type parameter can be provided, indicating the
+number of decimal points to keep after the major denomination:
+
+    Monetary{:USD, BigInt, 4}(10000)            # 1.0000 USD
+    Monetary(:USD, BigInt(10000); precision=4)  # 1.0000 USD
 """
-immutable Monetary{T, U} <: AbstractMonetary
+immutable Monetary{T, U, V} <: AbstractMonetary
     amt::U
 end
-Monetary(T::Symbol, x) = Monetary{T, typeof(x)}(x)
+Monetary(T::Symbol, x; precision=decimals(T)) =
+    Monetary{T, typeof(x), precision}(x)
+
+# Get the full type of a Monetary by filling in defaults
+fill_monetary_type{T}(::Type{Monetary{T}}) = Monetary{T, Int, decimals(T)}
+fill_monetary_type{T,U}(::Type{Monetary{T,U}}) = Monetary{T, U, decimals(T)}
 
 """
 Return a symbol (of uppercase letters) corresponding to the ISO 4217 currency
@@ -32,13 +45,23 @@ code of the currency that the given monetary amount is representing. For
 example, `currency(80USD)` will return `:USD`.
 """
 currency{T}(m::Monetary{T}) = T
+
+"""
+Get the precision, in terms of the number of decimal places after the major
+currency unit, of the given `Monetary` value or type. Alternatively, if given
+a symbol, gets the default decimal value (the number of decimal places to
+represent the minor currency unit) for that symbol.
+"""
 decimals(c::Symbol) = DATA[c][1]
+decimals{T,U,V}(::Monetary{T,U,V}) = V
+decimals{T,U,V}(::Type{Monetary{T,U,V}}) = V
+decimals{T<:Monetary}(::Type{T}) = decimals(fill_monetary_type(T))
 
 # numeric operations
-Base.zero{T}(::Type{Monetary{T}}) = Monetary(T, 0)
-Base.zero{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(0)
-Base.one{T}(::Type{Monetary{T}}) = Monetary(T, 10^decimals(T))
-Base.one{T,U}(::Type{Monetary{T,U}}) = Monetary{T,U}(10^decimals(T))
+Base.zero{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(0)
+Base.one{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(10^V)
+Base.zero{T<:Monetary}(::Type{T}) = zero(fill_monetary_type(T))
+Base.one{T<:Monetary}(::Type{T}) = one(fill_monetary_type(T))
 Base.int(m::Monetary) = m.amt
 
 # on types
@@ -46,38 +69,41 @@ Base.zero{T<:AbstractMonetary}(::T) = zero(T)
 Base.one{T<:AbstractMonetary}(::T) = one(T)
 
 # comparisons
-Base. =={T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt == n.amt
-Base. =={T,U,V,W}(m::Monetary{T,U}, n::Monetary{V,W}) = false
-Base.isless{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = isless(m.amt, n.amt)
+Base. ==(::Monetary, ::Monetary) = false
+Base. =={T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = m.amt == n.amt
+Base.isless{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
+    isless(m.amt, n.amt)
 
 # unary plus/minus
 Base. +(m::AbstractMonetary) = m
-Base. -{T,U}(m::Monetary{T,U}) = Monetary{T,U}(-m.amt)
+Base. -{T,U,V}(m::Monetary{T,U,V}) = Monetary{T,U,V}(-m.amt)
 
 # descriptive error messages for mixed arithmetic
-Base. +{T,U}(::Monetary{T}, ::Monetary{U}) = throw(ArgumentError(
-    "cannot add Monetary values of different currencies $T and $U"))
-Base. -{T,U}(::Monetary{T}, ::Monetary{U}) = throw(ArgumentError(
-    "cannot subtract Monetary values of different currencies $T and $U"))
+Base. +(x::Monetary, y::Monetary) = throw(ArgumentError(
+    "cannot add values of different types $(typeof(x)) and $(typeof(y))"))
+Base. -(x::Monetary, y::Monetary) = throw(ArgumentError(
+    "cannot subtract values of different types $(typeof(x)) and $(typeof(y))"))
 
 # arithmetic operations
-Base. +{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = Monetary{T,U}(m.amt + n.amt)
-Base. -{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = Monetary{T,U}(m.amt - n.amt)
-Base. *{T,U}(m::Monetary{T,U}, i::Integer) = Monetary{T,U}(m.amt * i)
-Base. *{T,U}(i::Integer, m::Monetary{T,U}) = Monetary{T,U}(i * m.amt)
-Base. *{T,U}(f::Real, m::Monetary{T,U}) = Monetary{T,U}(round(f * m.amt))
-Base. *{T,U}(m::Monetary{T,U}, f::Real) = Monetary{T,U}(round(m.amt * f))
-Base. /{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = m.amt / n.amt
+Base. +{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
+    Monetary{T,U,V}(m.amt + n.amt)
+Base. -{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
+    Monetary{T,U,V}(m.amt - n.amt)
+Base. *{T,U,V}(m::Monetary{T,U,V}, i::Integer) = Monetary{T,U,V}(m.amt * i)
+Base. *{T,U,V}(i::Integer, m::Monetary{T,U,V}) = Monetary{T,U,V}(i * m.amt)
+Base. *{T,U,V}(f::Real, m::Monetary{T,U,V}) = Monetary{T,U,V}(round(f * m.amt))
+Base. *{T,U,V}(m::Monetary{T,U,V}, f::Real) = Monetary{T,U,V}(round(m.amt * f))
+Base. /{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = m.amt / n.amt
 Base. /(m::Monetary, f::Real) = m * (1/f)
 
 # Note that quotient is an integer, but remainder is a monetary value.
-function Base.divrem{T,U}(m::Monetary{T,U}, n::Monetary{T,U})
+function Base.divrem{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V})
     quotient, remainder = divrem(m.amt, n.amt)
-    quotient, Monetary{T,U}(remainder)
+    quotient, Monetary{T,U,V}(remainder)
 end
-Base.div{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = div(m.amt, n.amt)
-Base.rem{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) =
-    Monetary{T,U}(rem(m.amt, n.amt))
+Base.div{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = div(m.amt, n.amt)
+Base.rem{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
+    Monetary{T,U,V}(rem(m.amt, n.amt))
 
 function curdisplay(num, dec; useunicode=true)
     minus = useunicode ? '−' : '-'
@@ -96,18 +122,17 @@ function curdisplay(num, dec; useunicode=true)
 end
 
 function Base.show(io::IO, m::Monetary)
-    cur = currency(m)
-    print(io, int(m) / 10.0^decimals(cur))
-    print(io, cur)
+    print(io, int(m) / 10.0^decimals(m))
+    print(io, currency(m))
 end
 
 function Base.writemime(io::IO, ::MIME"text/plain", m::Monetary)
     cur = currency(m)
-    print(io, "$(curdisplay(m.amt, decimals(cur))) $cur")
+    print(io, "$(curdisplay(m.amt, decimals(m))) $cur")
 end
 
 function Base.writemime(io::IO, ::MIME"text/latex", m::Monetary)
     cur = currency(m)
-    num = curdisplay(m.amt, decimals(cur); useunicode=false)
+    num = curdisplay(m.amt, decimals(m); useunicode=false)
     print(io, "\$$num\\,\\mathrm{$cur}\$")
 end
