@@ -16,6 +16,24 @@
     @test sprint(writemime, "text/plain", -1USD) == "−1.00 USD"
 end
 
+@testset "Display as text/latex" begin
+    @test sprint(writemime, "text/latex", 100USD) ==
+        "\$100.00\\,\\mathrm{USD}\$"
+    @test sprint(writemime, "text/latex", -100JPY) ==
+        "\$-100\\,\\mathrm{JPY}\$"
+    @test sprint(writemime, "text/latex", 0GBP) ==
+        "\$0.00\\,\\mathrm{GBP}\$"
+end
+
+@testset "Display as text/markdown" begin
+    basketstr = sprint(
+        writemime, "text/markdown", DynamicBasket([1USD, 20CAD, -10JPY]))
+
+    @test contains(basketstr, "`Currencies.DynamicBasket`")
+    @test contains(basketstr, "\$3\$-currency")
+    @test contains(basketstr, " - \$-10\\,\\mathrm{JPY}\$")
+end
+
 @testset "string() [print], show()" begin
     @test string(1USD) == "1.0USD"
     @test string(0.01USD) == "0.01USD"

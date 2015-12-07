@@ -79,16 +79,17 @@ Base.div{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) = div(m.amt, n.amt)
 Base.rem{T,U}(m::Monetary{T,U}, n::Monetary{T,U}) =
     Monetary{T,U}(rem(m.amt, n.amt))
 
-function curdisplay(num, dec)
+function curdisplay(num, dec; useunicode=true)
+    minus = useunicode ? '−' : '-'
     if dec == 0
-        return num < 0 ? "−$(abs(num))" : num
+        return num < 0 ? "$minus$(abs(num))" : num
     end
     unit = 10 ^ dec
     s, num = sign(num), abs(num)
     full = fld(num, unit)
     part = join(reverse(digits(num % unit, 10, dec)))
     if s < 0
-        "−$full.$part"
+        "$minus$full.$part"
     else
         "$full.$part"
     end
@@ -103,4 +104,10 @@ end
 function Base.writemime(io::IO, ::MIME"text/plain", m::Monetary)
     cur = currency(m)
     print(io, "$(curdisplay(m.amt, decimals(cur))) $cur")
+end
+
+function Base.writemime(io::IO, ::MIME"text/latex", m::Monetary)
+    cur = currency(m)
+    num = curdisplay(m.amt, decimals(cur); useunicode=false)
+    print(io, "\$$num\\,\\mathrm{$cur}\$")
 end
