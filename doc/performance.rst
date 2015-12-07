@@ -9,7 +9,7 @@ one-time cost.
 Note that the native assembly code generated for most arithmetic operations is
 effectively no different from the equivalent operation on integers::
 
-  julia> code_native()
+  julia> code_native(+, (typeof(USD), typeof(USD)))
   	.text
   Filename: ~/.julia/v0.5/Currencies/src/monetary.jl
   Source line: 64
