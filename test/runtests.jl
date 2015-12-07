@@ -1,5 +1,11 @@
 using Currencies
-using Base.Test
+
+if VERSION ≥ v"0.5-"
+    using Base.Test
+else
+    using BaseTestNext
+    const Test = BaseTestNext
+end
 
 # Get currencies for tests
 @usingcurrencies USD, CAD, EUR, GBP, JPY

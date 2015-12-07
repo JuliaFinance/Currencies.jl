@@ -15,30 +15,34 @@ rates_d = ExchangeRateTable(
     :USD => 1.0,
     :CAD => 0.75)
 
-@test valuate(rates_a, :CAD, 21USD) == 28CAD
-@test valuate(rates_a, :CAD, DynamicBasket([21USD, 10CAD])) == 38CAD
-@test valuate(rates_b, :USD, 10USD) == 10USD
-@test valuate(rates_b, :EUR, 0.13USD) == 0.1EUR
-@test valuate(rates_c, :USD, StaticBasket([USD, EUR, GBP])) == 3.8USD
-@test valuate(rates_c, :EUR, 100CAD) == 53.85EUR
-@test valuate(rates_c, :JPY, 1USD) == 100JPY
-@test valuate(rates_c, :USD, StaticBasket([200JPY, EUR])) == 3.3USD
-@test valuate(rates_c, :JPY, 0USD) == 0JPY
-@test valuate(rates_d, :CAD, 3.14CAD) == 3.14CAD
-@test contains(string(rates_d), ":USD=>1.0")
-@test contains(string(rates_d), ":CAD=>0.75")
+@testset "Valuation with hard-coded rates" begin
+    @test valuate(rates_a, :CAD, 21USD) == 28CAD
+    @test valuate(rates_a, :CAD, DynamicBasket([21USD, 10CAD])) == 38CAD
+    @test valuate(rates_b, :USD, 10USD) == 10USD
+    @test valuate(rates_b, :EUR, 0.13USD) == 0.1EUR
+    @test valuate(rates_c, :USD, StaticBasket([USD, EUR, GBP])) == 3.8USD
+    @test valuate(rates_c, :EUR, 100CAD) == 53.85EUR
+    @test valuate(rates_c, :JPY, 1USD) == 100JPY
+    @test valuate(rates_c, :USD, StaticBasket([200JPY, EUR])) == 3.3USD
+    @test valuate(rates_c, :JPY, 0USD) == 0JPY
+    @test valuate(rates_d, :CAD, 3.14CAD) == 3.14CAD
+    @test contains(string(rates_d), ":USD=>1.0")
+    @test contains(string(rates_d), ":CAD=>0.75")
 
-@test_throws KeyError valuate(rates_a, :JPY, 100USD)
+    @test_throws KeyError valuate(rates_a, :JPY, 100USD)
+end
 
 # Valuation — ECB data
 rates_e = ecbrates()
 
-# test cache
-@test rates_e ≡ ecbrates()
+@testset "Valuation with ECB data" begin
+    # test cache
+    @test rates_e ≡ ecbrates()
 
-# test rates object
-@test rates_e.date + Dates.Day(4) > Date(now())
-@test !isempty(rates_e)
-@test isa(rates_e, ExchangeRateTable)
-@test valuate(rates_e, :USD, 1USD) == 1USD
-@test valuate(rates_e, :EUR, 20EUR) == 20EUR
+    # test rates object
+    @test rates_e.date + Dates.Day(4) > Date(now())
+    @test !isempty(rates_e)
+    @test isa(rates_e, ExchangeRateTable)
+    @test valuate(rates_e, :USD, 1USD) == 1USD
+    @test valuate(rates_e, :EUR, 20EUR) == 20EUR
+end
