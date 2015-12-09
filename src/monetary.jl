@@ -17,9 +17,9 @@ Although this type is flexible enough to support values internally represented
 as any integer type, such as `BigInt`, it is recommended to use the built-in
 `Int` type on your architecture unless you need a bigger type. Do not mix
 different kinds of internal types. To use a different internal representation,
-give the internal type as a second type parameter to `Monetary`:
+change the type of the second argument to `Monetary`:
 
-    Monetary{:USD, BigInt}(100)
+    Monetary(:USD, BigInt(100))
 
 In some applications, the minor denomination of a currency is not precise
 enough. It is sometimes useful to override the number of decimal points stored.
