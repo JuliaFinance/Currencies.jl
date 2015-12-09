@@ -35,9 +35,14 @@ end
 Monetary(T::Symbol, x; precision=decimals(T)) =
     Monetary{T, typeof(x), precision}(x)
 
-# Get the full type of a Monetary by filling in defaults
-fill_monetary_type{T}(::Type{Monetary{T}}) = Monetary{T, Int, decimals(T)}
-fill_monetary_type{T,U}(::Type{Monetary{T,U}}) = Monetary{T, U, decimals(T)}
+"""
+    filltype(typ) → typ
+
+Fill in default type parameters to get a fully-specified concrete type from a
+partially-specified one.
+"""
+filltype{T}(::Type{Monetary{T}}) = Monetary{T, Int, decimals(T)}
+filltype{T,U}(::Type{Monetary{T,U}}) = Monetary{T, U, decimals(T)}
 
 """
 Return a symbol (of uppercase letters) corresponding to the ISO 4217 currency
@@ -47,6 +52,8 @@ example, `currency(80USD)` will return `:USD`.
 currency{T}(m::Monetary{T}) = T
 
 """
+    decimals(money) → Int
+
 Get the precision, in terms of the number of decimal places after the major
 currency unit, of the given `Monetary` value or type. Alternatively, if given
 a symbol, gets the default decimal value (the number of decimal places to
@@ -55,13 +62,13 @@ represent the minor currency unit) for that symbol.
 decimals(c::Symbol) = DATA[c][1]
 decimals{T,U,V}(::Monetary{T,U,V}) = V
 decimals{T,U,V}(::Type{Monetary{T,U,V}}) = V
-decimals{T<:Monetary}(::Type{T}) = decimals(fill_monetary_type(T))
+decimals{T<:Monetary}(::Type{T}) = decimals(filltype(T))
 
 # numeric operations
 Base.zero{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(0)
 Base.one{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(10^V)
-Base.zero{T<:Monetary}(::Type{T}) = zero(fill_monetary_type(T))
-Base.one{T<:Monetary}(::Type{T}) = one(fill_monetary_type(T))
+Base.zero{T<:Monetary}(::Type{T}) = zero(filltype(T))
+Base.one{T<:Monetary}(::Type{T}) = one(filltype(T))
 Base.int(m::Monetary) = m.amt
 
 # on types

@@ -15,7 +15,7 @@ rates_d = ExchangeRateTable(
     :USD => 1.0,
     :CAD => 0.75)
 
-@testset "Valuation with hard-coded rates" begin
+@testset "Valuation" begin
     @test valuate(rates_a, :CAD, 21USD) == 28CAD
     @test valuate(rates_a, :CAD, DynamicBasket([21USD, 10CAD])) == 38CAD
     @test valuate(rates_b, :USD, 10USD) == 10USD
@@ -35,7 +35,7 @@ end
 # Valuation — ECB data
 rates_e = ecbrates()
 
-@testset "Valuation with ECB data" begin
+@testset "ECB data" begin
     # test cache
     @test rates_e ≡ ecbrates()
 
@@ -45,4 +45,6 @@ rates_e = ecbrates()
     @test isa(rates_e, ExchangeRateTable)
     @test valuate(rates_e, :USD, 1USD) == 1USD
     @test valuate(rates_e, :EUR, 20EUR) == 20EUR
+    @test haskey(rates_e, :JPY)
+    @test length(rates_e) > 10
 end

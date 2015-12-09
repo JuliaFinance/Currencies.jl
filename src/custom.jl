@@ -47,5 +47,5 @@ This function may be called with either a symbol, a `Monetary` type, or a
 """
 currencyinfo(s::Symbol) = DATA[s][2]
 currencyinfo{T,U,V}(::Type{Monetary{T,U,V}}) = currencyinfo(T)
-currencyinfo{T<:Monetary}(::Type{T}) = currencyinfo(fill_monetary_type(T))
+currencyinfo{T<:Monetary}(::Type{T}) = currencyinfo(filltype(T))
 currencyinfo(m::Monetary) = currencyinfo(typeof(m))

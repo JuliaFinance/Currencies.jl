@@ -1,7 +1,7 @@
 # Tests for Monetary values
 
 # Basic arithmetic
-@testset "Monetary arithmetic" begin
+@testset "Monetary — Arithmetic" begin
     @test 1USD + 2USD == 3USD
     @test 1USD + 2USD + 3USD == 6USD
     @test 1.5USD * 3 == 4.5USD
@@ -10,6 +10,7 @@
     @test 1.11USD * 999 == 1108.89USD
     @test -1USD == -(1USD)
     @test 1USD == one(USD)
+    @test 1USD == USD
     @test 10USD / 1USD == 10.0
     @test 10USD ÷ 3USD == 3
     @test 10USD % 3USD == 1USD
@@ -18,7 +19,7 @@
 end
 
 # Type safety
-@testset "Monetary type safety" begin
+@testset "Monetary — Type Safety" begin
     @test_throws ArgumentError 1USD + 1CAD
     @test_throws ArgumentError 100JPY - 0USD  # even when zero!
     @test_throws MethodError 5USD * 10CAD
@@ -30,36 +31,55 @@ end
     @test_throws MethodError 10USD % 5        # meaningless
 end
 
-# Comparisons
-@testset "Monetary comparisons (same type)" begin
-    @test 1EUR < 2EUR
-    @test 3JPY > 2JPY
-    @test 3JPY ≥ 3JPY
-    @test 9USD ≤ 9.01USD
-    @test -1USD ≠ 0USD
-    @test sort([0.5EUR, 0.7EUR, 0.3EUR]) == [0.3EUR, 0.5EUR, 0.7EUR]
-end
+@testset "Monetary — Comparisons" begin
+    # Comparisons
+    @testset "Monetary — Homogenous Comparisons" begin
+        @test 1EUR < 2EUR
+        @test 3JPY > 2JPY
+        @test 3JPY ≥ 3JPY
+        @test 9USD ≤ 9.01USD
+        @test -1USD ≠ 0USD
+        @test sort([0.5EUR, 0.7EUR, 0.3EUR]) == [0.3EUR, 0.5EUR, 0.7EUR]
 
-# Type safety
-@testset "Monetary comparisons (different type)" begin
-    @test 1EUR ≠ 1USD
-    @test 5USD ≠ 5
-    @test 5USD ≠ 500
+        # immutable types should be **equivalent**
+        @test 10USD ≡ 10USD
+        @test zero(USD) ≡ 0USD
+        @test -one(USD) ≡ +(-USD)
+    end
 
-    @test_throws MethodError EUR > USD
-    @test_throws MethodError GBP ≥ USD
-    @test_throws MethodError JPY < USD
+    # Type safety
+    @testset "Monetary — Heterogenous Comparisons" begin
+        @test 1EUR ≠ 1USD
+        @test 5USD ≠ 5
+        @test 5USD ≠ 500
+
+        @test_throws MethodError EUR > USD
+        @test_throws MethodError GBP ≥ USD
+        @test_throws MethodError JPY < USD
+    end
 end
 
 # Big int monetary
 BI_USD = Monetary(:USD, BigInt(100))
-@testset "BigInt Monetary" begin
+BI_USD2 = one(Monetary{:USD, BigInt})
+I128_USD = one(Monetary{:USD, Int128})
+@testset "Monetary — Representation" begin
     @test BigInt(2)^100 * BI_USD + 10BI_USD == (BigInt(2)^100 + 10) * BI_USD
+
+    # test **equality** — note equivalence is untrue because BigInt
+    @test BI_USD == BI_USD2
+
+    # wrapping behaviour (strange but documented)
+    @test typemin(Int128) * I128_USD ≡ typemax(Int128) * I128_USD + I128_USD
+
+    # don't mix
     @test_throws ArgumentError BI_USD + USD
+    @test_throws ArgumentError BI_USD - I128_USD
+    @test_throws MethodError BI_USD / I128_USD
 end
 
 # Custom decimals
-@testset "Custom precision" begin
+@testset "Monetary — Precision" begin
     flatusd = one(Monetary{:USD, Int, 0})
     millusd = one(Monetary{:USD, Int, 3})
 

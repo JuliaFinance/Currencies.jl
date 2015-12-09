@@ -9,7 +9,7 @@ basket_e = compoundfv(basket_c, 0.02, 12)
 basket_f = basket_a - basket_b
 basket_g = basket_f / 4
 
-@testset "StaticBasket simple arithmetic" begin
+@testset "Basket simple arithmetic" begin
     @test basket_c == StaticBasket([100USD, 20EUR])
     @test basket_d == StaticBasket([400USD, 80EUR])
     @test basket_e == StaticBasket([126.82USD, 25.36EUR])
@@ -51,16 +51,19 @@ basket_m = StaticBasket([basket_i, basket_j, 100JPY])
 basket_n = zero(StaticBasket)
 basket_o = zero(basket_m)
 basket_p = zero(DynamicBasket)
+basket_q = DynamicBasket([basket_o, StaticBasket([10USD, 20USD])])
 
-@testset "Basket constructor and zero" begin
+@testset "Basket construction" begin
     @test basket_m == StaticBasket([-20EUR, 100JPY])
-    @test basket_n == basket_o == StaticBasket() == basket_p
+    @test basket_n == basket_o == StaticBasket() == basket_p == zero(JPY)
+    @test basket_q == 30USD
 end
 
 # Errors
 @testset "Basket constructor errors" begin
     @test_throws ArgumentError StaticBasket([1, 2, 3])
     @test_throws ArgumentError DynamicBasket([1USD, (1USD, 2USD, 3)])
+    @test_throws MethodError one(StaticBasket)
 end
 
 # Iteration & access
@@ -76,7 +79,7 @@ end
 # Dynamic
 basket_dyn = DynamicBasket() + basket_g
 
-@testset "DynamicBasket operations" begin
+@testset "DynamicBasket" begin
     basket_dyn[:CAD] = 10CAD
     @test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD])
     @test haskey(basket_dyn, :USD)

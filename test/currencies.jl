@@ -22,6 +22,7 @@ end
     @test currencyinfo(:custom) == "Custom Currency"
     @test currencyinfo(10custom) == "Custom Currency"
     @test currencyinfo(Monetary{:xbt}) == "Bitcoin (100 satoshi unit)"
+    @test currencyinfo(Monetary{:BND, BigInt}) == "Brunei dollar"
 end
 
 # Currency
@@ -30,4 +31,12 @@ end
     @test currency(zero(Monetary{:CNY})) == :CNY
     @test currency(10xbt) == :xbt
     @test currency(custom) == :custom
+end
+
+# Default precision
+@testset "decimals()" begin
+    @test decimals(:USD) == 2
+    @test decimals(:JPY) == 0
+    @test decimals(Monetary{:USD, BigInt}) == 2
+    @test decimals(Monetary{:JPY, Int, 4}) == 4
 end

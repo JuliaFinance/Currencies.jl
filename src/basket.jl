@@ -89,8 +89,7 @@ function Base.length(b::Basket)
     end
     acc
 end
-Base.haskey(b::Basket, k) =
-    haskey(b.table, k) && !iszero(b.table[k])
+Base.haskey(b::Basket, k) = haskey(b.table, k) && !iszero(b.table[k])
 Base.getindex(b::Basket, k::Symbol) = get(b.table, k, zero(Monetary{k}))
 Base.start(b::Basket) = start(b.table)
 function Base.next(b::Basket, s)
