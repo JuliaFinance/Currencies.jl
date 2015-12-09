@@ -1,40 +1,35 @@
 # Display methods (show & print & writemime) tests
 
 @testset "Display as text/plain" begin
-    @test contains(sprint(writemime, "text/plain", 1USD), "1.00")
-    @test contains(sprint(writemime, "text/plain", 1JPY), "1")
+    @test contains(stringmime("text/plain", 1USD), "1.00")
+    @test contains(stringmime("text/plain", 1JPY), "1")
+    @test contains(stringmime("text/plain", StaticBasket([1USD, 1CAD])), "CAD")
+    @test contains(stringmime("text/plain", DynamicBasket([1USD, 1CAD])), "USD")
     @test contains(
-        sprint(writemime, "text/plain", StaticBasket([1USD, 1CAD])), "CAD")
-    @test contains(
-        sprint(writemime, "text/plain", DynamicBasket([1USD, 1CAD])), "USD")
-    @test contains(
-        sprint(writemime, "text/plain", StaticBasket([100USD, 200EUR])),
+        stringmime("text/plain", StaticBasket([100USD, 200EUR])),
         "200.00 EUR")
     @test !contains(
-        sprint(writemime, "text/plain", StaticBasket([1USD, 1CAD, -1CAD])), "CAD")
-    @test sprint(writemime, "text/plain", +USD) == "1.00 USD"
-    @test sprint(writemime, "text/plain", -USD) == "−1.00 USD"
+        stringmime("text/plain", StaticBasket([1USD, 1CAD, -1CAD])), "CAD")
+    @test stringmime("text/plain", +USD) == "1.00 USD"
+    @test stringmime("text/plain", -USD) == "−1.00 USD"
 
-    @test sprint(writemime, "text/plain", one(Monetary{:USD, BigInt, 5})) ==
+    @test stringmime("text/plain", one(Monetary{:USD, BigInt, 5})) ==
         "1.00000 USD"
-    @test sprint(writemime, "text/plain", -one(Monetary{:JPY, Int, 2})) ==
+    @test stringmime("text/plain", -one(Monetary{:JPY, Int, 2})) ==
         "−1.00 JPY"
 end
 
 @testset "Display as text/latex" begin
-    @test sprint(writemime, "text/latex", 100USD) ==
-        "\$100.00\\,\\mathrm{USD}\$"
-    @test sprint(writemime, "text/latex", -100JPY) ==
-        "\$-100\\,\\mathrm{JPY}\$"
-    @test sprint(writemime, "text/latex", 0GBP) ==
-        "\$0.00\\,\\mathrm{GBP}\$"
-    @test sprint(writemime, "text/latex", zero(Monetary{:EUR, Int, 0})) ==
+    @test stringmime("text/latex", 100USD) == "\$100.00\\,\\mathrm{USD}\$"
+    @test stringmime("text/latex", -100JPY) == "\$-100\\,\\mathrm{JPY}\$"
+    @test stringmime("text/latex", 0GBP) == "\$0.00\\,\\mathrm{GBP}\$"
+    @test stringmime("text/latex", zero(Monetary{:EUR, Int, 0})) ==
         "\$0\\,\\mathrm{EUR}\$"
 end
 
 @testset "Display as text/markdown" begin
-    basketstr = sprint(
-        writemime, "text/markdown", DynamicBasket([1USD, 20CAD, -10JPY]))
+    basketstr = stringmime(
+        "text/markdown", DynamicBasket([1USD, 20CAD, -10JPY]))
 
     @test contains(basketstr, "`Currencies.DynamicBasket`")
     @test contains(basketstr, "\$3\$-currency")
