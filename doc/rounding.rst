@@ -94,7 +94,8 @@ Instead, it's better to explicitly convert using the :func:`int` function.
 .. warning::
 
    Mixing different representations or precisions of the same currency in a
-   :class:`StaticBasket` or :class:`DynamicBasket` is undefined behavior.
+   :class:`StaticBasket` or :class:`DynamicBasket` is undefined behavior, even
+   if all but one of the different representations sum to zero.
 
 Special Metals
 --------------
