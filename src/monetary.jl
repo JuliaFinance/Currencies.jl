@@ -6,7 +6,8 @@ currency used is part of the type and not the object. The value is internally
 represented as a quantity of some integer type. The usual way to construct a
 `Monetary` directly, if needed, is:
 
-    Monetary(:USD, 100)  # 1.00 USD
+    Monetary(:USD)      # 1.00 USD
+    Monetary(:USD, 325) # 3.25 USD
 
 Be careful about the decimal point, as the `Monetary` constructor takes an
 integer, representing the number of smallest denominations of the currency.
@@ -32,8 +33,22 @@ number of decimal points to keep after the major denomination:
 immutable Monetary{T, U, V} <: AbstractMonetary
     amt::U
 end
-Monetary(T::Symbol, x; precision=decimals(T)) =
-    Monetary{T, typeof(x), precision}(x)
+
+function Monetary(T::Symbol, x; precision=decimals(T))
+    if precision == -1
+        throw(ArgumentError("Must provide precision for currency $T."))
+    else
+        Monetary{T, typeof(x), precision}(x)
+    end
+end
+
+function Monetary(T::Symbol; precision=decimals(T), storage=Int)
+    if precision == -1
+        throw(ArgumentError("Must provide precision for currency $T."))
+    else
+        one(Monetary{T, storage, precision})
+    end
+end
 
 """
     filltype(typ) → typ
@@ -58,9 +73,10 @@ currency{T}(m::Monetary{T}) = T
     decimals(money) → Int
 
 Get the precision, in terms of the number of decimal places after the major
-currency unit, of the given `Monetary` value or type. Alternatively, if given
-a symbol, gets the default decimal value (the number of decimal places to
-represent the minor currency unit) for that symbol.
+currency unit, of the given `Monetary` value or type. Alternatively, if given a
+symbol, gets the default exponent (the number of decimal places to represent the
+minor currency unit) for that symbol. Return `-1` if there is no sane minor
+unit, such as for several kinds of precious metal.
 """
 decimals(c::Symbol) = DATA[c][1]
 decimals{T,U,V}(::Monetary{T,U,V}) = V

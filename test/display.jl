@@ -17,6 +17,8 @@
         "1.00000 USD"
     @test stringmime("text/plain", -one(Monetary{:JPY, Int, 2})) ==
         "−1.00 JPY"
+    @test stringmime("text/plain", 7.2512Monetary(:XAU; precision=4)) ==
+        "7.2512 XAU"
 end
 
 @testset "text/latex" begin

@@ -14,8 +14,8 @@
     @test 10USD / 1USD == 10.0
     @test 10USD ÷ 3USD == 3
     @test 10USD % 3USD == 1USD
-    @test one(Monetary{:USD}) == USD
-    @test zero(Monetary{:USD}) == 0USD
+    @test one(Monetary{:USD}) ≡ USD ≡ Monetary(:USD)
+    @test zero(Monetary{:USD}) ≡ 0USD
 end
 
 # Type safety
@@ -62,12 +62,13 @@ end
 # Big int monetary
 BI_USD = Monetary(:USD, BigInt(100))
 BI_USD2 = one(Monetary{:USD, BigInt})
+BI_USD3 = Monetary(:USD; storage=BigInt)
 I128_USD = one(Monetary{:USD, Int128})
 @testset "Monetary — Representation" begin
     @test BigInt(2)^100 * BI_USD + 10BI_USD == (BigInt(2)^100 + 10) * BI_USD
 
     # test **equality** — note equivalence is untrue because BigInt
-    @test BI_USD == BI_USD2
+    @test BI_USD == BI_USD2 == BI_USD3
 
     # wrapping behaviour (strange but documented)
     @test typemin(Int128) * I128_USD ≡ typemax(Int128) * I128_USD + I128_USD
@@ -84,8 +85,10 @@ end
     millusd = one(Monetary{:USD, Int, 3})
 
     # Constructor equivalence
-    @test flatusd == Monetary(:USD, 1; precision=0)
-    @test millusd == Monetary(:USD, 1000; precision=3)
+    @test flatusd ≡ Monetary(:USD, 1; precision=0)
+    @test flatusd ≡ Monetary(:USD; precision=0)
+    @test millusd ≡ Monetary(:USD, 1000; precision=3)
+    @test millusd ≡ Monetary(:USD; precision=3, storage=Int)
     @test flatusd ≠ millusd
 
     # Custom precision arithmetic
@@ -98,4 +101,12 @@ end
     @test_throws MethodError flatusd ≥ USD
     @test_throws ArgumentError flatusd + millusd
     @test_throws MethodError flatusd / millusd
+
+    # Special metals — precision required
+    @test_throws ArgumentError @usingcurrencies XAU
+    @test_throws ArgumentError Monetary(:XAU)
+    @test_throws ArgumentError Monetary(:XAU, 100)
+
+    @test Monetary(:XAU; precision=2) ≡ one(Monetary{:XAU,Int,2})
+    @test int(Monetary(:XSU; precision=0)) == 1
 end

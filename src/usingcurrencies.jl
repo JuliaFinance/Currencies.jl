@@ -6,6 +6,11 @@ currency unit worth 1€, not a currency unit worth 0.01€.
 
     @usingcurrencies EUR, GBP, AUD
     7AUD  # 7.00 AUD
+
+There is no sane unit for certain currencies like `XAU` or `XAG`, so this macro
+does not work for those. Instead, define them manually:
+
+    const XAU = Monetary(:XAU; precision=4)
 """
 macro usingcurrencies(curs)
     if isexpr(curs, Symbol)
@@ -14,7 +19,7 @@ macro usingcurrencies(curs)
     @assert isexpr(curs, :tuple)
 
     quote
-        $([:(const $cur = one(Monetary{$(Expr(:quote, cur))}))
+        $([:(const $cur = Monetary($(Expr(:quote, cur))))
             for cur in curs.args]...)
     end |> esc
 end

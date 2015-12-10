@@ -59,4 +59,7 @@ end
     @test decimals(:JPY) == 0
     @test decimals(Monetary{:USD, BigInt}) == 2
     @test decimals(Monetary{:JPY, Int, 4}) == 4
+    @test decimals(:XAU) == -1
+    @test decimals(Monetary(:XAU; precision=4)) == 4
+    @test decimals(Monetary{:XAU, Int, 3}) == 3
 end
