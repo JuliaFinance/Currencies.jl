@@ -74,24 +74,35 @@ end
 ecbrates(date) = haskey(ECBCache, date) ? ECBCache[date] : ecbrates_fresh(date)
 
 """
+    valuate(table, as::Symbol, amount::Monetary)   → Monetary{as}
+    valuate(table, as::DataType, amount::Monetary) → as
+
 Reduce the given `Monetary` or `Basket` to a value in a single specified
-currency, using the given exchange rate table. The exchange rate table can
-either be an `ExchangeRateTable` or any other `Associative` mapping `Symbol`
-to `Real`.
+currency or of a single specified type, using the given exchange rate table. The
+exchange rate table can either be an `ExchangeRateTable` or any other
+`Associative` mapping `Symbol` to `Real`.
 
     rates = ExchangeRateTable(:USD => 1.0, :CAD => 0.75)
     valuate(rates, :CAD, 21USD)  # 28CAD
 """
-function valuate{T}(table, as::Symbol, amount::Monetary{T})
-    rate = table[T] / table[as]
-    amount / one(amount) * rate * one(Monetary{as})
+function valuate{T,U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Monetary{T})
+    rate = table[T] / table[U]
+    amount / one(amount) * rate * one(as)
 end
 
-function valuate(table, as::Symbol, amount::Basket)
+function valuate{U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Basket)
     acc = 0.0
     for m in amount
         from = currency(m)
         acc += m / one(m) * table[from]
     end
-    acc / table[as] * one(Monetary{as})
+    acc / table[U] * one(as)
+end
+
+function valuate{U<:Monetary}(table, as::Type{U}, amount::AbstractMonetary)
+    valuate(table, filltype(U), amount)
+end
+
+function valuate(table, as::Symbol, amount::AbstractMonetary)
+    valuate(table, Monetary{as}, amount)
 end

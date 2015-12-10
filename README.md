@@ -121,7 +121,7 @@ rates = ExchangeRateTable(
 valuate(rates, :USD, 100JPY)  # 2.00 USD
 ```
 
-Many features are still not available for valuation, such as the ability to use custom precision. These features are upcoming.
+For more on valuation, as usual, see the [documentation](http://currenciesjl.readthedocs.org/en/latest/valuation.html).
 
 ## Floating Points & Other Reals
 Advanced users may be interested in a [cautionary note](http://currenciesjl.readthedocs.org/en/latest/rounding.html) on rounding.

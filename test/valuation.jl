@@ -30,6 +30,29 @@ rates_d = ExchangeRateTable(
     @test contains(string(rates_d), ":CAD=>0.75")
 
     @test_throws KeyError valuate(rates_a, :JPY, 100USD)
+
+    # Valuation at custom precision
+    @testset "At Custom Precision" begin
+        precisecad = Monetary(:CAD, 10000; precision=4)
+        @test valuate(rates_d, Monetary{:USD, Int, 4}, CAD) ==
+            Monetary(:USD, 7500; precision=4)
+        @test valuate(rates_d, Monetary{:USD}, precisecad) == 0.75USD
+    end
+
+    # Valuation with custom representation
+    @testset "With Custom Representation" begin
+        bigcad = Monetary(:CAD, BigInt(100))
+        @test valuate(rates_d, Monetary{:USD, BigInt, 4}, CAD) ==
+            Monetary(:USD, BigInt(7500); precision=4)
+        @test valuate(rates_d, :USD, bigcad) == 0.75USD
+    end
+
+    # Valuation to convert similar currencies
+    @testset "Convert Similar Currencies" begin
+        bigusd = Monetary(:USD; storage=BigInt)
+        @test USD ≡ valuate(Dict(:USD => 1.0), :USD, bigusd)
+        @test bigusd == valuate(Dict(:USD => 1.0), typeof(bigusd), USD)
+    end
 end
 
 # Valuation — ECB data
