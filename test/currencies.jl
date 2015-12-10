@@ -16,13 +16,33 @@ custom = newcurrency!(:custom, "Custom Currency", 6)
     @test 10custom / 10000000 == 0.000001custom
 end
 
-# Currency Info
-@testset "currencyinfo()" begin
-    @test currencyinfo(:USD) == "United States dollar"
-    @test currencyinfo(:custom) == "Custom Currency"
-    @test currencyinfo(10custom) == "Custom Currency"
-    @test currencyinfo(Monetary{:xbt}) == "Bitcoin (100 satoshi unit)"
-    @test currencyinfo(Monetary{:BND, BigInt}) == "Brunei dollar"
+# ISO 4217
+@testset "ISO 4217" begin
+    @testset "Currency Name" begin
+        @test currencyinfo(:USD) == "US Dollar"
+        @test currencyinfo(:custom) == "Custom Currency"
+        @test currencyinfo(10custom) == "Custom Currency"
+        @test currencyinfo(20EUR) == "Euro"
+        @test currencyinfo(Monetary{:xbt}) == "Bitcoin (100 satoshi unit)"
+        @test currencyinfo(Monetary{:BND, BigInt}) == "Brunei Dollar"
+    end
+
+    @testset "Numeric Code" begin
+        @test iso4217num(:BZD) == 84
+        @test iso4217num(:USD) == 840
+        @test iso4217num(:XPF) == 953
+        @test iso4217num(:custom) == 0
+        @test iso4217num(10custom) == 0
+        @test iso4217num(Monetary{:XAF}) == 950
+        @test iso4217num(Monetary{:XOF, BigInt}) == 952
+    end
+
+    @testset "Alphabetic Code" begin
+        @test iso4217alpha(:DJF) == "DJF"
+        @test iso4217alpha(Monetary{:xbt}) == "xbt"
+        @test iso4217alpha(Monetary{:BND, BigInt}) == "BND"
+        @test iso4217alpha(100xbt) == "xbt"
+    end
 end
 
 # Currency

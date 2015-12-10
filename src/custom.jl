@@ -13,7 +13,7 @@ currencies should consist of only lowercase letters.
     btc = newcurrency!(:btc, "Bitcoin", 8)  # 1.00000000 BTC
 """
 function newcurrency!(symb::Symbol, name::AbstractString, expt::Int)
-    DATA[symb] = (expt, UTF8String(name))
+    DATA[symb] = (expt, UTF8String(name), 0)
     one(Monetary{symb})
 end
 
@@ -35,6 +35,20 @@ macro usingcustomcurrency(symb, name, exponent)
     end |> esc
 end
 
+# Currency info lookup functions.
+
+# Macro to define flexible lookup functions that accept type or Monetary object.
+macro flexible(assignment)
+    @assert assignment.head == :(=)
+    symb = assignment.args[1].args[1]
+    quote
+        $assignment
+        $symb{T,U,V}(::Type{Monetary{T,U,V}}) = $symb(T)
+        $symb{T<:Monetary}(::Type{T}) = $symb(filltype(T))
+        $symb(m::Monetary) = $symb(typeof(m))
+    end |> esc
+end
+
 """
 Get a brief human-readable English-language description of the currency. The
 description should begin with the common name of the currency, which should
@@ -45,7 +59,34 @@ parentheses following the main description may include additional information
 This function may be called with either a symbol, a `Monetary` type, or a
 `Monetary` object.
 """
-currencyinfo(s::Symbol) = DATA[s][2]
-currencyinfo{T,U,V}(::Type{Monetary{T,U,V}}) = currencyinfo(T)
-currencyinfo{T<:Monetary}(::Type{T}) = currencyinfo(filltype(T))
-currencyinfo(m::Monetary) = currencyinfo(typeof(m))
+function currencyinfo end
+@flexible currencyinfo(s::Symbol) = DATA[s][2]
+
+"""
+    iso4217num(s::Symbol)   → Int
+    iso4217num(m::Monetary) → Int
+    iso4217num(t::DataType) → Int
+
+Get the ISO 4217 numeric code for a currency. For custom currencies, a value of
+`0` will be returned. This function may be called with either a symbol, a
+`Monetary` type, or a `Monetary` object. Note that most applications should
+zero-pad this code to three digits.
+"""
+function iso4217num end
+@flexible iso4217num(s::Symbol) = DATA[s][3]
+
+
+"""
+    iso4217alpha(s::Symbol)   → UTF8String
+    iso4217alpha(m::Monetary) → UTF8String
+    iso4217alpha(t::DataType) → UTF8String
+
+Get the ISO 4217 alphabetic code for a currency. For custom currencies, a
+lowercase string will be returned, and this should not be interpreted as an ISO
+4217 code. Otherwise, a three-letter uppercase string will be returned. This
+function may be called with either a symbol, a `Monetary` type, or a `Monetary`
+object. For type stability, this function returns a UTF8String always, even when
+the currency code contains no non-ASCII characters.
+"""
+function iso4217alpha end
+@flexible iso4217alpha(s::Symbol) = s |> string |> UTF8String

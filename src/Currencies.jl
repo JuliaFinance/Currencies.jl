@@ -5,7 +5,8 @@ using Requests
 
 # Exports
 export AbstractMonetary, Monetary
-export currency, currencyinfo, decimals, @usingcurrencies
+export currency, decimals, @usingcurrencies
+export currencyinfo, iso4217num, iso4217alpha
 export valuate, ExchangeRateTable, ecbrates
 export Basket, StaticBasket, DynamicBasket
 export simplefv, compoundfv
