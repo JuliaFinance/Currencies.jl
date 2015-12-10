@@ -1,4 +1,4 @@
-# Currencies
+# Currencies.jl
 
 [![Build Status](https://travis-ci.org/TotalVerb/Currencies.jl.svg?branch=master)](https://travis-ci.org/TotalVerb/Currencies.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/ofn6irk62gfe5v0o?svg=true)](https://ci.appveyor.com/project/TotalVerb/currencies-jl)

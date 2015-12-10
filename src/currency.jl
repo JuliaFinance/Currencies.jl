@@ -50,6 +50,34 @@ macro flexible(assignment)
 end
 
 """
+    currency(m::Monetary) → Symbol
+
+Return a symbol corresponding to the ISO 4217 currency code of the currency that
+the given monetary amount is representing. For example, `currency(80USD)` will
+return `:USD`. If the given monetary value is of a non-ISO 4217 currency, then
+the returned symbol should contain only lowercase letters.
+
+Prefer `iso4217alpha` to this function if a string is desired.
+"""
+currency{T}(m::Monetary{T}) = T
+
+"""
+    decimals(m::Monetary) → Int
+    decimals(s::Symbol)   → Int
+    decimals(d::DataType) → Int
+
+Get the precision, in terms of the number of decimal places after the major
+currency unit, of the given `Monetary` value or type. Alternatively, if given a
+symbol, gets the default exponent (the number of decimal places to represent the
+minor currency unit) for that symbol. Return `-1` if there is no sane minor
+unit, such as for several kinds of precious metal.
+"""
+decimals(c::Symbol) = DATA[c][1]
+decimals{T,U,V}(::Monetary{T,U,V}) = V
+decimals{T,U,V}(::Type{Monetary{T,U,V}}) = V
+decimals{T<:Monetary}(::Type{T}) = decimals(filltype(T))
+
+"""
 Get a brief human-readable English-language description of the currency. The
 description should begin with the common name of the currency, which should
 describe it unambiguously (up to variations on the same currency). Optionally,

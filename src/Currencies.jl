@@ -12,33 +12,23 @@ export Basket, StaticBasket, DynamicBasket
 export simplefv, compoundfv
 export newcurrency!, @usingcustomcurrency
 
-# Abstract class for Monetary-like things
-"""
-The abstract type of objects representing a single value in one currency, or a
-collection of values in a set of currencies. These objects should behave like
-`Monetary` or `Basket` objects.
-"""
-abstract AbstractMonetary
-
 # Currency data
 include("data.jl")
 
-# Monetary type
+# Monetary type, currencies, and arithmetic
 include("monetary.jl")
+include("currency.jl")
+include("arithmetic.jl")
 
-# Baskets & basket math
+# Baskets
 include("basket.jl")
 
-# Valuations
+# Computations (valuation & investments)
 include("valuate.jl")
-
-# Simple investment math
 include("investments.jl")
 
-# @usingcurrencies macro
+# Interface (display, convenience macro)
+include("display.jl")
 include("usingcurrencies.jl")
-
-# Custom currencies
-include("custom.jl")
 
 end # module

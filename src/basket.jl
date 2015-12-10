@@ -108,28 +108,6 @@ function Base.done(b::Basket, s)
         iszero(v) && done(b, s)
     end
 end
-function Base.show(io::IO, b::Basket)
-    write(io, "$(typeof(b))([")
-    write(io, join(b, ","))
-    print(io, "])")
-end
-function Base.writemime(io::IO, ::MIME"text/plain", b::Basket)
-    len = length(b)
-    write(io, "$len-currency $(typeof(b)):")
-    for val in b
-        write(io, "\n ")
-        writemime(io, "text/plain", val)
-    end
-end
-function Base.writemime(io::IO, ::MIME"text/markdown", b::Basket)
-    len = length(b)
-    println(io, "\$$len\$-currency `$(typeof(b))`:")
-    for val in b
-        write(io, "\n - ")
-        writemime(io, "text/latex", val)
-    end
-end
-
 
 # arithmetic methods (for static & dynamic baskets)
 Base.promote_rule(::Type{DynamicBasket}, ::Type{StaticBasket}) = DynamicBasket
