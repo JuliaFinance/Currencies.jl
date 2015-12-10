@@ -39,3 +39,9 @@ Central Bank, using the `fixer.io <https://fixer.io/>`_ API::
 
 This data is not live and may be delayed several days, but for most currencies
 and for most uses it is acceptably recent.
+
+If rates at some point in the past are desired, the :func:`ecbrates` function
+accepts an optional parameter with the date::
+
+  julia> valuate(ecbrates(Date(2015, 08, 05)), :EUR, 100USD)
+  91.89 EUR

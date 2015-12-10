@@ -95,3 +95,20 @@ Instead, it's better to explicitly convert using the :func:`int` function.
 
    Mixing different representations or precisions of the same currency in a
    :class:`StaticBasket` or :class:`DynamicBasket` is undefined behavior.
+
+Special Metals
+--------------
+
+Some "currencies", like XAU (gram of gold), have no sensible minor unit. For
+these currencies, the precision must be provided manually::
+
+  julia> @usingcurrencies XAU
+  ERROR: ArgumentError: Must provide precision for currency XAU.
+   in Monetary at ~/.julia/v0.5/Currencies/src/monetary.jl:47
+   in eval at ./boot.jl:263
+
+  julia> const XAU = Monetary(:XAU; precision=4)
+   1.0000 XAU
+
+The usual caveats apply—be careful not to mix two different precisions of this
+currency. Otherwise, it can now be used like any other currency.
