@@ -28,7 +28,7 @@ Mixed arithmetic is not supported:
 
 ```julia
 @usingcurrencies USD, CAD
-10USD + 3CAD  # MethodError
+10USD + 3CAD  # ArgumentError
 ```
 
 Monetary amounts can be compared:
