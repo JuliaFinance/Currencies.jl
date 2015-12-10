@@ -8,7 +8,7 @@ else
 end
 
 # Get currencies for tests
-@usingcurrencies USD, CAD, EUR, GBP, JPY
+@usingcurrencies USD, CAD, EUR, GBP, JPY, AUD
 @usingcurrencies CNY
 
 # Basic functionality tests

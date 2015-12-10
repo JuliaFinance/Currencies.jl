@@ -27,30 +27,10 @@ Base.getindex(ert::ExchangeRateTable, k) = ert.table[k]
 
 const ECBCache = Dict{Date, ExchangeRateTable}()
 
-"""
-Get an `ExchangeRateTable` from European Central Bank data for the most recent
-day available. European Central Bank data is not available for all currencies,
-and it is often out of date. This function requires a connection to the
-Internet, and reraises whatever exception is thrown from the `Requests` package
-if the connection fails for any reason.
-
-Data is retrieved from https://fixer.io/, and then cached in memory to avoid
-excessive network traffic. Because of the nature of cached data, an application
-running for a long period of time may receive data that is several days (one to
-six) out of date.
-"""
-function ecbrates()
-    # try last five days
-    date = Date(now())
-    for _ in 1:5
-        if haskey(ECBCache, date)
-            return ECBCache[date]
-        end
-        date -= Dates.Day(1)
-    end
-
+function ecbrates_fresh(date=Date(1, 1, 1))
+    datestr = date == Date(1, 1, 1) ? "latest" : string(date)
     # get fixer.io data
-    resp = Requests.json(get("https://api.fixer.io/latest", timeout=15))
+    resp = Requests.json(get("https://api.fixer.io/$datestr", timeout=15))
     date = Date(resp["date"])
     table = Dict{Symbol, Float64}()
     for (k, v) in resp["rates"]
@@ -63,6 +43,35 @@ function ecbrates()
     ECBCache[date] = ert
     return ert
 end
+
+"""
+    ecbrates()           → ExchangeRateTable
+    ecbrates(date::Date) → ExchangeRateTable
+
+Get an `ExchangeRateTable` from European Central Bank data for the specified
+date, or for the most recent date available. European Central Bank data is not
+available for all currencies, and it is often out of date. This function
+requires a connection to the Internet, and reraises whatever exception is thrown
+from the `Requests` package if the connection fails for any reason.
+
+Data is retrieved from https://fixer.io/, and then cached in memory to avoid
+excessive network traffic. Because of the nature of cached data, an application
+running for a long period of time may receive data that is several days (one to
+six) out of date.
+"""
+function ecbrates()
+    date=Date(now())
+    # try last five days
+    for _ in 1:5
+        if haskey(ECBCache, date)
+            return ECBCache[date]
+        end
+        date -= Dates.Day(1)
+    end
+
+    ecbrates_fresh()
+end
+ecbrates(date) = haskey(ECBCache, date) ? ECBCache[date] : ecbrates_fresh(date)
 
 """
 Reduce the given `Monetary` or `Basket` to a value in a single specified

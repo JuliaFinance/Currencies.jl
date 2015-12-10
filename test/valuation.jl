@@ -33,13 +33,16 @@ rates_d = ExchangeRateTable(
 end
 
 # Valuation — ECB data
-rates_e = ecbrates()
+rates_e = ecbrates()  # most recent
+rates_f = ecbrates(Date(2015, 08, 05))  # fixed date
+rates_g = ecbrates(Date(2015, 08, 05))  # same as rates_f
 
 @testset "ECB data" begin
     # test cache
     @test rates_e ≡ ecbrates()
+    @test rates_f ≡ rates_g
 
-    # test rates object
+    # test recent rates object
     @test rates_e.date + Dates.Day(4) > Date(now())
     @test !isempty(rates_e)
     @test isa(rates_e, ExchangeRateTable)
@@ -47,4 +50,9 @@ rates_e = ecbrates()
     @test valuate(rates_e, :EUR, 20EUR) == 20EUR
     @test haskey(rates_e, :JPY)
     @test length(rates_e) > 10
+
+    # test fixed rates object
+    @test isa(rates_f, ExchangeRateTable)
+    @test rates_f.date == Date(2015, 08, 05)
+    @test valuate(rates_f, :AUD, 100USD) == 135.58AUD
 end
