@@ -1,7 +1,7 @@
 # Tests for Monetary values
 
 # Basic arithmetic
-@testset "Monetary — Arithmetic" begin
+@testset "M. — Arith." begin
     @test 1USD + 2USD == 3USD
     @test 1USD + 2USD + 3USD == 6USD
     @test 1.5USD * 3 == 4.5USD
@@ -14,12 +14,10 @@
     @test 10USD / 1USD == 10.0
     @test 10USD ÷ 3USD == 3
     @test 10USD % 3USD == 1USD
-    @test one(Monetary{:USD}) ≡ USD ≡ Monetary(:USD)
-    @test zero(Monetary{:USD}) ≡ 0USD
 end
 
 # Type safety
-@testset "Monetary — Type Safety" begin
+@testset "M. — Type" begin
     @test_throws ArgumentError 1USD + 1CAD
     @test_throws ArgumentError 100JPY - 0USD  # even when zero!
     @test_throws MethodError 5USD * 10CAD
@@ -31,7 +29,7 @@ end
     @test_throws MethodError 10USD % 5        # meaningless
 end
 
-@testset "Monetary — Comparisons" begin
+@testset "M. — Comp." begin
     # Comparisons
     @testset "Monetary — Homogenous Comparisons" begin
         @test 1EUR < 2EUR
@@ -47,7 +45,7 @@ end
         @test -one(USD) ≡ +(-USD)
     end
 
-    # Type safety
+    # Type safety for comparisons
     @testset "Monetary — Heterogenous Comparisons" begin
         @test 1EUR ≠ 1USD
         @test 5USD ≠ 5
@@ -64,7 +62,7 @@ BI_USD = Monetary(:USD, BigInt(100))
 BI_USD2 = one(Monetary{:USD, BigInt})
 BI_USD3 = Monetary(:USD; storage=BigInt)
 I128_USD = one(Monetary{:USD, Int128})
-@testset "Monetary — Representation" begin
+@testset "M. — Repr." begin
     @test BigInt(2)^100 * BI_USD + 10BI_USD == (BigInt(2)^100 + 10) * BI_USD
 
     # test **equality** — note equivalence is untrue because BigInt
@@ -80,7 +78,7 @@ I128_USD = one(Monetary{:USD, Int128})
 end
 
 # Custom decimals
-@testset "Monetary — Precision" begin
+@testset "M. — Prec." begin
     flatusd = one(Monetary{:USD, Int, 0})
     millusd = one(Monetary{:USD, Int, 3})
 
@@ -109,4 +107,32 @@ end
 
     @test Monetary(:XAU; precision=2) ≡ one(Monetary{:XAU,Int,2})
     @test int(Monetary(:XSU; precision=0)) == 1
+end
+
+@testset "M. — Cons." begin
+    # the grand constructor test!
+    # split up for easy debugging
+    @test USD ≡ one(Monetary{:USD})
+    @test USD ≡ one(Monetary{:USD,Int,2})
+    @test USD ≡ Monetary(:USD)
+    @test USD ≡ Monetary(:USD; storage=Int)
+    @test USD ≡ Monetary(:USD; precision=2)
+    @test USD ≡ Monetary(:USD; storage=Int, precision=2)
+    @test USD ≡ Monetary(:USD, 100)
+    @test USD ≡ Monetary(:USD, 100; precision=2)
+
+    @test USD ≠ Monetary(:USD, 1)
+    @test USD ≠ Monetary(:USD; precision=0)
+    @test USD ≠ Monetary(:USD; precision=4)
+    @test USD ≠ Monetary(:USD; storage=BigInt)
+
+    # and the zero test
+    @test 0USD ≡ zero(Monetary{:USD})
+    @test 0USD ≡ zero(Monetary{:USD,Int,2})
+    @test 0USD ≡ Monetary(:USD, 0)
+    @test 0USD ≡ Monetary(:USD, 0; precision=2)
+
+    @test 0USD ≠ USD
+    @test 0USD ≠ Monetary(:USD, 0; precision=0)
+    @test 0USD ≠ Monetary(:USD, BigInt(0))
 end
