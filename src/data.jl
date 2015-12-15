@@ -177,3 +177,27 @@ const DATA = Dict{Symbol, Tuple{Int, UTF8String, Int}}(
     :ZAR => (2,"Rand",710),
     :ZMW => (2,"Zambian Kwacha",967),
     :ZWL => (2,"Zimbabwe Dollar",932))
+
+# extra data for long and short symbols
+
+# short symbol: may be ambiguous, take the most commonly-found unicode symbol.
+# NB: couldn't find a good free source of this data, so it's very incomplete.
+# send a pull request to contribute!
+const SHORT_SYMBOL = Dict{Symbol, UTF8String}(
+    :AFN => "؋",
+    :AUD => "\$",
+    :CAD => "\$",
+    :EUR => "€",
+    :GBP => "£",
+    :MGA => "Ar",
+    :USD => "\$")
+
+# long symbol: short where possible without being ambiguous
+const LONG_SYMBOL = Dict{Symbol, UTF8String}(
+    :AFN => "؋",
+    :AUD => "AU\$",
+    :CAD => "CA\$",
+    :EUR => "€",
+    :GBP => "GB£",
+    :MGA => "Ar",
+    :USD => "US\$")

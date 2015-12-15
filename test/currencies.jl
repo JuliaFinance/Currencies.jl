@@ -46,6 +46,24 @@ end
     end
 end
 
+@testset "Symbols" begin
+    @test shortsymbol(:USD) == "\$"
+    @test shortsymbol(:CAD) == "\$"
+    @test shortsymbol(100EUR) == "€"
+    @test shortsymbol(Monetary{:GBP}) == "£"
+    @test shortsymbol(Monetary{:AUD, BigInt, 4}) == "\$"
+
+    @test longsymbol(:USD) == "US\$"
+    @test longsymbol(:CAD) == "CA\$"
+    @test longsymbol(100EUR) == "€"
+    @test longsymbol(Monetary{:GBP}) == "GB£"
+    @test longsymbol(Monetary{:AUD, BigInt, 4}) == "AU\$"
+
+    # long symbols should be unique
+    alllongsymbols = values(Currencies.LONG_SYMBOL)
+    @test length(Set(alllongsymbols)) == length(alllongsymbols)
+end
+
 # Currency
 @testset "currency()" begin
     @test currency(2GBP) == :GBP

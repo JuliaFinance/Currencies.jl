@@ -55,3 +55,61 @@ function Base.writemime(io::IO, ::MIME"text/markdown", b::Basket)
         writemime(io, "text/latex", val)
     end
 end
+
+## Monetary Format Functions ##
+
+type IncompatibleFormatException <: Exception end
+
+function takenonzero(a, b, zero)
+    if a == zero
+        b
+    elseif b == zero
+        a
+    else throw(IncompatibleFormatException()) end
+end
+
+immutable ParenthesizeNegative
+    symloc::Symbol  # :inside, :outside, or :unspecified
+end
+ParenthesizeNegative() = ParenthesizeNegative(:unspecified)
+
+immutable DigitSeparator
+    sep::Char              # e.g. ',', '.', '\'', ' '; '\0' for unspecified
+    rule::Tuple{Int, Int}  # first, rest, e.g. (3, 3); (0, 0) for unspecified
+end
+DigitSeparator(c::Char) = DigitSeparator(c, (3, 3))
+
+immutable DecimalSeparator
+    sep::Char  # e.g. ',', '.'; '\0' for unspecified
+end
+
+immutable CurrencySymbol
+    style::Symbol  # :iso4217, :long, :short, or :unspecified
+end
+
+reconcile(p::ParenthesizeNegative, p′::ParenthesizeNegative) =
+    ParenthesizeNegative(takenonzero(p.symloc, p′.symloc, :unspecified))
+
+function reconcile(d::DigitSeparator, d′::DigitSeparator)
+    DigitSeparator(
+        takenonzero(d.sep, d′.sep, '\0'),
+        takenonzero(d.rule, d′.rule, (0, 0)))
+end
+
+reconcile(d::DecimalSeparator, d′::DecimalSeparator) =
+    DecimalSeparator(takenonzero(d.sep, d′.sep, '\0'))
+
+const REQUIREMENTS = Dict(
+    :finance => [ParenthesizeNegative(:unspecified)],
+    :us => [DecimalSeparator('.'), DigitSeparator(',')],
+    :european => [DecimalSeparator(','), DigitSeparator('.')])
+
+"""
+    format(m::Monetary; styles=[:finance]) → UTF8String
+
+Format the given monetary amount to meet the requirements of the given styles.
+Available styles are: `:finance`, `:us`, and `:european`.
+"""
+function format(c::Monetary; style=[:finance])
+
+end

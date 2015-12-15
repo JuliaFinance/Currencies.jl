@@ -118,3 +118,29 @@ the currency code contains no non-ASCII characters.
 """
 function iso4217alpha end
 @flexible iso4217alpha(s::Symbol) = s |> string |> UTF8String
+
+
+"""
+    shortsymbol(s::Symbol)   → UTF8String
+    shortsymbol(m::Monetary) → UTF8String
+    shortsymbol(t::DataType) → UTF8String
+
+Get a short, possibly ambiguous, commonly-used symbol for a currency. This
+function may be called with either a symbol, a `Monetary` type, or a `Monetary`
+object.
+"""
+function shortsymbol end
+@flexible shortsymbol(s::Symbol) = get(SHORT_SYMBOL, s, iso4217alpha(s))
+
+
+"""
+    longsymbol(s::Symbol)   → UTF8String
+    longsymbol(m::Monetary) → UTF8String
+    longsymbol(t::DataType) → UTF8String
+
+Get a commonly-used currency symbol for a currency, with at least enough
+disambiguation to be non-ambiguous. This function may be called with either a
+symbol, a `Monetary` type, or a `Monetary` object.
+"""
+function longsymbol end
+@flexible longsymbol(s::Symbol) = get(LONG_SYMBOL, s, iso4217alpha(s))
