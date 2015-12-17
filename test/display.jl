@@ -52,3 +52,47 @@ end
     # test compatibility between show & print
     @test sprint(show, 0.02USD) == string(0.02USD)
 end
+
+@testset "format" begin
+    # internals
+    @test Currencies.digitseparate(20160408, "'", (3, 3)) == "20'160'408"
+    @test Currencies.digitseparate(12345678, " ", (3, 3)) == "12 345 678"
+    @test Currencies.digitseparate(1, ",", (3, 3)) == "1"
+    @test Currencies.digitseparate(12345678, ",", (3, 2)) == "1,23,45,678"
+
+    # default (finance) style
+    @test format(100USD) == "100.00 USD"
+    @test format(8050.20USD) == "8050.20 USD"
+    @test format(-100USD) == "(100.00) USD"
+    @test format(-8050.20EUR) == "(8050.20) EUR"
+    @test format(-5JPY) == "(5) JPY"
+    @test format(0CAD) == "— CAD"
+
+    # us style
+    @test format(1000USD, styles=[:us]) == "USD 1,000.00"
+    @test format(1000JPY, styles=[:us]) == "JPY 1,000"
+    @test format(19970716.14AUD, styles=[:us]) == "AUD 19,970,716.14"
+    @test format(-1100.55USD, styles=[:us]) == "USD −1,100.55"
+
+    # european style
+    @test format(-15USD, styles=[:european]) == "−15,00 USD"
+    @test format(-1050EUR, styles=[:european]) == "−1.050,00 EUR"
+    @test format(5123JPY, styles=[:european]) == "5.123 JPY"
+    @test format(12345678.90GBP, styles=[:european]) == "12.345.678,90 GBP"
+    @test format(0USD, styles=[:european]) == "0,00 USD"
+
+    # combined us & finance style
+    @test format(-1100.55USD, styles=[:us, :finance]) == "USD (1,100.55)"
+    @test format(805.03CAD, styles=[:us, :finance]) == "CAD 805.03"
+    @test format(1111111.11AUD, styles=[:us, :finance]) == "AUD 1,111,111.11"
+    @test format(0USD, styles=[:us, :finance]) == "USD —"
+
+    # combined european & finance styles
+    @test format(-1100.55EUR, styles=[:european, :finance]) == "(1.100,55) EUR"
+    @test format(-0.11EUR, styles=[:european, :finance]) == "(0,11) EUR"
+    @test format(0AUD, styles=[:european, :finance]) == "— AUD"
+
+    # can't combine US & european
+    @test_throws Currencies.IncompatibleFormatException format(
+        USD, styles=[:us, :european])
+end

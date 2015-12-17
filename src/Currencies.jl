@@ -1,5 +1,6 @@
 module Currencies
 
+using DataStructures
 using MacroTools
 using Requests
 
@@ -11,6 +12,7 @@ export valuate, ExchangeRateTable, ecbrates
 export Basket, StaticBasket, DynamicBasket
 export simplefv, compoundfv
 export newcurrency!, @usingcustomcurrency
+export format
 
 # Currency data
 include("data.jl")
@@ -29,6 +31,7 @@ include("investments.jl")
 
 # Interface (display, convenience macro)
 include("display.jl")
+include("format.jl")
 include("usingcurrencies.jl")
 
 end # module
