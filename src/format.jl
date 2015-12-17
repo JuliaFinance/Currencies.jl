@@ -242,7 +242,7 @@ const REQUIREMENTS = Dict(
     format(m::Monetary; styles=[:finance])
 
 Format the given monetary amount to meet the requirements of the given style.
-Available styles are: `:finance`, `:us`, `:european`.
+Available styles are: `:finance`, `:us`, `:european`, and `:brief`.
 """
 function format(m::Monetary; styles=[:finance])
     specs = map(x -> REQUIREMENTS[x], styles)
