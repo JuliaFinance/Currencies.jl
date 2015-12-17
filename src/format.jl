@@ -50,7 +50,7 @@ function loweramount(spec::FormatSpecification, m::Monetary)
 end
 
 function symbolize(template::Vector, spec::FormatSpecification, m::Monetary)
-    require = CurrencySymbol(:unspecified, :unspecified, :unspecified)
+    require = CurrencySymbol()
     for req in spec.reqs
         if isa(req, CurrencySymbol)
             require = req
@@ -72,12 +72,23 @@ function symbolize(template::Vector, spec::FormatSpecification, m::Monetary)
     end
     for item in template
         if item == :symbefore
-            if require.location == :before
+            if require.location == :before && require.glued != :require
                 push!(next, desired_symbol)
                 push!(next, spacing)
             end
         elseif item == :symafter
-            if require.location ∈ (:after, :dependent, :unspecified)
+            if require.location ∈ (:after, :dependent, :unspecified) &&
+                require.glued != :require
+                push!(next, spacing)
+                push!(next, desired_symbol)
+            end
+        elseif item == :amount && require.glued == :require
+            if require.location == :before
+                push!(next, desired_symbol)
+                push!(next, spacing)
+                push!(next, item)
+            elseif require.location ∈ (:after, :dependent, :unspecified)
+                push!(next, item)
                 push!(next, spacing)
                 push!(next, desired_symbol)
             end
@@ -146,6 +157,13 @@ immutable CurrencySymbol <: FormatRequirement
     symtype::Symbol   # :short, :long, :iso4217, or :unspecified
     location::Symbol  # :before, :after, :none, :dependent, or :unspecified
     spacing::Symbol   # :space, :none, :dependent, or :unspecified
+    glued::Symbol     # :require, :disallow, :unspecified
+end
+function CurrencySymbol(;
+    symtype=:unspecified, location=:unspecified,
+    spacing=:unspecified, glued=:unspecified)
+
+    CurrencySymbol(symtype, location, spacing, glued)
 end
 
 reconcile(p::ParenthesizeNegative, p′::ParenthesizeNegative) =
@@ -161,7 +179,8 @@ reconcile(s::CurrencySymbol, s′::CurrencySymbol) =
     [CurrencySymbol(
         takenonzero(s.symtype, s′.symtype, :unspecified),
         takenonzero(s.location, s′.location, :unspecified),
-        takenonzero(s.spacing, s′.spacing, :unspecified))]
+        takenonzero(s.spacing, s′.spacing, :unspecified),
+        takenonzero(s.glued, s′.glued, :unspecified))]
 
 # require reconciliation if same type
 conflict(x, y) = typeof(x) ≡ typeof(y)
@@ -224,11 +243,13 @@ const REQUIREMENTS = Dict(
     :us => FormatSpecification([
         DigitSeparator(","),
         DecimalSeparator("."),
-        CurrencySymbol(:unspecified, :before, :unspecified)]),
+        CurrencySymbol(location=:before)]),
     :european => FormatSpecification([
         DigitSeparator("."),
         DecimalSeparator(","),
-        CurrencySymbol(:unspecified, :after, :unspecified)]))
+        CurrencySymbol(location=:after)]),
+    :brief => FormatSpecification([
+        CurrencySymbol(symtype=:short, spacing=:none, glued=:require)]))
 
 """
     format(m::Monetary; styles=[:finance])

@@ -92,6 +92,20 @@ end
     @test format(-0.11EUR, styles=[:european, :finance]) == "(0,11) EUR"
     @test format(0AUD, styles=[:european, :finance]) == "— AUD"
 
+    # brief style
+    @test format(-15USD, styles=[:brief]) == "−15.00\$"
+    @test format(8.05CAD, styles=[:brief]) == "8.05\$"
+    @test format(11.11EUR, styles=[:brief]) == "11.11€"
+
+    # combined brief & xxx style
+    @test format(-11.11EUR, styles=[:brief, :finance]) == "(11.11€)"
+    @test format(-11.11USD, styles=[:brief, :us]) == "−\$11.11"
+    @test format(-11.11CAD, styles=[:brief, :european]) == "−11,11\$"
+    @test format(-123456.78USD, styles=[:brief, :finance, :us]) ==
+        "(\$123,456.78)"
+    @test format(805.11GBP, styles=[:brief, :finance, :european]) ==
+        "805,11£"
+
     # can't combine US & european
     @test_throws Currencies.IncompatibleFormatException format(
         USD, styles=[:us, :european])
