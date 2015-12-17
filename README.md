@@ -14,7 +14,7 @@ This package provides a much simpler interface to using a wide variety of curren
 The currency-related information for this package comes from [this Wikipedia page](https://en.wikipedia.org/wiki/ISO_4217#cite_note-divby5-9).
 
 ## Usage
-For a (currently incomplete) full documentation, [read the docs](http://currenciesjl.readthedocs.org/en/latest/). Following is a brief guide to getting started.
+For a full documentation, [read the docs](http://currenciesjl.readthedocs.org/en/latest/). Please file any corrections or missing parts of the documentation as issues, or even better, send in a pull request. Following is a brief guide to getting started.
 
 The `Currencies` module exports the `Monetary` type. To access currencies, use the `@usingcurrencies` macro. Basic operation is as follows:
 
