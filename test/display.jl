@@ -60,6 +60,9 @@ end
     @test Currencies.digitseparate(1, ",", (3, 3)) == "1"
     @test Currencies.digitseparate(12345678, ",", (3, 2)) == "1,23,45,678"
 
+    @test Currencies.pad(80, 5) == "00080"
+    @test Currencies.pad(1234, 4) == "1234"
+
     # default (finance) style
     @test format(100USD) == "100.00 USD"
     @test format(8050.20USD) == "8050.20 USD"

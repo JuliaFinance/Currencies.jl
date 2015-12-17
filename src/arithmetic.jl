@@ -7,6 +7,15 @@ Base.zero{T<:Monetary}(::Type{T}) = zero(filltype(T))
 Base.one{T<:Monetary}(::Type{T}) = one(filltype(T))
 Base.int(m::Monetary) = m.amt
 
+# mathematical number-like operations
+Base.abs{T,U,V}(m::Monetary{T,U,V}) = Monetary{T,U,V}(abs(m.amt))
+
+# a note on this one:
+# a sign does NOT include the unit
+# quantity = sign * magnitude * one (unit)
+# so we return something of type V
+Base.sign(m::Monetary) = sign(m.amt)
+
 # on types
 Base.zero{T<:AbstractMonetary}(::T) = zero(T)
 Base.one{T<:AbstractMonetary}(::T) = one(T)

@@ -33,7 +33,7 @@ This package provides powerful formatting for :class:`Monetary` values, but at
 the present time not all of this functionality is exposed to the user. However,
 a convenient interface is provided to use some of that functionality: the
 :func:`format` function. By default, it formats currency in a way acceptable to
-people who work with finance:
+people who work with finance::
 
   julia> format(100USD)
   "100.00 USD"
@@ -42,7 +42,7 @@ people who work with finance:
   "(100.00) USD"
 
 Extra information about the style desired can be provided in the :obj:`styles`
-keyword argument:
+keyword argument::
 
   julia> format(1270USD; styles=[:us, :brief])
   "\$1,270.00"

@@ -34,7 +34,7 @@ function loweramount(spec::FormatSpecification, m::Monetary)
             break
         end
     end
-    if m < zero(m)
+    if sign(m) < 0
         if negfs == nothing
             [:symbefore, "−", :amount, :symafter]
         elseif negfs.symloc == :inside
@@ -42,7 +42,7 @@ function loweramount(spec::FormatSpecification, m::Monetary)
         else
             [:symbefore, "(", :amount, ")", :symafter]
         end
-    elseif m == zero(m) && negfs != nothing
+    elseif sign(m) == 0 && negfs != nothing
         [:symbefore, "—", :symafter]
     else
         [:symbefore, :amount, :symafter]

@@ -9,11 +9,25 @@
     @test 2 * 1USD * 3 == 6USD
     @test 1.11USD * 999 == 1108.89USD
     @test -1USD == -(1USD)
+    @test +20USD == 20USD
     @test 1USD == one(USD)
     @test 1USD == USD
-    @test 10USD / 1USD == 10.0
-    @test 10USD ÷ 3USD == 3
-    @test 10USD % 3USD == 1USD
+
+    @testset "Division" begin
+        @test 10USD / 1USD == 10.0
+        @test 10USD ÷ 3USD == 3
+        @test 10USD % 3USD == 1USD
+        @test divrem(10USD, 3USD) == (10USD ÷ 3USD, 10USD % 3USD)
+    end
+
+    @testset "Number-like" begin
+        @test abs(-10USD) == 10USD
+        @test abs(0USD) == 0USD
+        @test abs(10USD) == 10USD
+        @test sign(-10USD) == -1
+        @test sign(0USD) == 0
+        @test sign(10USD) == 1
+    end
 end
 
 # Type safety
