@@ -185,19 +185,6 @@ reconcile(s::CurrencySymbol, s′::CurrencySymbol) =
 # require reconciliation if same type
 conflict(x, y) = typeof(x) ≡ typeof(y)
 
-# catchalls
-modify(x::Val, m::Monetary, req::FormatSpecification) = x
-modify(template::Vector, m::Monetary, req::FormatSpecification) =
-    map(x -> modify(x, m, req), template)
-
-function modify(x::Val{:amount}, m::Monetary, req::ParenthesizeNegative)
-    if m < zero(m)
-        Any[Val{:openparen}, Val{:abs_amount}, Val{:closeparen}]
-    else
-        Any[Val{:abs_amount}]
-    end
-end
-
 function Base.union(x::FormatSpecification, y::FormatSpecification)
     base = copy(x.reqs)
     add = Queue(FormatRequirement)
