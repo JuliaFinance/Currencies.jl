@@ -1,23 +1,10 @@
-## Monetary & Basket Display Functions ##
+#= Powerful pretty-printing =#
+include("rules.jl")
+include("decimals.jl")
+include("render.jl")
+include("templates.jl")
 
-pad(num, decimals) = join(reverse(digits(num, 10, decimals)))
-
-function curdisplay(num, dec; useunicode=true)
-    minus = useunicode ? '−' : '-'
-    if dec == 0
-        return num < 0 ? "$minus$(abs(num))" : num
-    end
-    unit = 10 ^ dec
-    s, num = sign(num), abs(num)
-    full = fld(num, unit)
-    part = pad(num % unit, dec)
-    if s < 0
-        "$minus$full.$part"
-    else
-        "$full.$part"
-    end
-end
-
+#= Monetary & Basket Display Interface =#
 function Base.show(io::IO, m::Monetary)
     print(io, int(m) / 10.0^decimals(m))
     print(io, currency(m))
@@ -30,8 +17,7 @@ function Base.show(io::IO, b::Basket)
 end
 
 function Base.writemime(io::IO, ::MIME"text/plain", m::Monetary)
-    cur = currency(m)
-    print(io, "$(curdisplay(m.amt, decimals(m))) $cur")
+    print(io, format(m; styles=[:plain]))
 end
 
 function Base.writemime(io::IO, ::MIME"text/plain", b::Basket)
@@ -44,9 +30,7 @@ function Base.writemime(io::IO, ::MIME"text/plain", b::Basket)
 end
 
 function Base.writemime(io::IO, ::MIME"text/latex", m::Monetary)
-    cur = currency(m)
-    num = curdisplay(m.amt, decimals(m); useunicode=false)
-    print(io, "\$$num\\,\\mathrm{$cur}\$")
+    print(io, string('$', format(m; styles=[:latex]), '$'))
 end
 
 function Base.writemime(io::IO, ::MIME"text/markdown", b::Basket)

@@ -109,6 +109,13 @@ end
     @test format(805.11GBP, styles=[:brief, :finance, :european]) ==
         "805,11£"
 
+    # combined LaTeX style
+    @test format(-11.11AUD, styles=[:latex, :finance]) ==
+        "(11.11)\\,\\mathrm{AUD}"
+    @test format(11.11AUD, styles=[:latex, :us]) == "\\mathrm{AUD}\\,11.11"
+    @test format(8.05AUD, styles=[:latex, :brief, :european]) ==
+        "8,05\\mathrm{\\\$}"
+
     # can't combine US & european
     @test_throws Currencies.IncompatibleFormatException format(
         USD, styles=[:us, :european])

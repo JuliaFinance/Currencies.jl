@@ -31,8 +31,7 @@ include("valuate.jl")
 include("investments.jl")
 
 # Interface (display, convenience macro)
-include("display.jl")
-include("format.jl")
+include("format/formatting.jl")
 include("usingcurrencies.jl")
 
 end # module
