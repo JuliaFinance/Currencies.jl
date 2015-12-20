@@ -11,6 +11,9 @@ end
 @usingcurrencies USD, CAD, EUR, GBP, JPY, AUD
 @usingcurrencies CNY
 
+# Data tests
+include("data.jl")
+
 # Basic functionality tests
 include("monetary.jl")
 include("basket.jl")

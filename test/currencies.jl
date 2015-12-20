@@ -58,10 +58,6 @@ end
     @test longsymbol(100EUR) == "€"
     @test longsymbol(Monetary{:GBP}) == "GB£"
     @test longsymbol(Monetary{:AUD, BigInt, 4}) == "AU\$"
-
-    # long symbols should be unique
-    alllongsymbols = values(Currencies.LONG_SYMBOL)
-    @test length(Set(alllongsymbols)) == length(alllongsymbols)
 end
 
 # Currency
