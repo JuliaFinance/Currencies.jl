@@ -15,7 +15,8 @@ export newcurrency!, @usingcustomcurrency
 export format
 
 # Currency data
-include("data.jl")
+include("data/currencies.jl")
+include("data/symbols.jl")
 
 # Monetary type, currencies, and arithmetic
 include("monetary.jl")
