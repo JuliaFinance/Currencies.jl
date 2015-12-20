@@ -99,7 +99,7 @@ function valuate{U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Basket)
     acc / table[U] * one(as)
 end
 
-function valuate{U<:Monetary}(table, as::Type{U}, amount::AbstractMonetary)
+function valuate{U<:Monetary}(table, ::Type{U}, amount::AbstractMonetary)
     valuate(table, filltype(U), amount)
 end
 

@@ -59,7 +59,7 @@ the returned symbol should contain only lowercase letters.
 
 Prefer `iso4217alpha` to this function if a string is desired.
 """
-currency{T}(m::Monetary{T}) = T
+currency{T}(::Monetary{T}) = T
 
 """
     decimals(m::Monetary) → Int
