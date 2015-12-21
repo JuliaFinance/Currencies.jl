@@ -1,9 +1,9 @@
 #= Formatting template compose functions =#
 const LATEX_BACKSLASH_ESCAPE = Set("&%\$#_{}")
 const LATEX_OTHER_ESCAPE = Dict(
-    '~' => "\\textasciitilde",
-    '^' => "\\textasciicircum",
-    '\\' => "\\textbackslash")
+    '~' => "{\\textasciitilde}",
+    '^' => "{\\textasciicircum}",
+    '\\' => "{\\textbackslash}")
 function escapelatex(x)
     result = Char[]
     for char in x
