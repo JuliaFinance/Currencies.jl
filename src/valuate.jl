@@ -103,6 +103,6 @@ function valuate{U<:Monetary}(table, ::Type{U}, amount::AbstractMonetary)
     valuate(table, filltype(U), amount)
 end
 
-function valuate(table, as::Symbol, amount::AbstractMonetary)
-    valuate(table, Monetary{as}, amount)
+function valuate(table, T::Symbol, amount::AbstractMonetary)
+    valuate(table, Monetary{T}, amount)
 end
