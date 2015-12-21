@@ -52,4 +52,6 @@ keyword argument::
 
 Currently, the available styles are: :code:`:finance`, :code:`:us`,
 :code:`:european`, and :code:`:brief`. The :code:`:us` and :code:`:european`
-styles conflict and cannot be used together.
+styles conflict and cannot be used together. A :code:`:latex` style is provided
+to make formatting work nicely in LaTeX math mode, and a :code:`:plain` style
+(which has no requirements) is also provided for consistency.
