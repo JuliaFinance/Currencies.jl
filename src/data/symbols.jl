@@ -7,10 +7,14 @@ const SHORT_SYMBOL = Dict{Symbol, UTF8String}(
     :AFN => "؋",
     :AUD => "\$",
     :CAD => "\$",
+    :CHF => "Fr.",
+    :EEK => "kr",
     :EUR => "€",
     :GBP => "£",
     :JPY => "¥",
     :MGA => "Ar",
+    :NOK => "kr",
+    :NZD => "\$",
     :USD => "\$")
 
 # long symbol: short where possible without being ambiguous
@@ -18,8 +22,10 @@ const LONG_SYMBOL = Dict{Symbol, UTF8String}(
     :AFN => "؋",
     :AUD => "AU\$",
     :CAD => "CA\$",
+    :CHF => "Fr.",
     :EUR => "€",
     :GBP => "GB£",
     :JPY => "¥",
     :MGA => "Ar",
+    :NZD => "NZ\$",
     :USD => "US\$")
