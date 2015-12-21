@@ -39,6 +39,8 @@ function takenonzero(a, b, zero)
         b
     elseif b == zero
         a
+    elseif a == b
+        a
     else throw(IncompatibleFormatException("Can't reconcile $a and $b")) end
 end
 
@@ -92,7 +94,7 @@ reconcile(s::CurrencySymbol, s′::CurrencySymbol) =
         takenonzero(s.location, s′.location, :unspecified),
         takenonzero(s.spacing, s′.spacing, :unspecified),
         takenonzero(s.glued, s′.glued, :unspecified),
-        vcat(s.compose, s′.compose))]
+        s.compose ∪ s′.compose)]
 function reconcile(s::RenderAs, s′::RenderAs)
     @assert s.sym ≡ s′.sym
     allowed = allowable(s.options, s′.options)

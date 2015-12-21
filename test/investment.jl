@@ -5,6 +5,8 @@
     # compoundfv edge cases
     @test compoundfv(1000USD, 0.02, 1.5) == 1030.15USD
     @test compoundfv(1000USD, -0.01, 2) == 980.10USD
+    @test compoundfv(0USD, 0.02, 1) == 0USD
+    @test compoundfv(-USD, 0.02, 1) == -1.02USD
 
     # note π doesn't work directly because Irrational has no one()
     @test compoundfv(1000USD, π-1, 0) == 1000USD

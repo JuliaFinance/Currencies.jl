@@ -18,11 +18,14 @@ include("data.jl")
 include("monetary.jl")
 include("basket.jl")
 
-# Custom & Default currencies
-include("currencies.jl")
+# Currencies
+include("data-access.jl")
 
 # Display tests
 include("display.jl")
+
+# Custom currencies
+include("custom.jl")
 
 # Computations tests
 include("valuation.jl")

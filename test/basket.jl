@@ -1,3 +1,6 @@
+#= Tests for Basket values =#
+@testset "Basket" begin
+
 # Simple arithmetic
 basket_a = StaticBasket(100USD)
 basket_b = StaticBasket(20EUR)
@@ -14,7 +17,7 @@ basket_j = -20EUR - basket_i
 basket_k = DynamicBasket() + basket_j
 basket_l = (DynamicBasket(20USD) * 2 - 20CAD - 40USD) / 2 + 10CAD
 
-@testset "B. — Arith." begin
+@testset "Arithmetic" begin
     @test StaticBasket([100USD, 200USD]) == StaticBasket(300USD)
     @test basket_c == StaticBasket([100USD, 20EUR])
     @test basket_d == StaticBasket([400USD, 80EUR])
@@ -50,7 +53,7 @@ basket_o = zero(basket_m)
 basket_p = zero(DynamicBasket)
 basket_q = DynamicBasket([basket_o, StaticBasket([10USD, 20USD])])
 
-@testset "B. — Cons." begin
+@testset "Constructors" begin
     @test basket_m == StaticBasket([-20EUR, 100JPY])
     @test basket_n == basket_o == StaticBasket() == basket_p == zero(JPY)
     @test basket_q == 30USD
@@ -63,7 +66,7 @@ basket_q = DynamicBasket([basket_o, StaticBasket([10USD, 20USD])])
 end
 
 # Iteration & access
-@testset "B. — Coll." begin
+@testset "As Collection" begin
     @test isempty(collect(StaticBasket([100USD, -100USD])))
     @test basket_g[:EUR] == -5EUR
     @test haskey(StaticBasket([10USD, -10CAD]), :CAD)
@@ -75,7 +78,7 @@ end
 # Dynamic
 basket_dyn = DynamicBasket() + basket_g
 
-@testset "B. — Dynamic" begin
+@testset "Dynamic" begin
     basket_dyn[:CAD] = 10CAD
     @test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD])
     @test haskey(basket_dyn, :USD)
@@ -92,7 +95,7 @@ basket_dyn = DynamicBasket() + basket_g
 end
 
 # Errors
-@testset "B. — Illegal" begin
+@testset "Type Safety" begin
     @test_throws MethodError basket_a * basket_b
     @test_throws MethodError basket_a % basket_b
     @test_throws MethodError basket_a ÷ basket_b
@@ -101,3 +104,5 @@ end
     @test_throws MethodError basket_a > basket_b
     @test_throws AssertionError basket_dyn[:USD] = 100CAD
 end
+
+end  # testset Basket

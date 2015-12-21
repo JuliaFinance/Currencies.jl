@@ -22,12 +22,3 @@ end
     @test Monetary(symb, round(Int, b)) == 9.87USD
     @test sum([k*v for (k, v) in change(167.25EUR)]) == 167.25EUR
 end
-
-# Decimals
-@testset "int()" begin
-    @test int(100JPY) == 100
-    @test int(100USD) == 10000
-    @test int(Monetary(:USD, 25000; precision=3)) == 25000
-    @test int(one(Monetary{:USD, Int, 6})) == 1000000
-    @test int(zero(Monetary{:USD, Int, 8})) == 0
-end

@@ -1,7 +1,8 @@
 # Tests for Monetary values
+@testset "Monetary" begin
 
 # Basic arithmetic
-@testset "M. — Arith." begin
+@testset "Arithmetic" begin
     @test 1USD + 2USD == 3USD
     @test 1USD + 2USD + 3USD == 6USD
     @test 1.5USD * 3 == 4.5USD
@@ -31,7 +32,7 @@
 end
 
 # Type safety
-@testset "M. — Type" begin
+@testset "Type Safety" begin
     @test_throws ArgumentError 1USD + 1CAD
     @test_throws ArgumentError 100JPY - 0USD  # even when zero!
     @test_throws MethodError 5USD * 10CAD
@@ -43,7 +44,7 @@ end
     @test_throws MethodError 10USD % 5        # meaningless
 end
 
-@testset "M. — Comp." begin
+@testset "Comparison" begin
     # Comparisons
     @testset "Monetary — Homogenous Comparisons" begin
         @test 1EUR < 2EUR
@@ -76,7 +77,7 @@ BI_USD = Monetary(:USD, BigInt(100))
 BI_USD2 = one(Monetary{:USD, BigInt})
 BI_USD3 = Monetary(:USD; storage=BigInt)
 I128_USD = one(Monetary{:USD, Int128})
-@testset "M. — Repr." begin
+@testset "Custom Representation" begin
     @test BigInt(2)^100 * BI_USD + 10BI_USD == (BigInt(2)^100 + 10) * BI_USD
 
     # test **equality** — note equivalence is untrue because BigInt
@@ -92,7 +93,7 @@ I128_USD = one(Monetary{:USD, Int128})
 end
 
 # Custom decimals
-@testset "M. — Prec." begin
+@testset "Custom Precision" begin
     flatusd = one(Monetary{:USD, Int, 0})
     millusd = one(Monetary{:USD, Int, 3})
 
@@ -123,7 +124,7 @@ end
     @test int(Monetary(:XSU; precision=0)) == 1
 end
 
-@testset "M. — Cons." begin
+@testset "Constructors" begin
     # the grand constructor test!
     # split up for easy debugging
     @test USD ≡ one(Monetary{:USD})
@@ -150,3 +151,5 @@ end
     @test 0USD ≠ Monetary(:USD, 0; precision=0)
     @test 0USD ≠ Monetary(:USD, BigInt(0))
 end
+
+end  # testset Monetary

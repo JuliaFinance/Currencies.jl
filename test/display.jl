@@ -1,5 +1,7 @@
 # Display methods (show & print & writemime) tests
 
+@testset "Output" begin
+
 @testset "text/plain" begin
     @test contains(stringmime("text/plain", 1USD), "1.00")
     @test contains(stringmime("text/plain", 1JPY), "1")
@@ -52,6 +54,8 @@ end
     # test compatibility between show & print
     @test sprint(show, 0.02USD) == string(0.02USD)
 end
+
+end  # testset output
 
 @testset "format" begin
     # internals
@@ -115,6 +119,16 @@ end
     @test format(11.11AUD, styles=[:latex, :us]) == "\\mathrm{AUD}\\,11.11"
     @test format(8.05AUD, styles=[:latex, :brief, :european]) ==
         "8,05\\mathrm{\\\$}"
+
+    # test declarative nature (duplicates don't matter)
+    @testset "Declarative" begin
+        for style in (:us, :european, :brief, :finance, :latex)
+            for amt in (8000.05AUD, -0.15GBP, 13JPY)
+                @test format(amt, styles=[style]) ==
+                    format(amt, styles=[style, style])
+            end
+        end
+    end
 
     # can't combine US & european
     @test_throws Currencies.IncompatibleFormatException format(

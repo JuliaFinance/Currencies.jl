@@ -1,21 +1,21 @@
-# Valuation — Hard-coded Rates
-rates_a = ExchangeRateTable(:USD => 1.0, :CAD => 0.75)
-rates_b = ExchangeRateTable(Dict(
-    :USD => 1.0,
-    :EUR => 1.3,
-    :GBP => 1.5))
-rates_c = ExchangeRateTable(Date(2015, 12, 02), Dict(
-    :USD => 1.0,
-    :EUR => 1.3,
-    :GBP => 1.5,
-    :CAD => 0.7,
-    :JPY => 0.01))
-rates_d = ExchangeRateTable(
-    Date(2015, 12, 02),
-    :USD => 1.0,
-    :CAD => 0.75)
-
+#= Valuation — Hard-coded Rates =#
 @testset "Valuation" begin
+    rates_a = ExchangeRateTable(:USD => 1.0, :CAD => 0.75)
+    rates_b = ExchangeRateTable(Dict(
+        :USD => 1.0,
+        :EUR => 1.3,
+        :GBP => 1.5))
+    rates_c = ExchangeRateTable(Date(2015, 12, 02), Dict(
+        :USD => 1.0,
+        :EUR => 1.3,
+        :GBP => 1.5,
+        :CAD => 0.7,
+        :JPY => 0.01))
+    rates_d = ExchangeRateTable(
+        Date(2015, 12, 02),
+        :USD => 1.0,
+        :CAD => 0.75)
+
     @test valuate(rates_a, :CAD, 21USD) == 28CAD
     @test valuate(rates_a, :CAD, DynamicBasket([21USD, 10CAD])) == 38CAD
     @test valuate(rates_b, :USD, 10USD) == 10USD
@@ -23,6 +23,7 @@ rates_d = ExchangeRateTable(
     @test valuate(rates_c, :USD, StaticBasket([USD, EUR, GBP])) == 3.8USD
     @test valuate(rates_c, :EUR, 100CAD) == 53.85EUR
     @test valuate(rates_c, :JPY, 1USD) == 100JPY
+    @test valuate(rates_c, :JPY, -1USD) == -100JPY
     @test valuate(rates_c, :USD, StaticBasket([200JPY, EUR])) == 3.3USD
     @test valuate(rates_c, :JPY, 0USD) == 0JPY
     @test valuate(rates_d, :CAD, 3.14CAD) == 3.14CAD
@@ -55,12 +56,12 @@ rates_d = ExchangeRateTable(
     end
 end
 
-# Valuation — ECB data
-rates_e = ecbrates()  # most recent
-rates_f = ecbrates(Date(2015, 08, 05))  # fixed date
-rates_g = ecbrates(Date(2015, 08, 05))  # same as rates_f
-
+#= Valuation — ECB data =#
 @testset "ECB data" begin
+    rates_e = ecbrates()  # most recent
+    rates_f = ecbrates(Date(2015, 08, 05))  # fixed date
+    rates_g = ecbrates(Date(2015, 08, 05))  # same as rates_f
+
     # test cache
     @test rates_e ≡ ecbrates()
     @test rates_f ≡ rates_g
