@@ -1,4 +1,4 @@
-## Monetary type, and low-level operations ##
+#= Monetary type, and low-level operations =#
 
 # Abstract class for Monetary-like things
 """

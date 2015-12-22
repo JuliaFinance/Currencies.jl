@@ -1,4 +1,4 @@
-## Extra data for long and short symbols ##
+#= Extra data for long and short symbols =#
 
 # short symbol: may be ambiguous, take the most commonly-found unicode symbol.
 # NB: couldn't find a good free source of this data, so it's very incomplete.
@@ -8,7 +8,6 @@ const SHORT_SYMBOL = Dict{Symbol, UTF8String}(
     :AUD => "\$",
     :CAD => "\$",
     :CHF => "Fr.",
-    :EEK => "kr",
     :EUR => "€",
     :GBP => "£",
     :JPY => "¥",

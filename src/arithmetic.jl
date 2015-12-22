@@ -1,4 +1,4 @@
-## Monetary Arithmetic functions ##
+#= Monetary Arithmetic functions =#
 
 # numeric operations
 Base.zero{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(0)

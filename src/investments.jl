@@ -4,7 +4,7 @@
 """
     simplefv(amount, interest, periods) → Monetary
 
-Compute the future value of the given monetary amount, at the given interest
+Compute the future value of the given monetary amount, at the given discount
 rate, compounded each period on the principal only. This is known as "simple
 interest"; note that this is very rare in practice. For example, to find the
 future value of \$1000 (US) today in 12 years, at a simple interest rate of 5%
@@ -23,10 +23,11 @@ function simplefv(pv, rate::Real, periods::Real)
     pv * (one(rate) + rate * periods)
 end
 
+
 """
     compoundfv(amount, interest, periods) → Monetary
 
-Compute the future value of the given monetary amount, at the given interest
+Compute the future value of the given monetary amount, at the given discount
 rate, compounded each period. For example, to find the future value of \$1000
 (US) today in 12 years, at an interest rate of 3% per year, compute:
 

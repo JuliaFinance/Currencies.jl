@@ -30,8 +30,9 @@ include("basket.jl")
 include("valuate.jl")
 include("investments.jl")
 
-# Interface (display, convenience macro)
+# Interface (display/formatting, convenience macro)
 include("format/formatting.jl")
 include("usingcurrencies.jl")
+include("custom.jl")
 
 end # module
