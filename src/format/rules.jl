@@ -116,7 +116,7 @@ immutable FormatSpecification
 end
 
 function Base.union(x::FormatSpecification, y::FormatSpecification)
-    base = copy(x.reqs)
+    result = copy(x.reqs)
     add = Queue(FormatRequirement)
     for req in y.reqs
         enqueue!(add, req)
@@ -130,28 +130,28 @@ function Base.union(x::FormatSpecification, y::FormatSpecification)
 
         nextreq = dequeue!(add)
 
-        for i in 1:length(base)
-            req = base[i]
+        for i in 1:length(result)
+            req = result[i]
             if conflict(nextreq, req)
                 # zap the conflicting requirement
-                deleteat!(base, i)
+                deleteat!(result, i)
 
                 # reconcile the two conflicting requirements
                 # then add the mutally agreed requirements later
                 altreqs = reconcile(nextreq, req)
                 foldl(enqueue!, add, altreqs)
 
-                # skip adding to base
+                # skip adding to result
                 @goto endofloop
             end
         end
 
-        # no conflicts, add to base
-        push!(base, nextreq)
+        # no conflicts, add to result
+        push!(result, nextreq)
         @label endofloop
     end
 
-    FormatSpecification(base)
+    FormatSpecification(result)
 end
 
 function Base.get{T<:FormatRequirement}(spec::FormatSpecification, ::Type{T}, d)

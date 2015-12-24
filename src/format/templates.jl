@@ -4,16 +4,16 @@ const LATEX_OTHER_ESCAPE = Dict(
     '~' => "{\\textasciitilde}",
     '^' => "{\\textasciicircum}",
     '\\' => "{\\textbackslash}")
-function escapelatex(x)
+function escapelatex(text)
     result = Char[]
-    for char in x
-        if char ∈ LATEX_BACKSLASH_ESCAPE
+    for c in text
+        if c ∈ LATEX_BACKSLASH_ESCAPE
             push!(result, '\\')
-            push!(result, char)
-        elseif haskey(LATEX_OTHER_ESCAPE, char)
-            append!(result, LATEX_OTHER_ESCAPE[char])
+            push!(result, c)
+        elseif haskey(LATEX_OTHER_ESCAPE, c)
+            append!(result, LATEX_OTHER_ESCAPE[c])
         else
-            push!(result, char)
+            push!(result, c)
         end
     end
     UTF8String(result)

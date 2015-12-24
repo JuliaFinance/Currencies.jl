@@ -1,8 +1,8 @@
 #= Powerful pretty-printing =#
 include("rules.jl")
 include("decimals.jl")
-include("render.jl")
 include("templates.jl")
+include("render.jl")
 
 #= Monetary & Basket Display Interface =#
 function Base.show(io::IO, m::Monetary)
