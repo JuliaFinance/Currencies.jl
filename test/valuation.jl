@@ -67,7 +67,7 @@ end
     @test rates_f ≡ rates_g
 
     # test recent rates object
-    @test rates_e.date + Dates.Day(4) > Date(now())
+    @test rates_e.date + Dates.Day(7) > Date(now())
     @test !isempty(rates_e)
     @test isa(rates_e, ExchangeRateTable)
     @test valuate(rates_e, :USD, 1USD) == 1USD

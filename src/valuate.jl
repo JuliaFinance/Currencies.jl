@@ -27,8 +27,7 @@ Base.getindex(ert::ExchangeRateTable, k) = ert.table[k]
 
 const ECBCache = Dict{Date, ExchangeRateTable}()
 
-function ecbrates_fresh(date=Date(1, 1, 1))
-    datestr = date == Date(1, 1, 1) ? "latest" : string(date)
+function ecbrates_fresh(datestr::AbstractString)
     # get fixer.io data
     resp = Requests.json(get("https://api.fixer.io/$datestr", timeout=15))
     date = Date(resp["date"])
@@ -43,6 +42,8 @@ function ecbrates_fresh(date=Date(1, 1, 1))
     ECBCache[date] = ert
     return ert
 end
+ecbrates_fresh(date::Date) = ecbrates_fresh(string(date))
+ecbrates_fresh() = ecbrates_fresh("latest")
 
 """
     ecbrates()           → ExchangeRateTable
@@ -56,13 +57,13 @@ from the `Requests` package if the connection fails for any reason.
 
 Data is retrieved from https://fixer.io/, and then cached in memory to avoid
 excessive network traffic. Because of the nature of cached data, an application
-running for a long period of time may receive data that is several days (one to
-six) out of date.
+running for a long period of time may receive data that is one week or more out
+of date.
 """
 function ecbrates()
-    date=Date(now())
-    # try last five days
-    for _ in 1:5
+    date=Date(now(Dates.UTC))
+    # try last seven days
+    for _ in 1:7
         if haskey(ECBCache, date)
             return ECBCache[date]
         end
