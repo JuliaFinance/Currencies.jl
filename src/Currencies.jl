@@ -1,6 +1,5 @@
 module Currencies
 
-using DataStructures
 using MacroTools
 using Requests
 

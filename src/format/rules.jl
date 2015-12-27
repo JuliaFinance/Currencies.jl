@@ -115,43 +115,30 @@ immutable FormatSpecification
     reqs::Vector{FormatRequirement}
 end
 
+function Base.push!(spec::FormatSpecification, nextreq::FormatRequirement)
+    for (i, req) in enumerate(spec.reqs)
+        if conflict(nextreq, req)
+            # zap the conflicting requirement
+            deleteat!(spec.reqs, i)
+
+            # reconcile the two conflicting requirements
+            # then add the mutally agreed requirements
+            altreqs = reconcile(nextreq, req)
+            foldl(push!, spec, altreqs)
+            return spec
+        end
+    end
+    # no conflict, return with new requirement
+    push!(spec.reqs, nextreq)
+    spec
+end
+
 function Base.union(x::FormatSpecification, y::FormatSpecification)
-    result = copy(x.reqs)
-    add = Queue(FormatRequirement)
+    result = FormatSpecification(copy(x.reqs))
     for req in y.reqs
-        enqueue!(add, req)
+        push!(result, req)
     end
-
-    while !isempty(add)
-        if length(add) > HARD_LIMIT
-            throw(IncompatibleFormatException(
-                "Reconciliation probably won't converge."))
-        end
-
-        nextreq = dequeue!(add)
-
-        for i in 1:length(result)
-            req = result[i]
-            if conflict(nextreq, req)
-                # zap the conflicting requirement
-                deleteat!(result, i)
-
-                # reconcile the two conflicting requirements
-                # then add the mutally agreed requirements later
-                altreqs = reconcile(nextreq, req)
-                foldl(enqueue!, add, altreqs)
-
-                # skip adding to result
-                @goto endofloop
-            end
-        end
-
-        # no conflicts, add to result
-        push!(result, nextreq)
-        @label endofloop
-    end
-
-    FormatSpecification(result)
+    result
 end
 
 function Base.get{T<:FormatRequirement}(spec::FormatSpecification, ::Type{T}, d)
