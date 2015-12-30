@@ -1,10 +1,9 @@
 #= Digit / Decimal helper functions =#
 
 function digitseparate(amt::Integer, sep::AbstractString, rule::Tuple{Int, Int})
-    ds = digits(amt)
     untilnext = rule[1]
     result = []
-    for d in ds
+    for d in digits(amt)
         if untilnext == 0
             push!(result, sep)
             untilnext = rule[2]

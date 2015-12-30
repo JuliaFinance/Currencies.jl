@@ -18,24 +18,23 @@ function loweramount(spec::FormatSpecification, m::Monetary)
     end
 end
 
-function symbolize(template::Vector, spec::FormatSpecification, m::Monetary)
-    symreq = get(spec, CurrencySymbol, CurrencySymbol())
-    next_template = []
-    desired_symbol = if symreq.symtype == :short
+function resolve_symbol(symtype::Symbol, m::Monetary)
+    if symtype == :short
         shortsymbol(m)
-    elseif symreq.symtype == :long
+    elseif symtype == :long
         longsymbol(m)
     else
         iso4217alpha(m)
     end
-    for f in symreq.compose
-        desired_symbol = f(desired_symbol)
-    end
-    spacing = if symreq.spacing == :none
-        ""
-    else
-        :thin_space
-    end
+end
+
+function symbolize(template::Vector, spec::FormatSpecification, m::Monetary)
+    symreq = get(spec, CurrencySymbol, CurrencySymbol())
+    desired_symbol = foldl(
+        |>, resolve_symbol(symreq.symtype, m), symreq.compose)
+    spacing = symreq.spacing == :none ? "" : :thin_space
+
+    next_template = []
     for item in template
         if item == :symbefore
             if symreq.location == :before && symreq.glued != :require
