@@ -59,8 +59,8 @@ basket_q = DynamicBasket([basket_o, StaticBasket([10USD, 20USD])])
     @test basket_q == 30USD
 
     @testset "Basket — Illegal Construction" begin
-        @test_throws ArgumentError StaticBasket([1, 2, 3])
-        @test_throws ArgumentError DynamicBasket([1USD, (1USD, 2USD, 3)])
+        @test_throws MethodError StaticBasket([1, 2, 3])
+        @test_throws MethodError DynamicBasket([1USD, (1USD, 2USD, 3)])
         @test_throws MethodError one(StaticBasket)
     end
 end

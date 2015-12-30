@@ -9,27 +9,30 @@ abstract Basket <: AbstractMonetary
 iszero(x) = x == zero(x)
 
 # build monetary table
-function buildtable!(table::Dict{Symbol, Monetary}, ms)
-    for m in ms
-        if isa(m, Monetary)
-            if haskey(table, currency(m))
-                table[currency(m)] += m
-            else
-                table[currency(m)] = m
-            end
-        elseif isa(m, Basket)
-            buildtable!(table, m)
-        else
-            throw(ArgumentError(
-                "Value $m cannot be interpreted as a monetary value."))
-        end
+typealias SMDict Dict{Symbol, Monetary}
+function buildtable_one!(table::SMDict, m::Monetary)
+    if haskey(table, currency(m))
+        table[currency(m)] += m
+    else
+        table[currency(m)] = m
     end
     table
 end
+buildtable_one!(table::SMDict, b::Basket) = buildtable!(table, b)
+buildtable!(table::SMDict, ms) = foldl(buildtable_one!, table, ms)
+buildtable(ms) = buildtable!(SMDict(), ms)
 
-function buildtable(ms)
-    table = Dict{Symbol, Monetary}()
-    buildtable!(table, ms)
+# basket constructors
+macro basketinnerconstructor(sym)
+    :($sym(ms::Union{AbstractArray,Tuple}) = new(buildtable(ms))) |> esc
+end
+
+macro basketouterconstructor(sym)
+    quote
+        $sym() = $sym(())
+        Base.convert(::Type{$sym}, m::Monetary) = $sym([m])
+        Base.convert(::Type{$sym}, b::Basket) = $sym(collect(b))
+    end |> esc
 end
 
 """
@@ -54,12 +57,9 @@ basket.
 """
 immutable StaticBasket <: Basket
     table::Dict{Symbol, Monetary}
-    StaticBasket(ms::AbstractArray) = new(buildtable(ms))
-    StaticBasket() = StaticBasket(Monetary[])
+    @basketinnerconstructor StaticBasket
 end
-
-Base.convert(::Type{StaticBasket}, m::Monetary) = StaticBasket([m])
-Base.convert(::Type{StaticBasket}, b::Basket) = StaticBasket(collect(b))
+@basketouterconstructor StaticBasket
 
 """
 A mutable collection of `Monetary` values of various currencies. `DynamicBasket`
@@ -74,12 +74,9 @@ way.
 """
 immutable DynamicBasket <: Basket
     table::Dict{Symbol, Monetary}
-    DynamicBasket(ms::AbstractArray) = new(buildtable(ms))
-    DynamicBasket() = DynamicBasket(Monetary[])
+    @basketinnerconstructor DynamicBasket
 end
-
-Base.convert(::Type{DynamicBasket}, m::Monetary) = DynamicBasket([m])
-Base.convert(::Type{DynamicBasket}, b::Basket) = DynamicBasket(collect(b))
+@basketouterconstructor DynamicBasket
 
 # access methods (for all baskets)
 function Base.length(b::Basket)
@@ -111,17 +108,16 @@ end
 
 # arithmetic methods (for static & dynamic baskets)
 Base.promote_rule(::Type{DynamicBasket}, ::Type{StaticBasket}) = DynamicBasket
-Base.promote_rule{T<:Monetary}(::Type{StaticBasket}, ::Type{T}) = StaticBasket
-Base.promote_rule{T<:Monetary}(::Type{DynamicBasket}, ::Type{T}) = DynamicBasket
+Base.promote_rule{T<:Basket, U<:Monetary}(::Type{T}, ::Type{U}) = T
 
 Base. +{T<:Basket}(b::T, c::T) = T([collect(b); collect(c)])
 Base. +{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) =
     +(promote(b, c)...)
-Base. -{T<:Basket}(b::T) = T([-x for x in collect(b)])
+Base. -{T<:Basket}(b::T) = T([-x for x in b])
 Base. -{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = b + (-c)
-Base. *{T<:Basket}(b::T, k::Real) = T([x * k for x in collect(b)])
-Base. *{T<:Basket}(k::Real, b::T) = T([k * x for x in collect(b)])
-Base. /{T<:Basket}(b::T, k::Real) = T([x / k for x in collect(b)])
+Base. *{T<:Basket}(b::T, k::Real) = T([x * k for x in b])
+Base. *{T<:Basket}(k::Real, b::T) = T([k * x for x in b])
+Base. /{T<:Basket}(b::T, k::Real) = T([x / k for x in b])
 
 # methods for dynamic baskets
 function Base.setindex!(b::DynamicBasket, m::Monetary, k::Symbol)
@@ -133,7 +129,7 @@ function Base.push!(b::DynamicBasket, m::Monetary)
     b
 end
 function Base.push!(b::DynamicBasket, c::Basket)
-    for m in collect(c)
+    for m in c
         b[currency(m)] += m
     end
     b
@@ -147,5 +143,4 @@ Base. =={T<:Basket,U<:Basket}(b::T, c::U) = iszero(b - c)
 const EMPTY_BASKET = StaticBasket()
 Base.zero(::Type{StaticBasket}) = EMPTY_BASKET
 Base.zero(::Type{DynamicBasket}) = DynamicBasket()
-Base.eltype(::Type{StaticBasket}) = Monetary
-Base.eltype(::Type{DynamicBasket}) = Monetary
+Base.eltype{T<:Basket}(::Type{T}) = Monetary
