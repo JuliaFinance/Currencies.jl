@@ -27,14 +27,6 @@ macro basketinnerconstructor(sym)
     :($sym(ms::Union{AbstractArray,Tuple}) = new(buildtable(ms))) |> esc
 end
 
-macro basketouterconstructor(sym)
-    quote
-        $sym() = $sym(())
-        Base.convert(::Type{$sym}, m::Monetary) = $sym([m])
-        Base.convert(::Type{$sym}, b::Basket) = $sym(collect(b))
-    end |> esc
-end
-
 """
 An immutable collection of `Monetary` values of various currencies. Like
 regular `Monetary` values, `StaticBasket` values support basic arithmetic
@@ -59,7 +51,6 @@ immutable StaticBasket <: Basket
     table::Dict{Symbol, Monetary}
     @basketinnerconstructor StaticBasket
 end
-@basketouterconstructor StaticBasket
 
 """
 A mutable collection of `Monetary` values of various currencies. `DynamicBasket`
@@ -76,7 +67,10 @@ immutable DynamicBasket <: Basket
     table::Dict{Symbol, Monetary}
     @basketinnerconstructor DynamicBasket
 end
-@basketouterconstructor DynamicBasket
+
+# basket outer constructors
+Base.call{T<:Basket}(::Type{T}) = T(())
+Base.convert{T<:Basket}(::Type{T}, m::AbstractMonetary) = T((m,))
 
 # access methods (for all baskets)
 function Base.length(b::Basket)
