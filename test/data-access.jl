@@ -30,10 +30,10 @@ end
     @test shortsymbol(Monetary{:AUD, BigInt, 4}) == "\$"
 
     @test longsymbol(:USD) == "US\$"
-    @test longsymbol(:CAD) == "CA\$"
+    @test longsymbol(:CAD) == "C\$"
     @test longsymbol(100EUR) == "€"
     @test longsymbol(Monetary{:GBP}) == "GB£"
-    @test longsymbol(Monetary{:AUD, BigInt, 4}) == "AU\$"
+    @test longsymbol(Monetary{:AUD, BigInt, 4}) == "A\$"
 end
 
 # Currency
