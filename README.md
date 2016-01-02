@@ -11,7 +11,7 @@ Please see [FinancialMarkets.jl](https://github.com/imanuelcostigan/FinancialMar
 This package provides a much simpler interface to using a wide variety of currencies with performant checked arithmetic in Julia. It provides a clean interface for creating currency objects and manipulating them. It is user-friendly and provides some basic but useful features for calculating investments in the REPL.
 
 ## Data Source
-The currency-related information for this package comes from [this Wikipedia page](https://en.wikipedia.org/wiki/ISO_4217#cite_note-divby5-9).
+The currency-related information for this package comes from [this Wikipedia page](https://en.wikipedia.org/wiki/ISO_4217#cite_note-divby5-9), the official ISO standard, and other Wikipedia pages. It is compiled manually and may be in error; please do submit a pull request to correct any errors.
 
 ## Usage
 For a full documentation, [read the docs](http://currenciesjl.readthedocs.org/en/latest/). Please file any corrections or missing parts of the documentation as issues, or even better, send in a pull request. Following is a brief guide to getting started.

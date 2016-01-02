@@ -5,26 +5,35 @@ one is desired, use `DynamicBasket`.
 """
 abstract Basket <: AbstractMonetary
 
-# helper method
+# helper methods
 iszero(x) = x == zero(x)
+function deleteifzero!{T}(d::Associative{T}, k)
+    if iszero(d[k])
+        delete!(d, k)
+    end
+    d
+end
 
 # build monetary table
 typealias SMDict Dict{Symbol, Monetary}
-function buildtable_one!(table::SMDict, m::Monetary)
-    if haskey(table, currency(m))
-        table[currency(m)] += m
+function buildtable!(table::SMDict, m::Monetary)
+    cur = currency(m)
+    if haskey(table, cur)
+        table[cur] += m
     else
-        table[currency(m)] = m
+        table[cur] = m
     end
-    table
+    deleteifzero!(table, cur)
 end
-buildtable_one!(table::SMDict, b::Basket) = buildtable!(table, b)
-buildtable!(table::SMDict, ms) = foldl(buildtable_one!, table, ms)
+buildtable!(table::SMDict, ms) = foldl(buildtable!, table, ms)
 buildtable(ms) = buildtable!(SMDict(), ms)
 
 # basket constructors
-macro basketinnerconstructor(sym)
-    :($sym(ms::Union{AbstractArray,Tuple}) = new(buildtable(ms))) |> esc
+macro definebasket(sym)
+    quote
+        table::SMDict
+        $sym(ms::Union{AbstractArray,Tuple}) = new(buildtable(ms))
+    end |> esc
 end
 
 """
@@ -48,8 +57,7 @@ basket.
     end
 """
 immutable StaticBasket <: Basket
-    table::Dict{Symbol, Monetary}
-    @basketinnerconstructor StaticBasket
+    @definebasket StaticBasket
 end
 
 """
@@ -64,8 +72,7 @@ way.
     push!(basket, 10GBP) # DynamicBasket([3USD, 2EUR, 10GBP])
 """
 immutable DynamicBasket <: Basket
-    table::Dict{Symbol, Monetary}
-    @basketinnerconstructor DynamicBasket
+    @definebasket DynamicBasket
 end
 
 # basket outer constructors
@@ -73,32 +80,15 @@ Base.call{T<:Basket}(::Type{T}) = T(())
 Base.convert{T<:Basket}(::Type{T}, m::AbstractMonetary) = T((m,))
 
 # access methods (for all baskets)
-function Base.length(b::Basket)
-    acc = 0
-    for _ in b
-        acc += 1
-    end
-    acc
-end
+Base.length(b::Basket) = length(b.table)
 Base.haskey(b::Basket, k) = haskey(b.table, k) && !iszero(b.table[k])
 Base.getindex(b::Basket, T::Symbol) = get(b.table, T, zero(Monetary{T}))
 Base.start(b::Basket) = start(b.table)
 function Base.next(b::Basket, s)
-    (k, v), s = next(b.table, s)
-    if iszero(v)
-        next(b, s)
-    else
-        v, s
-    end
+    (_, v), s = next(b.table, s)
+    v, s
 end
-function Base.done(b::Basket, s)
-    if done(b.table, s)
-        true
-    else
-        (k, v), s = next(b.table, s)
-        iszero(v) && done(b, s)
-    end
-end
+Base.done(b::Basket, s) = done(b.table, s)
 
 # arithmetic methods (for static & dynamic baskets)
 Base.promote_rule(::Type{DynamicBasket}, ::Type{StaticBasket}) = DynamicBasket
@@ -117,17 +107,18 @@ Base. /{T<:Basket}(b::T, k::Real) = T([x / k for x in b])
 function Base.setindex!(b::DynamicBasket, m::Monetary, k::Symbol)
     @assert currency(m) == k "Monetary value type does not match currency"
     b.table[k] = m
+    deleteifzero!(b.table, k)
+    m
 end
 function Base.push!(b::DynamicBasket, m::Monetary)
     b[currency(m)] += m
     b
 end
-function Base.push!(b::DynamicBasket, c::Basket)
-    for m in c
-        b[currency(m)] += m
-    end
-    b
-end
+
+# this method is here only for consistency with the constructor
+# probably add! is a better name for all these methods, but arguably push!
+# is not a pun.
+Base.push!(b::DynamicBasket, c::Basket) = foldl(push!, b, c)
 
 # other methods (eltype, iszero, zero, ==)
 iszero(b::Basket) = isempty(b)
