@@ -6,8 +6,7 @@ macro flexible(assignment)
     symb = assignment.args[1].args[1]
     quote
         $assignment
-        $symb{T,U,V}(::Type{Monetary{T,U,V}}) = $symb(T)
-        $symb{T<:Monetary}(::Type{T}) = $symb(filltype(T))
+        $symb{U<:Monetary}(::Type{U}) = $symb(U.parameters[1])
         $symb(m::Monetary) = $symb(typeof(m))
     end |> esc
 end
