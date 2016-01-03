@@ -25,6 +25,8 @@ function buildtable!(table::SMDict, m::Monetary)
     end
     deleteifzero!(table, cur)
 end
+buildtable!(table::SMDict, m::Number) =
+    throw(ArgumentError("Numbers not supported in Baskets"))
 buildtable!(table::SMDict, ms) = foldl(buildtable!, table, ms)
 buildtable(ms) = buildtable!(SMDict(), ms)
 
