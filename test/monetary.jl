@@ -121,7 +121,7 @@ end
     @test_throws ArgumentError Monetary(:XAU, 100)
 
     @test Monetary(:XAU; precision=2) ≡ one(Monetary{:XAU,Int,2})
-    @test int(Monetary(:XSU; precision=0)) == 1
+    @test Monetary(:XSU; precision=0).val == 1
 end
 
 @testset "Constructors" begin

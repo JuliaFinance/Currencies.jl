@@ -85,8 +85,8 @@ function render(template::Vector, spec::FormatSpecification, m::Monetary)
     digisep = get(spec, DigitSeparator, DigitSeparator(""))
 
     prec = decimals(m)
-    intpart = abs(int(m)) ÷ 10^prec
-    floatpart = abs(int(m)) % 10^prec
+    intpart = abs(m.val) ÷ 10^prec
+    floatpart = abs(m.val) % 10^prec
 
     syms = getsymboltable(spec)
     next_template = []
@@ -94,7 +94,7 @@ function render(template::Vector, spec::FormatSpecification, m::Monetary)
         if item == :amount
             push!(next_template, digitseparate(intpart, digisep))
             if prec != 0
-                push!(next_template, decisep.sep, pad(floatpart, prec))
+                push!(next_template, decisep.sep, lpad(floatpart, prec, '0'))
             end
         elseif haskey(syms, item)
             push!(next_template, syms[item])

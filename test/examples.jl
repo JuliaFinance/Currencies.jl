@@ -2,7 +2,7 @@
 
 # Manual control
 money = 1USD
-magn = int(money)
+magn = money.val
 symb = currency(money)
 a = π * magn
 b = π * a

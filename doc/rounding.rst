@@ -45,7 +45,7 @@ For example::
 
   @usingcurrencies USD
   money = 1USD                   # 1 USD
-  magn = int(money)              # 100
+  magn = money.val               # 100
   symb = currency(money)         # :USD
   a = π * magn                   # 314.159265...
   b = π * a                      # 986.960440...

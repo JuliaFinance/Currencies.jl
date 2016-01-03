@@ -39,7 +39,7 @@ number of decimal points to keep after the major denomination:
     Monetary(:USD, BigInt(10000); precision=4)  # 1.0000 USD
 """
 immutable Monetary{T, U, V} <: AbstractMonetary
-    amt::U
+    val::U
 end
 
 function Monetary(T::Symbol, x; precision=decimals(T))

@@ -17,5 +17,3 @@ end
 function digitseparate(amt::Integer, dsrule::DigitSeparator)
     digitseparate(amt, dsrule.sep, dsrule.rule)
 end
-
-pad(num, decimals) = join(reverse(digits(num, 10, decimals)))
