@@ -24,10 +24,6 @@ function best(x)
 end
 
 #= Format Specification rules =#
-
-# limit for extremely problematic (i.e. impossible) formats
-const HARD_LIMIT = 1000
-
 abstract FormatRequirement
 
 type IncompatibleFormatException <: Exception
