@@ -99,6 +99,10 @@ end  # testset output
     @test format(-0.11EUR, styles=[:european, :finance]) == "(0,11) EUR"
     @test format(0AUD, styles=[:european, :finance]) == "— AUD"
 
+    # local style
+    @test format(1000AUD, styles=[:local]) == "AUD 1000.00"
+    @test format(1000EUR, styles=[:local]) == "1000.00 EUR"
+
     # brief style
     @test format(-15USD, styles=[:brief]) == "−15.00\$"
     @test format(8.05CAD, styles=[:brief]) == "8.05\$"

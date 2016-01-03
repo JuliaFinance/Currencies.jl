@@ -51,7 +51,9 @@ keyword argument::
   (700,00) EUR
 
 Currently, the available styles are: :code:`:finance`, :code:`:us`,
-:code:`:european`, and :code:`:brief`. The :code:`:us` and :code:`:european`
-styles conflict and cannot be used together. A :code:`:latex` style is provided
-to make formatting work nicely in LaTeX math mode, and a :code:`:plain` style
-(which has no requirements) is also provided for consistency.
+:code:`:european`, :code:`:local`, and :code:`:brief`. The :code:`local` style
+attempts to use the convention in the majority of areas where the particular
+currency is used. The :code:`:us`, :code:`:european`, and :code:`:local` styles
+conflict and cannot be used together. A :code:`:latex` style is provided to make
+formatting work nicely in LaTeX math mode, and a :code:`:plain` style (which has
+no requirements) is also provided for consistency.

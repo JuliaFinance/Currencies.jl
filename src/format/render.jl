@@ -28,8 +28,30 @@ function resolve_symbol(symtype::Symbol, m::Monetary)
     end
 end
 
+"""
+Compile the symbol requirement to a simplified form.
+
+In the simplified form, the `location` field is guaranteed to take the value of
+`:before` or `:after`.
+"""
+function compile(symreq::CurrencySymbol, m::Monetary)
+    loc = if symreq.location == :dependent
+        get(LOCAL_SYMBOL_LOCATION, currency(m), :after)
+    elseif symreq.location == :before
+        :before
+    else  # :unspecified or :after
+        :after
+    end
+    CurrencySymbol(
+        symreq.symtype,
+        loc,
+        symreq.spacing,
+        symreq.glued,
+        symreq.compose)
+end
+
 function symbolize(template::Vector, spec::FormatSpecification, m::Monetary)
-    symreq = get(spec, CurrencySymbol, CurrencySymbol())
+    symreq = compile(get(spec, CurrencySymbol, CurrencySymbol()), m)
     desired_symbol = foldl(
         |>, resolve_symbol(symreq.symtype, m), symreq.compose)
     spacing = symreq.spacing == :none ? "" : :thin_space
@@ -48,7 +70,7 @@ function symbolize(template::Vector, spec::FormatSpecification, m::Monetary)
         elseif item == :amount && symreq.glued == :require
             if symreq.location == :before
                 push!(next_template, desired_symbol, spacing, item)
-            elseif symreq.location ∈ (:after, :dependent, :unspecified)
+            elseif symreq.location == :after
                 push!(next_template, item, spacing, desired_symbol)
             end
         else

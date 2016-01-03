@@ -40,4 +40,6 @@ const REQUIREMENTS = Dict(
         RenderAs(:minus_sign, Dict("-" => 0)),
         RenderAs(:zero_dash, Dict("\\textrm{---}" => 0)),
         RenderAs(:thin_space, Dict("\\," => 0))]),
-    :plain => FormatSpecification([]))
+    :plain => FormatSpecification([]),
+    :local => FormatSpecification([
+        CurrencySymbol(location=:dependent)]))

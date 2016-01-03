@@ -16,6 +16,7 @@ export format
 # Currency data
 include("data/currencies.jl")
 include("data/symbols.jl")
+include("data/locale.jl")
 
 # Monetary type, currencies, and arithmetic
 include("monetary.jl")
