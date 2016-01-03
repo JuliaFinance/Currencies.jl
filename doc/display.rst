@@ -50,10 +50,16 @@ keyword argument::
   julia> format(-700EUR; styles=[:european, :finance])
   (700,00) EUR
 
-Currently, the available styles are: :code:`:finance`, :code:`:us`,
-:code:`:european`, :code:`:local`, and :code:`:brief`. The :code:`local` style
-attempts to use the convention in the majority of areas where the particular
-currency is used. The :code:`:us`, :code:`:european`, and :code:`:local` styles
-conflict and cannot be used together. A :code:`:latex` style is provided to make
-formatting work nicely in LaTeX math mode, and a :code:`:plain` style (which has
-no requirements) is also provided for consistency.
+Currently, the available general styles are :code:`:finance` and :code:`:brief`.
+The :code:`finance` style formats negative numbers in a way familiar to
+accountants. The :code:`brief` style enforces shorter symbols and reduced
+spacing.
+
+The available local styles are :code:`:us`, :code:`:european`, :code:`indian`,
+:code:`:local`. The :code:`local` style attempts to use the convention in the
+majority of areas where the particular currency is used. Local styles almost
+certainly conflict, and at most one of these can be used at once.
+
+A :code:`:latex` style is provided to make formatting work nicely in LaTeX math
+mode, and a :code:`:plain` style (which has no requirements) is also provided
+for consistency.

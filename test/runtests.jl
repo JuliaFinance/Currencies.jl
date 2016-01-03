@@ -8,8 +8,8 @@ else
 end
 
 # Get currencies for tests
-@usingcurrencies USD, CAD, EUR, GBP, JPY, AUD
-@usingcurrencies CNY
+@usingcurrencies USD, CAD, EUR, GBP, JPY, AUD, INR
+@usingcurrencies CNY  # test one-currency version
 
 # Data tests
 include("data.jl")

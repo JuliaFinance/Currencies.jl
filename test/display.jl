@@ -88,6 +88,9 @@ end  # testset output
     @test format(12345678.90GBP, styles=[:european]) == "12.345.678,90 GBP"
     @test format(0USD, styles=[:european]) == "0,00 USD"
 
+    # indian style
+    @test format(20000000INR, styles=[:indian]) == "INR 2,00,00,000.00"
+
     # combined us & finance style
     @test format(-1100.55USD, styles=[:us, :finance]) == "USD (1,100.55)"
     @test format(805.03CAD, styles=[:us, :finance]) == "CAD 805.03"

@@ -33,6 +33,10 @@ const REQUIREMENTS = Dict(
         DigitSeparator("."),
         DecimalSeparator(","),
         CurrencySymbol(location=:after)]),
+    :indian => FormatSpecification([
+        DigitSeparator(",", (3, 2)),
+        DecimalSeparator("."),
+        CurrencySymbol(location=:before)]),
     :brief => FormatSpecification([
         CurrencySymbol(symtype=:short, spacing=:none, glued=:require)]),
     :latex => FormatSpecification([
