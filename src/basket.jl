@@ -124,8 +124,8 @@ Base.push!(b::DynamicBasket, c::Basket) = foldl(push!, b, c)
 
 # other methods (eltype, iszero, zero, ==)
 iszero(b::Basket) = isempty(b)
-Base. =={T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = iszero(b - c)
-Base. =={T<:Basket,U<:Basket}(b::T, c::U) = iszero(b - c)
+Base. =={T<:Basket,U<:AbstractMonetary}(b::T, c::U) = iszero(b - c)
+Base. =={T<:AbstractMonetary,U<:Basket}(b::T, c::U) = c == b
 
 const EMPTY_BASKET = StaticBasket()
 Base.zero(::Type{StaticBasket}) = EMPTY_BASKET
