@@ -21,7 +21,6 @@ Base.zero{T<:AbstractMonetary}(::T) = zero(T)
 Base.one{T<:AbstractMonetary}(::T) = one(T)
 
 # comparisons
-Base. ==(::Monetary, ::Monetary) = false
 Base. =={T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = m.val == n.val
 Base.isless{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
     isless(m.val, n.val)
