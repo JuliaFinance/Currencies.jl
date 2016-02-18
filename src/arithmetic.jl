@@ -29,12 +29,6 @@ Base.isless{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
 Base. +(m::AbstractMonetary) = m
 Base. -{T,U,V}(m::Monetary{T,U,V}) = Monetary{T,U,V}(-m.val)
 
-# descriptive error messages for mixed arithmetic
-Base. +(x::Monetary, y::Monetary) = throw(ArgumentError(
-    "cannot add values of different types $(typeof(x)) and $(typeof(y))"))
-Base. -(x::Monetary, y::Monetary) = throw(ArgumentError(
-    "cannot subtract values of different types $(typeof(x)) and $(typeof(y))"))
-
 # arithmetic operations
 Base. +{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
     Monetary{T,U,V}(m.val + n.val)

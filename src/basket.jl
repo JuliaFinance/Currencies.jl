@@ -97,8 +97,8 @@ Base.promote_rule(::Type{DynamicBasket}, ::Type{StaticBasket}) = DynamicBasket
 Base.promote_rule{T<:Basket, U<:Monetary}(::Type{T}, ::Type{U}) = T
 
 Base. +{T<:Basket}(b::T, c::T) = T([collect(b); collect(c)])
-Base. +{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) =
-    +(promote(b, c)...)
+Base. +{T<:Basket,U<:AbstractMonetary}(b::T, c::U) = +(promote(b, c)...)
+Base. +{T<:AbstractMonetary,U<:Basket}(b::T, c::U) = c + b
 Base. -{T<:Basket}(b::T) = T([-x for x in b])
 Base. -{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = b + (-c)
 Base. *{T<:Basket}(b::T, k::Real) = T([x * k for x in b])

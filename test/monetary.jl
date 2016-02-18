@@ -33,8 +33,8 @@ end
 
 # Type safety
 @testset "Type Safety" begin
-    @test_throws ArgumentError 1USD + 1CAD
-    @test_throws ArgumentError 100JPY - 0USD  # even when zero!
+    @test_throws MethodError 1USD + 1CAD
+    @test_throws MethodError 100JPY - 0USD  # even when zero!
     @test_throws MethodError 5USD * 10CAD
     @test_throws MethodError 5USD * 10USD
     @test_throws MethodError 1USD + 1
@@ -87,8 +87,8 @@ I128_USD = one(Monetary{:USD, Int128})
     @test typemin(Int128) * I128_USD ≡ typemax(Int128) * I128_USD + I128_USD
 
     # don't mix
-    @test_throws ArgumentError BI_USD + USD
-    @test_throws ArgumentError BI_USD - I128_USD
+    @test_throws MethodError BI_USD + USD
+    @test_throws MethodError BI_USD - I128_USD
     @test_throws MethodError BI_USD / I128_USD
 end
 
@@ -112,7 +112,7 @@ end
     # Absolutely no mixing (surprising behaviour?)
     @test zero(flatusd) ≠ 0USD
     @test_throws MethodError flatusd ≥ USD
-    @test_throws ArgumentError flatusd + millusd
+    @test_throws MethodError flatusd + millusd
     @test_throws MethodError flatusd / millusd
 
     # Special metals — precision required
