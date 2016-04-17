@@ -11,8 +11,9 @@
     @test 1.11USD * 999 == 1108.89USD
     @test -1USD == -(1USD)
     @test +20USD == 20USD
-    @test 1USD == one(USD)
+    @test 1USD == oftype(USD, 1)
     @test 1USD == USD
+    @test one(25USD) ≡ 1
 
     @testset "Division" begin
         @test 10USD / 1USD == 10.0
@@ -57,7 +58,7 @@ end
         # immutable types should be **equivalent**
         @test 10USD ≡ 10USD
         @test zero(USD) ≡ 0USD
-        @test -one(USD) ≡ +(-USD)
+        @test -oftype(USD, 1) ≡ +(-USD)
     end
 
     # Type safety for comparisons
@@ -74,9 +75,9 @@ end
 
 # Big int monetary
 BI_USD = Monetary(:USD, BigInt(100))
-BI_USD2 = one(Monetary{:USD, BigInt})
+BI_USD2 = convert(Monetary{:USD, BigInt}, 1)
 BI_USD3 = Monetary(:USD; storage=BigInt)
-I128_USD = one(Monetary{:USD, Int128})
+I128_USD = convert(Monetary{:USD, Int128}, 1)
 @testset "Custom Representation" begin
     @test BigInt(2)^100 * BI_USD + 10BI_USD == (BigInt(2)^100 + 10) * BI_USD
 
@@ -94,8 +95,8 @@ end
 
 # Custom decimals
 @testset "Custom Precision" begin
-    flatusd = one(Monetary{:USD, Int, 0})
-    millusd = one(Monetary{:USD, Int, 3})
+    flatusd = convert(Monetary{:USD, Int, 0}, 1)
+    millusd = convert(Monetary{:USD, Int, 3}, 1)
 
     # Constructor equivalence
     @test flatusd ≡ Monetary(:USD, 1; precision=0)
@@ -120,15 +121,15 @@ end
     @test_throws ArgumentError Monetary(:XAU)
     @test_throws ArgumentError Monetary(:XAU, 100)
 
-    @test Monetary(:XAU; precision=2) ≡ one(Monetary{:XAU,Int,2})
+    @test Monetary(:XAU; precision=2) ≡ convert(Monetary{:XAU,Int,2}, 1)
     @test Monetary(:XSU; precision=0).val == 1
 end
 
 @testset "Constructors" begin
     # the grand constructor test!
     # split up for easy debugging
-    @test USD ≡ one(Monetary{:USD})
-    @test USD ≡ one(Monetary{:USD,Int,2})
+    @test USD ≡ convert(Monetary{:USD}, 1)
+    @test USD ≡ convert(Monetary{:USD,Int,2}, 1)
     @test USD ≡ Monetary(:USD)
     @test USD ≡ Monetary(:USD; storage=Int)
     @test USD ≡ Monetary(:USD; precision=2)

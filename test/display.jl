@@ -15,9 +15,9 @@
     @test stringmime("text/plain", +USD) == "1.00 USD"
     @test stringmime("text/plain", -USD) == "−1.00 USD"
 
-    @test stringmime("text/plain", one(Monetary{:USD, BigInt, 5})) ==
+    @test stringmime("text/plain", convert(Monetary{:USD, BigInt, 5}, 1)) ==
         "1.00000 USD"
-    @test stringmime("text/plain", -one(Monetary{:JPY, Int, 2})) ==
+    @test stringmime("text/plain", -Monetary(:JPY, precision=2)) ==
         "−1.00 JPY"
     @test stringmime("text/plain", 7.2512Monetary(:XAU; precision=4)) ==
         "7.2512 XAU"

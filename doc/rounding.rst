@@ -61,7 +61,7 @@ precision is necessary. The precision (the number of decimal points after the
 major currency unit) can be controlled as a third type parameter to
 :class:`Monetary`::
 
-  julia> USD_M = one(Monetary{:USD, Int, 3})
+  julia> USD_M = convert(Monetary{:USD, Int, 3}, 1)
   1.000 USD
 
   julia> 10USD_M + 11.004USD_M
@@ -70,7 +70,7 @@ major currency unit) can be controlled as a third type parameter to
 Sometimes it is useful to override the second parameter too, to change the
 underlying storage precision::
 
-  julia> USD_M = one(Monetary{:USD, Int128, 3})
+  julia> USD_M = convert(Monetary{:USD, Int128, 3}, 1)
   1.000 USD
 
   julia> 1267650600228229401496703205376USD_M

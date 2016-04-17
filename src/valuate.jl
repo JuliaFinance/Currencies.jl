@@ -88,7 +88,7 @@ exchange rate table can either be an `ExchangeRateTable` or any other
 """
 function valuate{T,U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Monetary{T})
     rate = table[T] / table[U]
-    float(amount) * rate * one(as)
+    float(amount) * rate * convert(as, 1)
 end
 
 function valuate{U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Basket)
@@ -97,7 +97,7 @@ function valuate{U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Basket)
         from = currency(m)
         acc += float(m) * table[from]
     end
-    acc / table[U] * one(as)
+    acc / table[U] * convert(as, 1)
 end
 
 function valuate{U<:Monetary}(table, ::Type{U}, amount::AbstractMonetary)

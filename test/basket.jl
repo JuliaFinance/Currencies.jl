@@ -57,11 +57,11 @@ basket_q = DynamicBasket([basket_o, StaticBasket([10USD, 20USD])])
     @test basket_m == StaticBasket([-20EUR, 100JPY])
     @test basket_n == basket_o == StaticBasket() == basket_p == zero(JPY)
     @test basket_q == 30USD
+    @test one(StaticBasket) ≡ 1
 
     @testset "Basket — Illegal Construction" begin
         @test_throws Exception StaticBasket([1, 2, 3])
         @test_throws Exception DynamicBasket([1USD, (1USD, 2USD, 3)])
-        @test_throws MethodError one(StaticBasket)
     end
 end
 

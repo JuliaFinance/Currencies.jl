@@ -58,9 +58,9 @@ end
     @test (-USD).val == -100
     @test (100JPY).val == 100
     @test (100USD).val == 10000
-    @test (Monetary(:USD, 25000; precision=3)).val == 25000
-    @test (one(Monetary{:USD, Int, 6})).val == 1000000
-    @test (zero(Monetary{:USD, Int, 8})).val == 0
+    @test Monetary(:USD, 25000; precision=3).val == 25000
+    @test Monetary(:USD; precision=6).val == 1000000
+    @test zero(Monetary{:USD, Int, 8}).val == 0
 end
 
 end  # testset Data Access

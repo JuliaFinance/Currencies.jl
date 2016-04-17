@@ -78,7 +78,7 @@ immutable DynamicBasket <: Basket
 end
 
 # basket outer constructors
-Base.call{T<:Basket}(::Type{T}) = T(())
+(::Type{T}){T<:Basket}() = T(())
 Base.convert{T<:Basket}(::Type{T}, m::AbstractMonetary) = T((m,))
 
 # access methods (for all baskets)
@@ -130,4 +130,5 @@ Base. =={T<:AbstractMonetary,U<:Basket}(b::T, c::U) = c == b
 const EMPTY_BASKET = StaticBasket()
 Base.zero(::Type{StaticBasket}) = EMPTY_BASKET
 Base.zero(::Type{DynamicBasket}) = DynamicBasket()
+Base.one{T<:Basket}(::Type{T}) = 1
 Base.eltype{T<:Basket}(::Type{T}) = Monetary

@@ -39,9 +39,6 @@ than others::
   julia> Monetary(:USD; storage=BigInt)
   1.00 USD
 
-  julia> one(Monetary{:USD})
-  1.00 USD
-
   julia> zero(Monetary{:USD})
   0.00 USD
 
@@ -50,6 +47,9 @@ than others::
 
   julia> Monetary(:USD, 314)
   3.14 USD
+
+  julia> convert(Monetary{:USD, Int, 4}, 1)
+  1.0000 USD
 
 Note in particular that last one! The second argument to :class:`Monetary`, if
 provided, should be an integer value. Avoid this constructor if possible.
@@ -60,3 +60,13 @@ provided, should be an integer value. Avoid this constructor if possible.
    consistently used. But if they're ever used in conjunction alongside the
    default versions of the same currency, undesirable behavior will result.
    Stick to the defaults if you do not need more precision.
+
+Caution with `one`
+------------------
+
+Note that the :func:`one` method returns the multiplicative identity. For
+currencies, this identity does not have a unit. That means that the type
+:func:`one` returns may be unintuitive::
+
+  julia> one(Monetary{:USD})
+  1

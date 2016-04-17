@@ -2,8 +2,10 @@
 
 # numeric operations
 Base.zero{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(0)
-Base.one{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(10^V)
 Base.zero{T<:Monetary}(::Type{T}) = zero(filltype(T))
+
+# NB: one returns multiplicative identity, which does not have units
+Base.one{T,U,V}(::Type{Monetary{T,U,V}}) = one(U)
 Base.one{T<:Monetary}(::Type{T}) = one(filltype(T))
 Base.float(m::Monetary) = m.val / 10.0^decimals(m)
 
