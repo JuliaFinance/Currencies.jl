@@ -2,6 +2,7 @@ module Currencies
 
 using MacroTools
 using Requests
+using Compat
 
 # Exports
 export AbstractMonetary, Monetary

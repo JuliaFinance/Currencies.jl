@@ -78,7 +78,7 @@ immutable DynamicBasket <: Basket
 end
 
 # basket outer constructors
-(::Type{T}){T<:Basket}() = T(())
+@compat (::Type{T}){T<:Basket}() = T(())
 Base.convert{T<:Basket}(::Type{T}, m::AbstractMonetary) = T((m,))
 
 # access methods (for all baskets)
