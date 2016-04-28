@@ -130,6 +130,7 @@ end
     # split up for easy debugging
     @test USD ≡ convert(Monetary{:USD}, 1)
     @test USD ≡ convert(Monetary{:USD,Int,2}, 1)
+    @test 2USD ≡ oftype(USD, 2)
     @test USD ≡ Monetary(:USD)
     @test USD ≡ Monetary(:USD; storage=Int)
     @test USD ≡ Monetary(:USD; precision=2)

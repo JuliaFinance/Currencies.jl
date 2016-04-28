@@ -68,6 +68,6 @@ filltype{T}(::Type{Monetary{T}}) = Monetary{T, Int, decimals(T)}
 filltype{T,U}(::Type{Monetary{T,U}}) = Monetary{T, U, decimals(T)}
 
 function Base.convert{T,U,V}(::Type{Monetary{T,U,V}}, x::Number)
-    Monetary{T,U,V}(round(10^V))
+    Monetary{T,U,V}(round(U, x * 10^V))
 end
 Base.convert{T<:Monetary}(::Type{T}, x::Number) = convert(filltype(T), x)
