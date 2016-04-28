@@ -29,13 +29,15 @@
         @test fld(-10USD, 3USD) == -4
         @test fldmod(-10USD, 3USD) == (-4, 2USD)
 
-        @test mod1(10USD, 3USD) == 1USD
-        @test fld1(10USD, 3USD) == 4
-        @test mod1(-10USD, 3USD) == 2USD
-        @test fld1(-10USD, 3USD) == -3
-        @test mod1(9USD, 3USD) == 3USD
-        @test fld1(9USD, 3USD) == 3
-        @test fldmod1(9USD, 3USD) == (3, 3USD)
+        if VERSION ≥ v"0.5-"
+            @test mod1(10USD, 3USD) == 1USD
+            @test fld1(10USD, 3USD) == 4
+            @test mod1(-10USD, 3USD) == 2USD
+            @test fld1(-10USD, 3USD) == -3
+            @test mod1(9USD, 3USD) == 3USD
+            @test fld1(9USD, 3USD) == 3
+            @test fldmod1(9USD, 3USD) == (3, 3USD)
+        end
     end
 
     @testset "Number-like" begin

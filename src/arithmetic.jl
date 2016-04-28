@@ -44,9 +44,17 @@ Base. /{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = m.val / n.val
 Base. /(m::Monetary, f::Real) = m * (1/f)
 
 # Note that quotient is an integer, but remainder is a monetary value.
-for (dv, rm, dvrm) in ((:div, :rem, :divrem),
-                       (:fld, :mod, :fldmod),
-                       (:fld1, :mod1, :fldmod1))
+
+const DIVS = if VERSION < v"0.5-"
+    ((:div, :rem, :divrem),
+     (:fld, :mod, :fldmod))
+else
+    ((:div, :rem, :divrem),
+     (:fld, :mod, :fldmod),
+     (:fld1, :mod1, :fldmod1))
+end
+
+for (dv, rm, dvrm) in DIVS
     @eval function Base.$(dvrm){T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V})
         quotient, remainder = $(dvrm)(m.val, n.val)
         quotient, Monetary{T,U,V}(remainder)
