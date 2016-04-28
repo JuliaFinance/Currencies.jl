@@ -44,10 +44,14 @@ Base. /{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = m.val / n.val
 Base. /(m::Monetary, f::Real) = m * (1/f)
 
 # Note that quotient is an integer, but remainder is a monetary value.
-function Base.divrem{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V})
-    quotient, remainder = divrem(m.val, n.val)
-    quotient, Monetary{T,U,V}(remainder)
+for (dv, rm, dvrm) in ((:div, :rem, :divrem),
+                       (:fld, :mod, :fldmod),
+                       (:fld1, :mod1, :fldmod1))
+    @eval function Base.$(dvrm){T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V})
+        quotient, remainder = $(dvrm)(m.val, n.val)
+        quotient, Monetary{T,U,V}(remainder)
+    end
+    @eval Base.$(dv){T<:Monetary}(m::T, n::T) = $(dv)(m.val, n.val)
+    @eval Base.$(rm){T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
+        Monetary{T,U,V}($(rm)(m.val, n.val))
 end
-Base.div{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = div(m.val, n.val)
-Base.rem{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
-    Monetary{T,U,V}(rem(m.val, n.val))
