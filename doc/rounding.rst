@@ -76,26 +76,21 @@ underlying storage precision::
   julia> 1267650600228229401496703205376USD_M
   1267650600228229401496703205376.000 USD
 
-However, it's important to note that mixed arithmetic is absolutely not
-supported, even when both types have the same currency. This is because there is
-no canonical way to promote both types to an acceptable precision and storage
-representation. Note the errors and the surprising behavior for equality::
+However, it's important to note that mixed arithmetic may have significant
+performance implications. This is because for type safety, many combinations
+are converted unnecessarily to :class:`BigInt` as an internal representation::
 
   julia> USD_M + USD
-  ERROR: ArgumentError: [...]
-   in + at ~/.julia/v0.5/Currencies/src/monetary.jl:81
-   in eval at ./boot.jl:263
+  2.000 USD
 
-  julia> USD_M == USD
-  false
+  julia> dump(ans)
+  Currencies.Monetary{:USD,BigInt,3}
+    val: BigInt
+      alloc: Int32 2
+      size: Int32 1
+      d: Ptr{UInt64} Ptr{UInt64} @0x000000000479f7a0
 
 Instead, it's better to explicitly convert using the ``.val`` field.
-
-.. warning::
-
-   Mixing different representations or precisions of the same currency in a
-   :class:`Basket` is undefined behavior, even if all but one of the different
-   representations sum to zero.
 
 Special Metals
 --------------
