@@ -1,4 +1,4 @@
-#= Monetary Arithmetic functions =#
+#= Monetary arithmetic functions =#
 
 # numeric operations
 Base.zero{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(0)
@@ -17,7 +17,6 @@ Base.abs{T<:Monetary}(m::T) = T(abs(m.val))
 
 # a note on this one: a sign does NOT include the unit
 # quantity = sign * magnitude * unit
-# so we return something of type V
 Base.sign(m::Monetary) = sign(m.val)
 
 # on types
@@ -26,24 +25,24 @@ Base.one{T<:AbstractMonetary}(::T) = one(T)
 unit{T<:AbstractMonetary}(::T) = unit(T)
 
 # comparisons
-Base. =={T<:Monetary}(m::T, n::T) = m.val == n.val
+=={T<:Monetary}(m::T, n::T) = m.val == n.val
 Base.isless{T<:Monetary}(m::T, n::T) = isless(m.val, n.val)
 
 # unary plus/minus
-Base. +(m::AbstractMonetary) = m
-Base. -{T,U,V}(m::Monetary{T,U,V}) = Monetary{T,U,V}(-m.val)
++ m::AbstractMonetary = m
+-{T<:Monetary}(m::T) = T(-m.val)
 
 # arithmetic operations on two monetary values
-Base. +{T<:Monetary}(m::T, n::T) = T(m.val + n.val)
-Base. -{T<:Monetary}(m::T, n::T) = T(m.val - n.val)
-Base. /{T<:Monetary}(m::T, n::T) = m.val / n.val
++{T<:Monetary}(m::T, n::T) = T(m.val + n.val)
+-{T<:Monetary}(m::T, n::T) = T(m.val - n.val)
+/{T<:Monetary}(m::T, n::T) = m.val / n.val
 
 # arithmetic operations on monetary and dimensionless values
-Base. *{T<:Monetary}(m::T, i::Integer) = T(m.val * i)
-Base. *{T<:Monetary}(i::Integer, m::T) = T(i * m.val)
-Base. *{T,U,V}(f::Real, m::Monetary{T,U,V}) = Monetary{T,U,V}(round(U, f * m.val))
-Base. *{T,U,V}(m::Monetary{T,U,V}, f::Real) = Monetary{T,U,V}(round(U, m.val * f))
-Base. /(m::Monetary, f::Real) = m * inv(f)
+*{T<:Monetary}(m::T, i::Integer) = T(m.val * i)
+*{T<:Monetary}(i::Integer, m::T) = T(i * m.val)
+*{T,U,V}(f::Real, m::Monetary{T,U,V}) = Monetary{T,U,V}(round(U, f * m.val))
+*{T,U,V}(m::Monetary{T,U,V}, f::Real) = Monetary{T,U,V}(round(U, m.val * f))
+m::Monetary / f::Real = m * inv(f)
 
 # Note that quotient is an integer, but remainder is a monetary value.
 

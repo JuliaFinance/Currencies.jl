@@ -102,7 +102,7 @@ end
     @test_throws MethodError basket_a ÷ 20USD
     @test_throws MethodError basket_a / basket_b
     @test_throws MethodError basket_a > basket_b
-    @test_throws AssertionError basket_dyn[:USD] = 100CAD
+    @test_throws ArgumentError basket_dyn[:USD] = 100CAD
 end
 
 end  # testset Basket

@@ -96,18 +96,25 @@ Base.done(b::Basket, s) = done(b.table, s)
 Base.promote_rule(::Type{DynamicBasket}, ::Type{StaticBasket}) = DynamicBasket
 Base.promote_rule{T<:Basket, U<:Monetary}(::Type{T}, ::Type{U}) = T
 
-Base. +{T<:Basket}(b::T, c::T) = T([collect(b); collect(c)])
-Base. +{T<:Basket,U<:AbstractMonetary}(b::T, c::U) = +(promote(b, c)...)
-Base. +{T<:AbstractMonetary,U<:Basket}(b::T, c::U) = c + b
-Base. -{T<:Basket}(b::T) = T([-x for x in b])
-Base. -{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = b + (-c)
-Base. *{T<:Basket}(b::T, k::Real) = T([x * k for x in b])
-Base. *{T<:Basket}(k::Real, b::T) = T([k * x for x in b])
-Base. /{T<:Basket}(b::T, k::Real) = T([x / k for x in b])
++{T<:Basket}(b::T, c::T) = T([collect(b); collect(c)])
+-{T<:Basket}(b::T) = T([-x for x in b])
+-{T<:AbstractMonetary,U<:AbstractMonetary}(b::T, c::U) = b + (-c)
+*{T<:Basket}(b::T, k::Real) = T([x * k for x in b])
+*{T<:Basket}(k::Real, b::T) = T([k * x for x in b])
+/{T<:Basket}(b::T, k::Real) = T([x / k for x in b])
+
+
+# mixed arithmetic
+b::Basket           + c::Basket           = +(promote(b, c)...)
+b::Basket           + c::AbstractMonetary = +(promote(b, c)...)
+b::AbstractMonetary + c::Basket           = c + b
+b::AbstractMonetary - c::AbstractMonetary = b + (-c)
 
 # methods for dynamic baskets
 function Base.setindex!(b::DynamicBasket, m::Monetary, k::Symbol)
-    @assert currency(m) == k "Monetary value type does not match currency"
+    if currency(m) ≠ k
+        throw(ArgumentError("Monetary value type does not match currency"))
+    end
     b.table[k] = m
     deleteifzero!(b.table, k)
     m

@@ -61,7 +61,7 @@ running for a long period of time may receive data that is one week or more out
 of date.
 """
 function ecbrates()
-    date=Date(now(Dates.UTC))
+    date = Date(now(Dates.UTC))
     # try last seven days
     for _ in 1:7
         if haskey(ECBCache, date)
