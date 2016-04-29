@@ -57,9 +57,8 @@ end
 Base.@deprecate_binding StaticBasket Basket
 Base.@deprecate_binding DynamicBasket Basket
 
-# basket outer constructors
+# basket outer constructor
 Basket() = Basket(())
-Base.convert(::Type{Basket}, m::AbstractMonetary) = Basket((m,))
 
 # access methods
 Base.length(b::Basket) = length(b.table)
@@ -73,8 +72,6 @@ end
 Base.done(b::Basket, s) = done(b.table, s)
 
 # arithmetic methods (for static & dynamic baskets)
-Base.promote_rule{U<:Monetary}(::Type{Basket}, ::Type{U}) = Basket
-
 - b::Basket = Basket([-x for x in b])
 b::Basket           + c::Basket           = Basket([collect(b); collect(c)])
 b::Basket           + c::AbstractMonetary = +(promote(b, c)...)
@@ -95,9 +92,8 @@ function Base.setindex!(b::Basket, m::Monetary, k::Symbol)
     m
 end
 
-# this method is here only for consistency with the constructor
-# probably add! is a better name for all these methods, but arguably push!
-# is not a pun.
+# this method is somewhat strange because Baskets behave like collections and
+# like numbers... maybe add! is a better name
 function Base.push!(b::Basket, m::Monetary)
     b[currency(m)] += m
     b
@@ -106,8 +102,7 @@ Base.push!(b::Basket, c::Basket) = foldl(push!, b, c)
 
 # other methods (eltype, iszero, zero, ==)
 iszero(b::Basket) = isempty(b)
-Base. =={T<:Basket,U<:AbstractMonetary}(b::T, c::U) = iszero(b - c)
-Base. =={T<:AbstractMonetary,U<:Basket}(b::T, c::U) = c == b
+Base. ==(b::AbstractMonetary, c::AbstractMonetary) = iszero(-(promote(b, c)...))
 
   Base.zero(::Type{Basket}) = Basket()
    Base.one(::Type{Basket}) = 1

@@ -32,6 +32,7 @@ include("arithmetic.jl")
 
 # Baskets
 include("basket.jl")
+include("mixed.jl")
 
 # Computations (valuation & investments)
 include("valuate.jl")

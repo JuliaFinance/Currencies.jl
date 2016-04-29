@@ -121,16 +121,18 @@ end
     @test flatusd ≡ Monetary(:USD; precision=0)
     @test millusd ≡ Monetary(:USD, 1000; precision=3)
     @test millusd ≡ Monetary(:USD; precision=3, storage=Int)
-    @test flatusd ≠ millusd
+    @test flatusd ≢ millusd
 
     # Custom precision arithmetic
     @test 1.111millusd + 1.222millusd == 2.333millusd
     @test 0.1flatusd == 0flatusd
     @test 0.001millusd ≠ 0.002millusd
 
-    # Absolutely no mixing (surprising behaviour?)
-    @test zero(flatusd) ≠ 0USD
-    @test_throws MethodError flatusd ≥ USD
+    # Mixing comparisons allowed (surprising behaviour?)
+    @test zero(flatusd) ≢ 0USD
+    @test flatusd ≥ USD
+
+    # ...but arithmetic not (surprising behaviour?)
     @test_throws MethodError flatusd + millusd
     @test_throws MethodError flatusd / millusd
 
@@ -155,10 +157,10 @@ end
     @test USD ≡ Monetary(:USD, 100)
     @test USD ≡ Monetary(:USD, 100; precision=2)
 
-    @test USD ≠ Monetary(:USD, 1)
-    @test USD ≠ Monetary(:USD; precision=0)
-    @test USD ≠ Monetary(:USD; precision=4)
-    @test USD ≠ Monetary(:USD; storage=BigInt)
+    @test USD ≢ Monetary(:USD, 1)
+    @test USD ≢ Monetary(:USD; precision=0)
+    @test USD ≢ Monetary(:USD; precision=4)
+    @test USD ≢ Monetary(:USD; storage=BigInt)
 
     # and the zero test
     @test 0USD ≡ zero(Monetary{:USD})
@@ -166,9 +168,9 @@ end
     @test 0USD ≡ Monetary(:USD, 0)
     @test 0USD ≡ Monetary(:USD, 0; precision=2)
 
-    @test 0USD ≠ USD
-    @test 0USD ≠ Monetary(:USD, 0; precision=0)
-    @test 0USD ≠ Monetary(:USD, BigInt(0))
+    @test 0USD ≢ USD
+    @test 0USD ≢ Monetary(:USD, 0; precision=0)
+    @test 0USD ≢ Monetary(:USD, BigInt(0))
 end
 
 end  # testset Monetary

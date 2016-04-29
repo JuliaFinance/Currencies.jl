@@ -20,6 +20,7 @@ include("data.jl")
 # Basic functionality tests
 include("monetary.jl")
 include("basket.jl")
+include("mixed.jl")
 
 # Currencies
 include("data-access.jl")
