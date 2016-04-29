@@ -54,4 +54,20 @@ end
 
 
 ## Functions that promote
+Base. ==(b::AbstractMonetary, c::AbstractMonetary) = iszero(-(promote(b, c)...))
 Base.isless{T}(m::Monetary{T}, n::Monetary{T}) = isless(promote(m, n)...)
+
+b::Basket           + c::AbstractMonetary = +(promote(b, c)...)
+b::AbstractMonetary + c::Basket           = c + b
+b::AbstractMonetary - c::AbstractMonetary = b + (-c)
+
++{T}(m::Monetary{T}, n::Monetary{T}) = +(promote(m, n)...)
+/{T}(m::Monetary{T}, n::Monetary{T}) = /(promote(m, n)...)
+
+for fns in DIVS
+    for fn in fns
+        @eval function Base.$(fn){T}(m::Monetary{T}, n::Monetary{T})
+            $(fn)(promote(m, n)...)
+        end
+    end
+end

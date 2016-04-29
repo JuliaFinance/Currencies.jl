@@ -105,10 +105,14 @@ I128_USD = unit(Monetary{:USD, Int128})
     # wrapping behaviour (strange but documented)
     @test typemin(Int128) * I128_USD ≡ typemax(Int128) * I128_USD + I128_USD
 
-    # don't mix
-    @test_throws MethodError BI_USD + USD
-    @test_throws MethodError BI_USD - I128_USD
-    @test_throws MethodError BI_USD / I128_USD
+    # mixing allowed
+    @test BI_USD + USD == 2USD
+    @test typeof(BI_USD + USD) == typeof(BI_USD)
+    @test typeof(I128_USD + USD) == typeof(I128_USD)
+    @test BI_USD - I128_USD == 0USD
+    @test typeof(BI_USD - I128_USD) == typeof(BI_USD)
+    @test BI_USD / I128_USD == 1.0
+    @test typeof(BI_USD / I128_USD) == BigFloat
 end
 
 # Custom decimals
@@ -132,9 +136,11 @@ end
     @test zero(flatusd) ≢ 0USD
     @test flatusd ≥ USD
 
-    # ...but arithmetic not (surprising behaviour?)
-    @test_throws MethodError flatusd + millusd
-    @test_throws MethodError flatusd / millusd
+    # and arithmetic also, but promotes to BigInt (surprising behaviour?)
+    @test flatusd + millusd == 2USD
+    @test typeof(flatusd + millusd) == Monetary{:USD, BigInt, 3}
+    @test flatusd / millusd == 1.0
+    @test typeof(flatusd / millusd) == BigFloat
 
     # Special metals — precision required
     @test_throws ArgumentError @usingcurrencies XAU

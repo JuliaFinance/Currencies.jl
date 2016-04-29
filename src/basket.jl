@@ -73,11 +73,7 @@ Base.done(b::Basket, s) = done(b.table, s)
 
 # arithmetic methods (for static & dynamic baskets)
 - b::Basket = Basket([-x for x in b])
-b::Basket           + c::Basket           = Basket([collect(b); collect(c)])
-b::Basket           + c::AbstractMonetary = +(promote(b, c)...)
-b::AbstractMonetary + c::Basket           = c + b
-b::AbstractMonetary - c::AbstractMonetary = b + (-c)
-
+b::Basket + c::Basket = Basket((b, c))
 b::Basket * k::Real   = Basket([x * k for x in b])
 k::Real   * b::Basket = Basket([k * x for x in b])
 b::Basket / k::Real   = Basket([x / k for x in b])
@@ -89,21 +85,16 @@ function Base.setindex!(b::Basket, m::Monetary, k::Symbol)
     end
     b.table[k] = m
     deleteifzero!(b.table, k)
-    m
-end
-
-# this method is somewhat strange because Baskets behave like collections and
-# like numbers... maybe add! is a better name
-function Base.push!(b::Basket, m::Monetary)
-    b[currency(m)] += m
     b
 end
-Base.push!(b::Basket, c::Basket) = foldl(push!, b, c)
+
+# somewhat strange because Baskets behave like collections and like numbers...
+# maybe add! is a better name
+Base.push!(b::Basket, m::Monetary) = (b[currency(m)] += m; b)
+Base.push!(b::Basket, c::Basket)   = foldl(push!, b, c)
 
 # other methods (eltype, iszero, zero, ==)
-iszero(b::Basket) = isempty(b)
-Base. ==(b::AbstractMonetary, c::AbstractMonetary) = iszero(-(promote(b, c)...))
-
+          iszero(b::Basket) = isempty(b)
   Base.zero(::Type{Basket}) = Basket()
    Base.one(::Type{Basket}) = 1
 Base.eltype(::Type{Basket}) = Monetary
