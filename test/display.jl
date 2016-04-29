@@ -5,13 +5,13 @@
 @testset "text/plain" begin
     @test contains(stringmime("text/plain", 1USD), "1.00")
     @test contains(stringmime("text/plain", 1JPY), "1")
-    @test contains(stringmime("text/plain", StaticBasket([1USD, 1CAD])), "CAD")
-    @test contains(stringmime("text/plain", DynamicBasket([1USD, 1CAD])), "USD")
+    @test contains(stringmime("text/plain", Basket([1USD, 1CAD])), "CAD")
+    @test contains(stringmime("text/plain", Basket([1USD, 1CAD])), "USD")
     @test contains(
-        stringmime("text/plain", StaticBasket([100USD, 200EUR])),
+        stringmime("text/plain", Basket([100USD, 200EUR])),
         "200.00 EUR")
     @test !contains(
-        stringmime("text/plain", StaticBasket([1USD, 1CAD, -1CAD])), "CAD")
+        stringmime("text/plain", Basket([1USD, 1CAD, -1CAD])), "CAD")
     @test stringmime("text/plain", +USD) == "1.00 USD"
     @test stringmime("text/plain", -USD) == "−1.00 USD"
 
@@ -32,8 +32,7 @@ end
 end
 
 @testset "text/markdown" begin
-    basketstr = stringmime(
-        "text/markdown", DynamicBasket([USD, 20CAD, -10JPY]))
+    basketstr = stringmime("text/markdown", Basket([USD, 20CAD, -10JPY]))
 
     @test contains(basketstr, "`Currencies.Basket`")
     @test contains(basketstr, "\$3\$-currency")
@@ -46,7 +45,7 @@ end
     @test string(20JPY) == "20.0JPY"
 
     # this test is a bit complicated because order is undefined
-    basketstr = string(StaticBasket([USD, 20CAD, -10JPY]))
+    basketstr = string(Basket([USD, 20CAD, -10JPY]))
     @test contains(basketstr, "Basket([")
     @test contains(basketstr, "-10.0JPY")
     @test contains(basketstr, "20.0CAD")

@@ -10,7 +10,7 @@ custom = newcurrency!(:custom, "Custom Currency", 6)
     @test contains(stringmime("text/plain", 10xbt), "10.00")
     @test 10xbt - 5xbt == 5xbt
     @test format(-1111.11xbt, styles=[:us, :finance]) == "xbt (1,111.11)"
-    @test StaticBasket([10xbt, 10USD]) - 10USD == 10xbt
+    @test Basket([10xbt, 10USD]) - 10USD == 10xbt
 
     @test currencyinfo(Monetary{:xbt}) == "Bitcoin (100 satoshi unit)"
 

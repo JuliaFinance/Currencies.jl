@@ -13,6 +13,6 @@
 
     # generic use cases
     @test compoundfv(1, e-1, 10) ≈ exp(10)
-    @test compoundfv(StaticBasket([USD, EUR]), 0.1, 2) ==
-        StaticBasket([1.21USD, 1.21EUR])
+    @test compoundfv(Basket([USD, EUR]), 0.1, 2) ==
+        Basket([1.21USD, 1.21EUR])
 end

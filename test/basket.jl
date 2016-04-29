@@ -2,8 +2,8 @@
 @testset "Basket" begin
 
 # Simple arithmetic
-basket_a = StaticBasket(100USD)
-basket_b = StaticBasket(20EUR)
+basket_a = Basket(100USD)
+basket_b = Basket(20EUR)
 basket_c = basket_a + basket_b
 basket_d = 4 * basket_c
 basket_e = compoundfv(basket_c, 0.02, 12)
@@ -14,27 +14,27 @@ basket_g = basket_f / 4
 basket_h = basket_f + 20JPY
 basket_i = basket_h - 100USD
 basket_j = -20EUR - basket_i
-basket_k = DynamicBasket() + basket_j
-basket_l = (DynamicBasket(20USD) * 2 - 20CAD - 40USD) / 2 + 10CAD
+basket_k = Basket() + basket_j
+basket_l = (Basket(20USD) * 2 - 20CAD - 40USD) / 2 + 10CAD
 
 @testset "Arithmetic" begin
-    @test StaticBasket([100USD, 200USD]) == StaticBasket(300USD)
-    @test basket_c == StaticBasket([100USD, 20EUR])
-    @test basket_d == StaticBasket([400USD, 80EUR])
-    @test basket_e == StaticBasket([126.82USD, 25.36EUR])
-    @test basket_f == StaticBasket([100USD, -20EUR])
-    @test basket_g == StaticBasket([25USD, -5EUR])
+    @test Basket([100USD, 200USD]) == Basket(300USD)
+    @test basket_c == Basket([100USD, 20EUR])
+    @test basket_d == Basket([400USD, 80EUR])
+    @test basket_e == Basket([126.82USD, 25.36EUR])
+    @test basket_f == Basket([100USD, -20EUR])
+    @test basket_g == Basket([25USD, -5EUR])
 
     # false positive tests
-    @test basket_c ≠ StaticBasket()
-    @test basket_c ≠ StaticBasket([100USD, 20EUR, 20GBP])
-    @test StaticBasket([100USD, 20EUR, 20GBP]) ≠ basket_c
+    @test basket_c ≠ Basket()
+    @test basket_c ≠ Basket([100USD, 20EUR, 20GBP])
+    @test Basket([100USD, 20EUR, 20GBP]) ≠ basket_c
 
-    @test basket_h == StaticBasket([100USD, -20EUR, 20JPY])
-    @test basket_i == StaticBasket([-20EUR, 20JPY])
+    @test basket_h == Basket([100USD, -20EUR, 20JPY])
+    @test basket_i == Basket([-20EUR, 20JPY])
     @test basket_j == -20JPY
     @test basket_j == basket_k
-    @test basket_l == StaticBasket()
+    @test basket_l == Basket()
     @test basket_l == 0EUR
     @test isempty(basket_l)
 
@@ -43,55 +43,55 @@ basket_l = (DynamicBasket(20USD) * 2 - 20CAD - 40USD) / 2 + 10CAD
     @test basket_j ≠ -20USD
     @test basket_i ≠ basket_j
     @test basket_l ≠ 1JPY
-    @test basket_l ≠ StaticBasket(1JPY)
+    @test basket_l ≠ Basket(1JPY)
 end
 
 # Basket constructor & zero
-basket_m = StaticBasket([basket_i, basket_j, 100JPY])
-basket_n = zero(StaticBasket)
+basket_m = Basket([basket_i, basket_j, 100JPY])
+basket_n = zero(Basket)
 basket_o = zero(basket_m)
-basket_p = zero(DynamicBasket)
-basket_q = DynamicBasket([basket_o, StaticBasket([10USD, 20USD])])
+basket_p = zero(Basket)
+basket_q = Basket([basket_o, Basket([10USD, 20USD])])
 
 @testset "Constructors" begin
-    @test basket_m == StaticBasket([-20EUR, 100JPY])
-    @test basket_n == basket_o == StaticBasket() == basket_p == zero(JPY)
+    @test basket_m == Basket([-20EUR, 100JPY])
+    @test basket_n == basket_o == Basket() == basket_p == zero(JPY)
     @test basket_q == 30USD
-    @test one(StaticBasket) ≡ 1
+    @test one(Basket) ≡ 1
 
     @testset "Basket — Illegal Construction" begin
-        @test_throws Exception StaticBasket([1, 2, 3])
-        @test_throws Exception DynamicBasket([1USD, (1USD, 2USD, 3)])
+        @test_throws Exception Basket([1, 2, 3])
+        @test_throws Exception Basket([1USD, (1USD, 2USD, 3)])
     end
 end
 
 # Iteration & access
 @testset "As Collection" begin
-    @test isempty(collect(StaticBasket([100USD, -100USD])))
+    @test isempty(collect(Basket([100USD, -100USD])))
     @test basket_g[:EUR] == -5EUR
-    @test haskey(StaticBasket([10USD, -10CAD]), :CAD)
-    @test !haskey(StaticBasket([10USD, -10USD]), :USD)
-    @test length(collect(StaticBasket([1USD, 2USD]))) == 1
-    @test length(collect(StaticBasket([1USD, 1CAD]))) == 2
+    @test haskey(Basket([10USD, -10CAD]), :CAD)
+    @test !haskey(Basket([10USD, -10USD]), :USD)
+    @test length(collect(Basket([1USD, 2USD]))) == 1
+    @test length(collect(Basket([1USD, 1CAD]))) == 2
 end
 
 # Dynamic
-basket_dyn = DynamicBasket() + basket_g
+basket_dyn = Basket() + basket_g
 
 @testset "Dynamic" begin
     basket_dyn[:CAD] = 10CAD
-    @test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD])
+    @test basket_dyn == Basket([25USD, -5EUR, 10CAD])
     @test haskey(basket_dyn, :USD)
     @test !haskey(basket_dyn, :JPY)
     push!(basket_dyn, 15JPY)
-    @test basket_dyn == DynamicBasket([25USD, -5EUR, 10CAD, 15JPY])
+    @test basket_dyn == Basket([25USD, -5EUR, 10CAD, 15JPY])
     push!(basket_dyn, -10EUR)
-    @test basket_dyn == DynamicBasket([25USD, -15EUR, 10CAD, 15JPY])
+    @test basket_dyn == Basket([25USD, -15EUR, 10CAD, 15JPY])
     push!(basket_dyn, -10CAD)
     @test !haskey(basket_dyn, :CAD)  # zero keys should act invisible
     @test length(collect(basket_dyn)) == 3
-    push!(basket_dyn, StaticBasket([25USD, 25EUR]))
-    @test basket_dyn == StaticBasket([50USD, 10EUR, 15JPY])
+    push!(basket_dyn, Basket([25USD, 25EUR]))
+    @test basket_dyn == Basket([50USD, 10EUR, 15JPY])
 end
 
 # Errors

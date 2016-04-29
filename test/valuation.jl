@@ -17,14 +17,14 @@
         :CAD => 0.75)
 
     @test valuate(rates_a, :CAD, 21USD) == 28CAD
-    @test valuate(rates_a, :CAD, DynamicBasket([21USD, 10CAD])) == 38CAD
+    @test valuate(rates_a, :CAD, Basket([21USD, 10CAD])) == 38CAD
     @test valuate(rates_b, :USD, 10USD) == 10USD
     @test valuate(rates_b, :EUR, 0.13USD) == 0.1EUR
-    @test valuate(rates_c, :USD, StaticBasket([USD, EUR, GBP])) == 3.8USD
+    @test valuate(rates_c, :USD, Basket([USD, EUR, GBP])) == 3.8USD
     @test valuate(rates_c, :EUR, 100CAD) == 53.85EUR
     @test valuate(rates_c, :JPY, 1USD) == 100JPY
     @test valuate(rates_c, :JPY, -1USD) == -100JPY
-    @test valuate(rates_c, :USD, StaticBasket([200JPY, EUR])) == 3.3USD
+    @test valuate(rates_c, :USD, Basket([200JPY, EUR])) == 3.3USD
     @test valuate(rates_c, :JPY, 0USD) == 0JPY
     @test valuate(rates_d, :CAD, 3.14CAD) == 3.14CAD
     @test contains(string(rates_d), ":USD=>1.0")
