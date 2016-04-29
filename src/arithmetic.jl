@@ -7,6 +7,8 @@ Base.zero{T<:Monetary}(::Type{T}) = zero(filltype(T))
 # NB: one returns multiplicative identity, which does not have units
 Base.one{T,U,V}(::Type{Monetary{T,U,V}}) = one(U)
 Base.one{T<:Monetary}(::Type{T}) = one(filltype(T))
+
+# NB: name may change depending on Base
 unit{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(convert(U, 10)^V)
 unit{T<:Monetary}(::Type{T}) = unit(filltype(T))
 
