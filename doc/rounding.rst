@@ -94,8 +94,8 @@ Instead, it's better to explicitly convert using the ``.val`` field.
 .. warning::
 
    Mixing different representations or precisions of the same currency in a
-   :class:`StaticBasket` or :class:`DynamicBasket` is undefined behavior, even
-   if all but one of the different representations sum to zero.
+   :class:`Basket` is undefined behavior, even if all but one of the different
+   representations sum to zero.
 
 Special Metals
 --------------

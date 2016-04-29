@@ -20,8 +20,8 @@ as LaTeX and Markdown, respectively::
   julia> writemime(STDOUT, "text/latex", 100USD)
   $100.00\,\mathrm{USD}$
 
-  julia> writemime(STDOUT, "text/markdown", StaticBasket([100USD, 100EUR]))
-  $2$-currency `Currencies.StaticBasket`:
+  julia> writemime(STDOUT, "text/markdown", Basket([100USD, 100EUR]))
+  $2$-currency `Currencies.Basket`:
 
    - $100.00\,\mathrm{USD}$
    - $100.00\,\mathrm{EUR}$

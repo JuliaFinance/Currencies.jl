@@ -49,29 +49,29 @@ investmentyears = 20
 futurevalue = compoundfv(presentvalue, annualinterest, investmentyears)
 ```
 
-Baskets, effectively collections of many different currencies, are supported in two variants: `StaticBasket` and `DynamicBasket`, differing only in mutability. To catch likely errors, `Monetary` objects don't support mixed arithmetic. But if mixed arithmetic is desired, it is still possible by promoting one of the objects to a `Basket` type:
+Baskets, effectively collections of many different currencies, are supported using the `Basket` type. To catch likely errors, `Monetary` objects don't support mixed arithmetic. But if mixed arithmetic is desired, it is still possible by promoting one of the objects to a `Basket` type:
 
 ```julia
 @usingcurrencies USD, CAD
 money = 100USD
-basket = StaticBasket(money)  # StaticBasket([100USD])
-basket += 20CAD               # StaticBasket([100USD, 20CAD])
+basket = Basket(money)  # Basket([100USD])
+basket += 20CAD         # Basket([100USD, 20CAD])
 ```
 
-To access an individual component of a basket, indexing notation is supported. Note that only `DynamicBasket` allows `setindex!`.
+To access an individual component of a basket, indexing notation is supported.
 
 ```julia
 @usingcurrencies USD, EUR, GBP
-sdr = DynamicBasket([1USD, 2EUR, 3GBP])
+sdr = Basket([1USD, 2EUR, 3GBP])
 sdr[:USD] = 3USD
 sdr[:GBP]  # 3.00 GBP
 ```
 
-Because of the nature of holding multiple currencies, some operations are not supported. In particular, one cannot divide baskets by baskets or compare baskets with baskets (equality, however, is still supported). Baskets however can be iterated over to get their components, in undefined order. `DynamicBasket` objects additionally support `push!`.
+Because of the nature of holding multiple currencies, some operations are not supported. In particular, one cannot divide baskets by baskets or compare baskets with baskets (equality, however, is still supported). Baskets however can be iterated over to get their components, in undefined order. `Basket` objects additionally support `push!`.
 
 ```julia
 @usingcurrencies USD, EUR, GBP, JPY
-basket = DynamicBasket([300USD, 400EUR, 500GBP, 600JPY])
+basket = Basket([300USD, 400EUR, 500GBP, 600JPY])
 for amount::Monetary in basket
     println(amount)
 end
@@ -79,17 +79,17 @@ push!(basket, 200USD)
 basket[:USD]
 ```
 
-For convenience, it's possible to add `Basket` values to regular `Monetary` values. But as seen earlier, adding two `Monetary` values does not result in a `Basket` value. If it's desired to combine two values of unknown type (either `Basket` or `Monetary`), the constructors for `StaticBasket` and `DynamicBasket` can be used directly:
+For convenience, it's possible to add `Basket` values to regular `Monetary` values. But as seen earlier, adding two `Monetary` values does not result in a `Basket` value. If it's desired to combine two values of unknown type (either `Basket` or `Monetary`), the constructor for `Basket` can be used directly:
 
 ```julia
 @usingcurrencies USD, EUR, GBP
-a = DynamicBasket([20USD, 20EUR])
+a = Basket([20USD, 20EUR])
 b = 10USD
-c = StaticBasket([5EUR, 40GBP])
-StaticBasket([a, b, c])  # StaticBasket([30USD, 25EUR, 40GBP])
+c = Basket([5EUR, 40GBP])
+Basket([a, b, c])  # Basket([30USD, 25EUR, 40GBP])
 ```
 
-Note that for consistency with the constructor, `push!` for `DynamicBasket` accepts a `Basket` object as an argument. This is somewhat inconsistent with other containers, which use `append!` or `union!`.
+Note that for consistency with the constructor, `push!` for `Basket` accepts a `Basket` object as an argument. This is somewhat inconsistent with other containers, which use `append!` or `union!`.
 
 ## Using `Monetary` in Practice
 `Monetary` types behave a lot like integer types, and they can be used like them for a lot of practical situations. For example, here is a (quite fast) function to give optimal change using the common European system of having coins and bills worth 0.01€, 0.02€, 0.05€, 0.10€, 0.20€, 0.50€, 1.00€, and so forth until 500.00€ (this algorithm doesn't necessarily work for all combinations of coin values).

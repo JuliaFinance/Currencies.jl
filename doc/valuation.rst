@@ -12,7 +12,7 @@ explain it better than any words::
 
   @usingcurrencies USD, JPY, EUR
   usdmoney = 100USD
-  mybasket = StaticBasket([100USD, 100JPY, 100EUR])
+  mybasket = Basket([100USD, 100JPY, 100EUR])
   rates = ExchangeRateTable(
     :USD => 1.0,
     :JPY => 0.02,
