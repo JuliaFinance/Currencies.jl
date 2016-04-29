@@ -7,7 +7,7 @@ each currency, each arithmetic operation used on that currency incurs some small
 one-time cost.
 
 Note that the native assembly code generated for most arithmetic operations is
-little different from the equivalent operation on integers::
+not so different from the equivalent operation on integers::
 
   julia> code_native(+, (typeof(USD), typeof(USD)))
   	.text
