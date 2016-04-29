@@ -6,7 +6,7 @@ include("render.jl")
 
 #= Monetary & Basket Display Interface =#
 function Base.show(io::IO, m::Monetary)
-    print(io, float(m), currency(m))
+    print(io, m / unit(m), currency(m))
 end
 
 function Base.show(io::IO, b::Basket)

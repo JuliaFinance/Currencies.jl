@@ -1,5 +1,8 @@
 using Currencies
 
+# (!) experimental; could disappear any time
+import Currencies.Quantities: unit
+
 if VERSION ≥ v"0.5-"
     using Base.Test
 else

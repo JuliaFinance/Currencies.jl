@@ -1,8 +1,12 @@
 module Currencies
 
+# Quantities
+include("Quantities.jl")
+
 using MacroTools
 using Requests
 using Compat
+import Currencies.Quantities: unit
 
 # Exports
 export AbstractMonetary, Monetary
