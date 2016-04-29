@@ -4,9 +4,16 @@
 # NB: couldn't find a good free source of this data, so it's very incomplete.
 # send a pull request to contribute!
 const SHORT_SYMBOL = Dict{Symbol, UTF8String}(
+    :AED => "د.إ",
     :AFN => "؋",
+    :ALL => "L",
+    :AMD => "֏",
+    :ANG => "ƒ",
+    :AOA => "Kz",
     :ARS => "\$",
     :AUD => "\$",
+    :AWG => "Afl.",
+    :AZN => "₼",
     :BBD => "\$",
     :BSD => "\$",
     :CAD => "\$",
@@ -25,9 +32,16 @@ const SHORT_SYMBOL = Dict{Symbol, UTF8String}(
 
 # long symbol: short where possible without being ambiguous
 const LONG_SYMBOL = Dict{Symbol, UTF8String}(
+    :AED => "د.إ",
     :AFN => "؋",
+    :ALL => "L",
+    :AMD => "֏",
+    :ANG => "ƒ",
+    :AOA => "Kz",
     :ARS => "AR\$",
     :AUD => "A\$",
+    :AWG => "Afl.",
+    :AZN => "₼",
     :BBD => "Bds\$",
     :BSD => "B\$",
     :CAD => "C\$",
