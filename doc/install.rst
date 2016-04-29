@@ -48,11 +48,13 @@ than others::
   julia> Monetary(:USD, 314)
   3.14 USD
 
-  julia> convert(Monetary{:USD, Int, 4}, 1)
+  julia> Monetary{:USD, Int, 4}(10000)
   1.0000 USD
 
-Note in particular that last one! The second argument to :class:`Monetary`, if
-provided, should be an integer value. Avoid this constructor if possible.
+Note in particular that last two! The second argument to :class:`Monetary`, if
+provided, should be an integer value, and similarly the argument to the inner
+constructor is also expected to be an integer. These constructors can be
+difficult to understand and should be avoided where possible.
 
 .. warning::
 
