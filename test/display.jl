@@ -35,7 +35,7 @@ end
     basketstr = stringmime(
         "text/markdown", DynamicBasket([USD, 20CAD, -10JPY]))
 
-    @test contains(basketstr, "`Currencies.DynamicBasket`")
+    @test contains(basketstr, "`Currencies.Basket`")
     @test contains(basketstr, "\$3\$-currency")
     @test contains(basketstr, " - \$-10\\,\\mathrm{JPY}\$")
 end
@@ -47,7 +47,7 @@ end
 
     # this test is a bit complicated because order is undefined
     basketstr = string(StaticBasket([USD, 20CAD, -10JPY]))
-    @test contains(basketstr, "StaticBasket([")
+    @test contains(basketstr, "Basket([")
     @test contains(basketstr, "-10.0JPY")
     @test contains(basketstr, "20.0CAD")
 
