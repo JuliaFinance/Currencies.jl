@@ -8,10 +8,6 @@ Base.zero{T<:Monetary}(::Type{T}) = zero(filltype(T))
 Base.one{T,U,V}(::Type{Monetary{T,U,V}}) = one(U)
 Base.one{T<:Monetary}(::Type{T}) = one(filltype(T))
 
-# NB: name may change depending on Base
-unit{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(convert(U, 10)^V)
-unit{T<:Monetary}(::Type{T}) = unit(filltype(T))
-
 # mathematical number-like operations
 Base.abs{T<:Monetary}(m::T) = T(abs(m.val))
 
