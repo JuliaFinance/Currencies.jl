@@ -16,6 +16,8 @@ export simplefv, compoundfv
 export newcurrency!, @usingcustomcurrency
 export format
 
+const String = VERSION ≥ v"0.5-" ? Base.String : UTF8String
+
 # Currency data
 include("data/currencies.jl")
 include("data/symbols.jl")

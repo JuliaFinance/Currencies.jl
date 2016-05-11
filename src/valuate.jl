@@ -33,9 +33,9 @@ function ecbrates_fresh(datestr::AbstractString)
     date = Date(resp["date"])
     table = Dict{Symbol, Float64}()
     for (k, v) in resp["rates"]
-        table[symbol(k)] = 1.0/v
+        table[Symbol(k)] = 1.0/v
     end
-    table[symbol(resp["base"])] = 1.0
+    table[Symbol(resp["base"])] = 1.0
 
     # cache and return
     ert = ExchangeRateTable(date, table)

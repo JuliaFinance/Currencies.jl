@@ -67,25 +67,24 @@ function iso4217num end
 
 
 """
-    iso4217alpha(s::Symbol)   → UTF8String
-    iso4217alpha(m::Monetary) → UTF8String
-    iso4217alpha(t::DataType) → UTF8String
+    iso4217alpha(s::Symbol)   → String
+    iso4217alpha(m::Monetary) → String
+    iso4217alpha(t::DataType) → String
 
 Get the ISO 4217 alphabetic code for a currency. For custom currencies, a
 lowercase string will be returned, and this should not be interpreted as an ISO
 4217 code. Otherwise, a three-letter uppercase string will be returned. This
 function may be called with either a symbol, a `Monetary` type, or a `Monetary`
-object. For type stability, this function returns a UTF8String always, even when
-the currency code contains no non-ASCII characters.
+object. For type stability, this function returns a `String` always.
 """
 function iso4217alpha end
-@flexible iso4217alpha(s::Symbol) = s |> string |> UTF8String
+@flexible iso4217alpha(s::Symbol) = s |> string |> String
 
 
 """
-    shortsymbol(s::Symbol)   → UTF8String
-    shortsymbol(m::Monetary) → UTF8String
-    shortsymbol(t::DataType) → UTF8String
+    shortsymbol(s::Symbol)   → String
+    shortsymbol(m::Monetary) → String
+    shortsymbol(t::DataType) → String
 
 Get a short, possibly ambiguous, commonly-used symbol for a currency. This
 function may be called with either a symbol, a `Monetary` type, or a `Monetary`
@@ -96,9 +95,9 @@ function shortsymbol end
 
 
 """
-    longsymbol(s::Symbol)   → UTF8String
-    longsymbol(m::Monetary) → UTF8String
-    longsymbol(t::DataType) → UTF8String
+    longsymbol(s::Symbol)   → String
+    longsymbol(m::Monetary) → String
+    longsymbol(t::DataType) → String
 
 Get a commonly-used currency symbol for a currency, with at least enough
 disambiguation to be non-ambiguous. This function may be called with either a

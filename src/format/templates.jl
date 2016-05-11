@@ -16,7 +16,7 @@ function escapelatex(text)
             push!(result, c)
         end
     end
-    UTF8String(result)
+    String(result)
 end
 
 romanfont(s) = string("\\mathrm{", s, "}")
