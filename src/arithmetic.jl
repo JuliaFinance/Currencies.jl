@@ -18,7 +18,6 @@ Base.sign(m::Monetary) = sign(m.val)
 # on types
 Base.zero{T<:AbstractMonetary}(::T) = zero(T)
 Base.one{T<:AbstractMonetary}(::T) = one(T)
-unit{T<:AbstractMonetary}(::T) = unit(T)
 
 # comparisons
 =={T<:Monetary}(m::T, n::T) = m.val == n.val
