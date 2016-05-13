@@ -3,6 +3,7 @@ module Currencies
 using MacroTools
 using Requests
 using Compat
+import Compat.String
 
 import Base: +, -, *, /, ==
 
@@ -15,8 +16,6 @@ export Basket, StaticBasket, DynamicBasket
 export simplefv, compoundfv
 export newcurrency!, @usingcustomcurrency
 export format
-
-const String = VERSION ≥ v"0.5-" ? Base.String : UTF8String
 
 # Currency data
 include("data/currencies.jl")
