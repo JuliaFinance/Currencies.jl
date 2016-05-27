@@ -1,6 +1,5 @@
 module Currencies
 
-using MacroTools
 using Requests
 using Compat
 import Compat.String
