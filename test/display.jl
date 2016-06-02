@@ -21,6 +21,11 @@
         "−1.00 JPY"
     @test stringmime("text/plain", 7.2512Monetary(:XAU; precision=4)) ==
         "7.2512 XAU"
+
+    # with compact IOContext
+    buf = IOBuffer()
+    writemime(IOContext(buf, :compact => true), "text/plain", 1USD)
+    @test takebuf_string(buf) == "1.0USD"
 end
 
 @testset "text/latex" begin

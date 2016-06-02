@@ -4,23 +4,20 @@ Display & Format
 Quick Display
 -------------
 
-There are two basic ways to display a :class:`Monetary` value. The
-representation used by :func:`show` and :func:`print` is the same, and is fairly
-compact. For a richer display, use :func:`writemime`, which has a more
-user-friendly representation. To get the :func:`writemime` representation into a
-string, use the :func:`stringmime` function::
+The representation used by :func:`show` and :func:`print` is the same, and is
+fairly compact.
 
-  julia> stringmime("text/plain", 100USD)
-  "100.00 USD"
+  julia> show(100USD)
+  100.0USD
 
 When a richer representation than ``text/plain`` is available, such as in an
 IJulia environment, :class:`Basket` and :class:`Monetary` objects can render
 as LaTeX and Markdown, respectively::
 
-  julia> writemime(STDOUT, "text/latex", 100USD)
+  julia> show(STDOUT, "text/latex", 100USD)
   $100.00\,\mathrm{USD}$
 
-  julia> writemime(STDOUT, "text/markdown", Basket([100USD, 100EUR]))
+  julia> show(STDOUT, "text/markdown", Basket([100USD, 100EUR]))
   $2$-currency `Currencies.Basket`:
 
    - $100.00\,\mathrm{USD}$

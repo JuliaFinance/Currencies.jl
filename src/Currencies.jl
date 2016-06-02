@@ -16,6 +16,9 @@ export simplefv, compoundfv
 export newcurrency!, @usingcustomcurrency
 export format
 
+# Extra compatibility code
+include("compat.jl")
+
 # Currency data
 include("data/currencies.jl")
 include("data/symbols.jl")
