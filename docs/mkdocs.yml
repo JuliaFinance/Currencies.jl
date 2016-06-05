@@ -1,0 +1,37 @@
+# See the mkdocs user guide for more information on these settings.
+#   http://www.mkdocs.org/user-guide/configuration/
+
+site_name:        Currencies.jl
+repo_url:         https://github.com/TotalVerb/Currencies.jl
+site_description: Simple checked currencies for Julia
+site_author:      Fengyang Wang
+
+theme: material
+
+extra_css:
+  - assets/Documenter.css
+
+extra_javascript:
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - assets/mathjaxhelper.js
+
+markdown_extensions:
+  - codehilite
+  - extra
+  - tables
+  - fenced_code
+  - mdx_math
+  - admonition
+
+docs_dir: 'build'
+
+pages:
+  - Home: index.md
+  - Manual:
+    - Installation & Usage: install.md
+    - Valuation: valuation.md
+    - Display & Formatting: display.md
+    - Custom Currencies: custom.md
+    - Rounding: rounding.md
+    - Notes on Performance: performance.md
+  - Reference: reference.md

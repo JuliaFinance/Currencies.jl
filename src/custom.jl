@@ -33,5 +33,6 @@ custom currencies should consist of only lowercase letters.
 macro usingcustomcurrency(symb, name, exponent)
     quote
         $symb = newcurrency!($(Expr(:quote, symb)), $name, $exponent)
+        nothing
     end |> esc
 end

@@ -9,10 +9,10 @@ collection of values in a set of currencies. These objects should behave like
 abstract AbstractMonetary
 
 """
-A representation of a monetary value, denominated in some currency. The
-currency used is part of the type and not the object. The value is internally
-represented as a quantity of some integer type. The usual way to construct a
-`Monetary` directly, if needed, is:
+A representation of a monetary value, denominated in some currency. The currency
+used is part of the type and not the object. The value is internally represented
+as a quantity of some integer type. The usual way to construct a `Monetary`
+directly, if needed, is:
 
     Monetary(:USD)      # 1.00 USD
     Monetary(:USD, 325) # 3.25 USD

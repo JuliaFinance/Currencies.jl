@@ -4,18 +4,17 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ofn6irk62gfe5v0o?svg=true)](https://ci.appveyor.com/project/TotalVerb/currencies-jl)
 [![Coverage Status](https://coveralls.io/repos/TotalVerb/Currencies.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/TotalVerb/Currencies.jl?branch=master)
 [![codecov](https://codecov.io/gh/TotalVerb/Currencies.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/TotalVerb/Currencies.jl)
-[![Documentation Status](https://readthedocs.org/projects/currenciesjl/badge/?version=latest)](http://currenciesjl.readthedocs.org/en/latest/?badge=latest)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://totalverb.github.io/Currencies.jl/stable)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://totalverb.github.io/Currencies.jl/latest)
 
 ## Purpose
-Please see [FinancialMarkets.jl](https://github.com/imanuelcostigan/FinancialMarkets.jl) package in case that suits your needs better.
-
-This package provides a much simpler interface to using a wide variety of currencies with performant checked arithmetic in Julia. It provides a clean interface for creating currency objects and manipulating them. It is user-friendly and provides some basic but useful features for calculating investments in the REPL.
+This package provides a simple interface to using a wide variety of currencies with performant checked arithmetic in Julia. Creating and using monetary values is clean and easy. For advanced users, it also offers rich formatting and other powerful features, such as integration with currency conversion APIs.
 
 ## Data Source
 The currency-related information for this package comes from [this Wikipedia page](https://en.wikipedia.org/wiki/ISO_4217#cite_note-divby5-9), the official ISO standard, and other Wikipedia pages. It is compiled manually and may be in error; please do submit a pull request to correct any errors.
 
 ## Usage
-For a full documentation, [read the docs](http://currenciesjl.readthedocs.org/en/latest/). Please file any corrections or missing parts of the documentation as issues, or even better, send in a pull request. Following is a brief guide to getting started.
+This README.md file provides a basic guide to getting started. It is not a replacement for the [documentation](https://totalverb.github.io/Currencies.jl/stable). Please file any corrections or missing parts of the documentation as issues, or even better, send in a pull request.
 
 The `Currencies` module exports the `Monetary` type. To access currencies, use the `@usingcurrencies` macro. Basic operation is as follows:
 
@@ -122,10 +121,13 @@ rates = ExchangeRateTable(
 valuate(rates, :USD, 100JPY)  # 2.00 USD
 ```
 
-For more on valuation, as usual, see the [documentation](http://currenciesjl.readthedocs.org/en/latest/valuation.html).
+For more on valuation, as usual, see the [documentation](https://totalverb.github.io/Currencies.jl/stable/valuation).
 
 ## Floating Points & Other Reals
-Advanced users may be interested in a [cautionary note](http://currenciesjl.readthedocs.org/en/latest/rounding.html) on rounding.
+Advanced users may be interested in a [cautionary note](https://totalverb.github.io/Currencies.jl/stable/rounding) on rounding.
 
 ## Custom Currencies & Names
-Advanced users may also be interested in [using currencies](http://currenciesjl.readthedocs.org/en/latest/custom.html) that are not in ISO 4217.
+Advanced users may also be interested in [using currencies](https://totalverb.github.io/Currencies.jl/stable/custom) that are not in ISO 4217.
+
+## Related Packages
+Please see [FinancialMarkets.jl](https://github.com/imanuelcostigan/FinancialMarkets.jl) package in case that suits your needs better.

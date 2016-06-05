@@ -21,5 +21,6 @@ macro usingcurrencies(curs)
     quote
         $([:(const $cur = Monetary($(Expr(:quote, cur))))
             for cur in curs.args]...)
+        nothing
     end |> esc
 end
