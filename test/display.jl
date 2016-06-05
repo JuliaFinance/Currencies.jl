@@ -24,7 +24,7 @@
 
     # with compact IOContext
     buf = IOBuffer()
-    writemime(IOContext(buf, :compact => true), "text/plain", 1USD)
+    show(IOContext(buf, :compact => true), "text/plain", 1USD)
     @test takebuf_string(buf) == "1.0USD"
 end
 
