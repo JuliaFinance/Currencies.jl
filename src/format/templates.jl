@@ -16,10 +16,10 @@ function escapelatex(text)
             push!(result, c)
         end
     end
-    String(result)
+    Compat.UTF8String(result)
 end
 
-romanfont(s) = string("\\mathrm{", s, "}")
+romanfont(s) = "\\mathrm{$s}"
 
 #= Available formatting templates =#
 const REQUIREMENTS = Dict(

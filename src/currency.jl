@@ -75,10 +75,10 @@ Get the ISO 4217 alphabetic code for a currency. For custom currencies, a
 lowercase string will be returned, and this should not be interpreted as an ISO
 4217 code. Otherwise, a three-letter uppercase string will be returned. This
 function may be called with either a symbol, a `Monetary` type, or a `Monetary`
-object. For type stability, this function returns a `String` always.
+object.
 """
 function iso4217alpha end
-@flexible iso4217alpha(s::Symbol) = s |> string |> String
+@flexible iso4217alpha(s::Symbol) = string(s) |> Compat.UTF8String
 
 
 """

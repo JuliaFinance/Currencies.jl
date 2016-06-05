@@ -13,7 +13,7 @@ currencies should consist of only lowercase letters.
     btc = newcurrency!(:btc, "Bitcoin", 8)  # 1.00000000 BTC
 """
 function newcurrency!(T::Symbol, name::AbstractString, expt::Int)
-    DATA[T] = (expt, String(name), 0)
+    DATA[T] = (expt, Compat.UTF8String(name), 0)
     Monetary(T)
 end
 

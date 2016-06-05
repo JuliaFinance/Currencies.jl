@@ -3,7 +3,7 @@
 # short symbol: may be ambiguous, take the most commonly-found unicode symbol.
 # NB: couldn't find a good free source of this data, so it's very incomplete.
 # send a pull request to contribute!
-const SHORT_SYMBOL = Dict{Symbol, String}(
+const SHORT_SYMBOL = Dict{Symbol, Compat.UTF8String}(
     :AED => "د.إ",
     :AFN => "؋",
     :ALL => "L",
@@ -31,7 +31,7 @@ const SHORT_SYMBOL = Dict{Symbol, String}(
     :USD => "\$")
 
 # long symbol: short where possible without being ambiguous
-const LONG_SYMBOL = Dict{Symbol, String}(
+const LONG_SYMBOL = Dict{Symbol, Compat.UTF8String}(
     :AED => "د.إ",
     :AFN => "؋",
     :ALL => "L",

@@ -4,7 +4,6 @@ module Currencies
 
 using Requests
 using Compat
-import Compat.String
 
 import Base: +, -, *, /, ==
 
