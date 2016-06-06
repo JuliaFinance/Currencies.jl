@@ -14,6 +14,6 @@ deploydocs(
             "pygments",
             "mkdocs",
             "mkdocs-material",
-            "python-markdown-math")
+            "python-markdown-math"),
     repo = "github.com/TotalVerb/Currencies.jl.git"
 )
