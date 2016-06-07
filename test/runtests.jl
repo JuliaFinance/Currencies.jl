@@ -32,7 +32,6 @@ include("custom.jl")
 
 # Computations tests
 include("valuation.jl")
-include("investment.jl")
 
 # README & Doc examples
 include("examples.jl")

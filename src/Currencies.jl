@@ -36,11 +36,13 @@ include("mixed.jl")
 
 # Computations (valuation & investments)
 include("valuate.jl")
-include("investments.jl")
 
 # Interface (display/formatting, convenience macro)
 include("format/formatting.jl")
 include("usingcurrencies.jl")
 include("custom.jl")
+
+# Deprecations
+include("deprecated.jl")
 
 end # module

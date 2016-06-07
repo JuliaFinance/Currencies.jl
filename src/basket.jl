@@ -54,9 +54,6 @@ immutable Basket <: AbstractMonetary
     Basket(ms::Union{AbstractArray,Tuple}) = new(buildtable(ms))
 end
 
-Base.@deprecate_binding StaticBasket Basket
-Base.@deprecate_binding DynamicBasket Basket
-
 # basket outer constructor
 Basket() = Basket(())
 

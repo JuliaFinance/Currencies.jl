@@ -39,16 +39,6 @@ Monetary amounts can be compared:
 sort([2EUR, 1EUR]) # [1EUR, 2EUR]
 ```
 
-Certain useful computations are exported by default:
-
-```julia
-@usingcurrencies GBP
-presentvalue = 5000GBP
-annualinterest = 0.02
-investmentyears = 20
-futurevalue = compoundfv(presentvalue, annualinterest, investmentyears)
-```
-
 Baskets, effectively collections of many different currencies, are supported using the `Basket` type. To catch likely errors, `Monetary` objects don't support mixed arithmetic. But if mixed arithmetic is desired, it is still possible by promoting one of the objects to a `Basket` type:
 
 ```julia

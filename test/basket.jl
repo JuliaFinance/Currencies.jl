@@ -6,7 +6,6 @@ basket_a = Basket(100USD)
 basket_b = Basket(20EUR)
 basket_c = basket_a + basket_b
 basket_d = 4 * basket_c
-basket_e = compoundfv(basket_c, 0.02, 12)
 basket_f = basket_a - basket_b
 basket_g = basket_f / 4
 
@@ -21,7 +20,6 @@ basket_l = (Basket(20USD) * 2 - 20CAD - 40USD) / 2 + 10CAD
     @test Basket([100USD, 200USD]) == Basket(300USD)
     @test basket_c == Basket([100USD, 20EUR])
     @test basket_d == Basket([400USD, 80EUR])
-    @test basket_e == Basket([126.82USD, 25.36EUR])
     @test basket_f == Basket([100USD, -20EUR])
     @test basket_g == Basket([25USD, -5EUR])
 
