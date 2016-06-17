@@ -2,7 +2,7 @@
 #   http://www.mkdocs.org/user-guide/configuration/
 
 site_name:        Currencies.jl
-repo_url:         https://github.com/TotalVerb/Currencies.jl
+repo_url:         https://github.com/JuliaFinance/Currencies.jl
 site_description: Simple checked currencies for Julia
 site_author:      Fengyang Wang
 

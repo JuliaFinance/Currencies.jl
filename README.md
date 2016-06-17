@@ -1,13 +1,13 @@
 # Currencies.jl
 
-[![Join the chat at https://gitter.im/TotalVerb/Currencies.jl](https://badges.gitter.im/TotalVerb/Currencies.jl.svg)](https://gitter.im/TotalVerb/Currencies.jl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/JuliaFinance/Currencies.jl](https://badges.gitter.im/JuliaFinance/Currencies.jl.svg)](https://gitter.im/JuliaFinance/Currencies.jl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/TotalVerb/Currencies.jl.svg?branch=master)](https://travis-ci.org/TotalVerb/Currencies.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/ofn6irk62gfe5v0o?svg=true)](https://ci.appveyor.com/project/TotalVerb/currencies-jl)
-[![Coverage Status](https://coveralls.io/repos/TotalVerb/Currencies.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/TotalVerb/Currencies.jl?branch=master)
-[![codecov](https://codecov.io/gh/TotalVerb/Currencies.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/TotalVerb/Currencies.jl)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://totalverb.github.io/Currencies.jl/stable)
-[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://totalverb.github.io/Currencies.jl/latest)
+[![Build Status](https://travis-ci.org/JuliaFinance/Currencies.jl.svg?branch=master)](https://travis-ci.org/JuliaFinance/Currencies.jl)
+[![Build status](https://ci.appveyor.com/api/projects/status/uhekxx4y4mtaf3ye?svg=true)](https://ci.appveyor.com/project/TotalVerb/currencies-jl-sm9b0)
+[![Coverage Status](https://coveralls.io/repos/JuliaFinance/Currencies.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/JuliaFinance/Currencies.jl?branch=master)
+[![codecov](https://codecov.io/gh/JuliaFinance/Currencies.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaFinance/Currencies.jl)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliafinance.github.io/Currencies.jl/stable)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://juliafinance.github.io/Currencies.jl/latest)
 
 ## Purpose
 This package provides a simple interface to using a wide variety of currencies with performant checked arithmetic in Julia. Creating and using monetary values is clean and easy. For advanced users, it also offers rich formatting and other powerful features, such as integration with currency conversion APIs.
@@ -16,7 +16,7 @@ This package provides a simple interface to using a wide variety of currencies w
 The currency-related information for this package comes from [this Wikipedia page](https://en.wikipedia.org/wiki/ISO_4217#cite_note-divby5-9), the official ISO standard, and other Wikipedia pages. It is compiled manually and may be in error; please do submit a pull request to correct any errors.
 
 ## Usage
-This README.md file provides a basic guide to getting started. It is not a replacement for the [documentation](https://totalverb.github.io/Currencies.jl/stable). Please file any corrections or missing parts of the documentation as issues, or even better, send in a pull request.
+This README.md file provides a basic guide to getting started. It is not a replacement for the [documentation](https://JuliaFinance.github.io/Currencies.jl/stable). Please file any corrections or missing parts of the documentation as issues, or even better, send in a pull request.
 
 The `Currencies` module exports the `Monetary` type. To access currencies, use the `@usingcurrencies` macro. Basic operation is as follows:
 
@@ -113,13 +113,13 @@ rates = ExchangeRateTable(
 valuate(rates, :USD, 100JPY)  # 2.00 USD
 ```
 
-For more on valuation, as usual, see the [documentation](https://totalverb.github.io/Currencies.jl/stable/valuation).
+For more on valuation, as usual, see the [documentation](https://JuliaFinance.github.io/Currencies.jl/stable/valuation).
 
 ## Floating Points & Other Reals
-Advanced users may be interested in a [cautionary note](https://totalverb.github.io/Currencies.jl/stable/rounding) on rounding.
+Advanced users may be interested in a [cautionary note](https://JuliaFinance.github.io/Currencies.jl/stable/rounding) on rounding.
 
 ## Custom Currencies & Names
-Advanced users may also be interested in [using currencies](https://totalverb.github.io/Currencies.jl/stable/custom) that are not in ISO 4217.
+Advanced users may also be interested in [using currencies](https://JuliaFinance.github.io/Currencies.jl/stable/custom) that are not in ISO 4217.
 
 ## Related Packages
 Please see [FinancialMarkets.jl](https://github.com/imanuelcostigan/FinancialMarkets.jl) package in case that suits your needs better.

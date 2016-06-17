@@ -15,5 +15,5 @@ deploydocs(
             "mkdocs",
             "mkdocs-material",
             "python-markdown-math"),
-    repo = "github.com/TotalVerb/Currencies.jl.git"
+    repo = "github.com/JuliaFinance/Currencies.jl.git"
 )
