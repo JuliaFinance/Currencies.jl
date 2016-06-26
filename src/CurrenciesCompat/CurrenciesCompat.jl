@@ -1,3 +1,5 @@
+module CurrenciesCompat
+
 # Additional compatibility helpers (not / not yet in Compat)
 
 # Mock IOContext (simple but slow and incomplete)
@@ -30,3 +32,5 @@ if VERSION < v"0.5.0-dev+4356"
     Base.Multimedia.reprmime{K}(m::MIME"text/plain", x::K) =
             sprint(verbose_show, m, x)
 end
+
+end  # module CurrenciesCompat

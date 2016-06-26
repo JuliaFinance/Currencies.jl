@@ -1,5 +1,7 @@
 # Display methods (show & print & writemime) tests
 
+using Currencies.CurrenciesCompat
+
 @testset "Output" begin
 
 @testset "text/plain" begin
@@ -39,7 +41,7 @@ end
 @testset "text/markdown" begin
     basketstr = stringmime("text/markdown", Basket([USD, 20CAD, -10JPY]))
 
-    @test contains(basketstr, "`Currencies.Basket`")
+    @test contains(basketstr, "`Currencies.CurrenciesBase.Basket`")
     @test contains(basketstr, "\$3\$-currency")
     @test contains(basketstr, " - \$-10\\,\\mathrm{JPY}\$")
 end
@@ -63,10 +65,10 @@ end  # testset output
 
 @testset "format" begin
     # internals
-    @test Currencies.digitseparate(20160408, "'", (3, 3)) == "20'160'408"
-    @test Currencies.digitseparate(12345678, " ", (3, 3)) == "12 345 678"
-    @test Currencies.digitseparate(1, ",", (3, 3)) == "1"
-    @test Currencies.digitseparate(12345678, ",", (3, 2)) == "1,23,45,678"
+    @test Currencies.CurrencyFormatting.digitseparate(20160408, "'", (3, 3)) == "20'160'408"
+    @test Currencies.CurrencyFormatting.digitseparate(12345678, " ", (3, 3)) == "12 345 678"
+    @test Currencies.CurrencyFormatting.digitseparate(1, ",", (3, 3)) == "1"
+    @test Currencies.CurrencyFormatting.digitseparate(12345678, ",", (3, 2)) == "1,23,45,678"
 
     # default (finance) style
     @test format(100USD) == "100.00 USD"
@@ -139,6 +141,6 @@ end  # testset output
     end
 
     # can't combine US & european
-    @test_throws Currencies.IncompatibleFormatException format(
+    @test_throws Currencies.DeclarativeFormatting.IncompatibleFormatException format(
         USD, styles=[:us, :european])
 end

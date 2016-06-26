@@ -1,3 +1,12 @@
+module Valuation
+
+using Requests
+
+using ..CurrenciesBase
+import ..CurrenciesBase: filltype, unit
+
+export valuate, ExchangeRateTable, ecbrates
+
 # Valuate Monetary or Basket using a table of exchange rates.
 
 """
@@ -106,4 +115,6 @@ end
 
 function valuate(table, T::Symbol, amount::AbstractMonetary)
     valuate(table, Monetary{T}, amount)
+end
+
 end

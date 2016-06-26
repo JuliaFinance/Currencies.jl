@@ -2,11 +2,6 @@ __precompile__()
 
 module Currencies
 
-using Requests
-using Compat
-
-import Base: +, -, *, /, ==
-
 # Exports
 export AbstractMonetary, Monetary
 export currency, decimals, @usingcurrencies
@@ -18,30 +13,23 @@ export newcurrency!, @usingcustomcurrency
 export format
 
 # Extra compatibility code
-include("compat.jl")
+include("CurrenciesCompat/CurrenciesCompat.jl")
+
+# DeclarativeFormatting (not specific to Currencies; under development)
+include("DeclarativeFormatting/DeclarativeFormatting.jl")
 
 # Currency data
 include("CurrencyData/CurrencyData.jl")
-using .CurrencyData
 
-# Monetary type, currencies, and arithmetic
-include("monetary.jl")
-include("currency.jl")
-include("arithmetic.jl")
+# Core features
+include("CurrenciesBase/CurrenciesBase.jl")
+using .CurrenciesBase
 
-# Baskets
-include("basket.jl")
-include("mixed.jl")
-
-# Computations (valuation & investments)
-include("valuate.jl")
+include("Valuation/Valuation.jl")
+using .Valuation
 
 # Interface (display/formatting, convenience macro)
-include("format/formatting.jl")
-include("usingcurrencies.jl")
-include("custom.jl")
-
-# Deprecations
-include("deprecated.jl")
+include("CurrencyFormatting/CurrencyFormatting.jl")
+using .CurrencyFormatting
 
 end # module

@@ -1,4 +1,15 @@
-#= Powerful pretty-printing =#
+module CurrencyFormatting
+
+using Compat
+
+using ..CurrenciesCompat
+using ..CurrenciesBase
+using ..CurrencyData
+using ..DeclarativeFormatting
+import ..DeclarativeFormatting: conflict, reconcile
+
+export format
+
 include("rules.jl")
 include("decimals.jl")
 include("templates.jl")
@@ -11,7 +22,7 @@ Base.show(io::IO, b::Basket) = show(io, "text/plain", b)
 
 function Base.show(io::IO, ::MIME"text/plain", m::Monetary)
     if get(io, :compact, false)
-        print(io, m / unit(m), currency(m))
+        print(io, m / CurrenciesBase.unit(m), currency(m))
     else
         print(io, format(m; styles=[:plain]))
     end
@@ -44,3 +55,5 @@ function Base.show(io::IO, ::MIME"text/markdown", b::Basket)
         show(io, "text/latex", val)
     end
 end
+
+end  # module CurrencyFormatting
