@@ -34,7 +34,7 @@ symbol, gets the default exponent (the number of decimal places to represent the
 minor currency unit) for that symbol. Return `-1` if there is no sane minor
 unit, such as for several kinds of precious metal.
 """
-decimals(c::Symbol) = DATA[c][1]
+decimals(c::Symbol) = ISO4217[c][1]
 decimals{T,U,V}(::Monetary{T,U,V}) = V
 decimals{T,U,V}(::Type{Monetary{T,U,V}}) = V
 decimals{T<:Monetary}(::Type{T}) = decimals(filltype(T))
@@ -50,7 +50,7 @@ This function may be called with either a symbol, a `Monetary` type, or a
 `Monetary` object.
 """
 function currencyinfo end
-@flexible currencyinfo(s::Symbol) = DATA[s][2]
+@flexible currencyinfo(s::Symbol) = ISO4217[s][2]
 
 """
     iso4217num(s::Symbol)   → Int
@@ -63,7 +63,7 @@ Get the ISO 4217 numeric code for a currency. For custom currencies, a value of
 zero-pad this code to three digits.
 """
 function iso4217num end
-@flexible iso4217num(s::Symbol) = DATA[s][3]
+@flexible iso4217num(s::Symbol) = ISO4217[s][3]
 
 
 """

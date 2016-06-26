@@ -1,4 +1,4 @@
-const DATA = Dict{Symbol, Tuple{Int, Compat.UTF8String, Int}}(
+const ISO4217 = Dict{Symbol, Tuple{Int, Compat.UTF8String, Int}}(
     :AED => (2,"UAE Dirham",784),
     :AFN => (2,"Afghani",971),
     :ALL => (2,"Lek",8),
