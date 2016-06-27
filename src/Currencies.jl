@@ -32,4 +32,7 @@ using .Valuation
 include("CurrencyFormatting/CurrencyFormatting.jl")
 using .CurrencyFormatting
 
+# Deprecations
+include("deprecated.jl")
+
 end # module

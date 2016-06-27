@@ -10,8 +10,7 @@ import Base: +, -, *, /, ==
 export AbstractMonetary, Monetary
 export currency, decimals, @usingcurrencies
 export currencyinfo, iso4217num, iso4217alpha, shortsymbol, longsymbol
-export Basket, StaticBasket, DynamicBasket
-export simplefv, compoundfv
+export Basket
 export newcurrency!, @usingcustomcurrency
 
 # Monetary type, currencies, and arithmetic
@@ -26,8 +25,5 @@ include("mixed.jl")
 # Custom currencies and macros
 include("usingcurrencies.jl")
 include("custom.jl")
-
-# Deprecations
-include("deprecated.jl")
 
 end  # module CurrenciesBase
