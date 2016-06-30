@@ -3,7 +3,7 @@ module Valuation
 using Requests
 
 using ..CurrenciesBase
-import ..CurrenciesBase: filltype, unit
+import ..CurrenciesBase: filltype
 
 export valuate, ExchangeRateTable, ecbrates
 
@@ -97,16 +97,16 @@ exchange rate table can either be an `ExchangeRateTable` or any other
 """
 function valuate{T,U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Monetary{T})
     rate = table[T] / table[U]
-    amount / unit(amount) * rate * unit(as)
+    amount / majorunit(amount) * rate * majorunit(as)
 end
 
 function valuate{U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Basket)
     acc = 0.0
     for m in amount
         from = currency(m)
-        acc += m / unit(m) * table[from]
+        acc += m / majorunit(m) * table[from]
     end
-    acc / table[U] * unit(as)
+    acc / table[U] * majorunit(as)
 end
 
 function valuate{U<:Monetary}(table, ::Type{U}, amount::AbstractMonetary)

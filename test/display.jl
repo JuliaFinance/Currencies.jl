@@ -17,7 +17,7 @@ using Currencies.CurrenciesCompat
     @test stringmime("text/plain", +USD) == "1.00 USD"
     @test stringmime("text/plain", -USD) == "−1.00 USD"
 
-    @test stringmime("text/plain", unit(Monetary{:USD, BigInt, 5})) ==
+    @test stringmime("text/plain", majorunit(Monetary{:USD, BigInt, 5})) ==
         "1.00000 USD"
     @test stringmime("text/plain", -Monetary(:JPY, precision=2)) ==
         "−1.00 JPY"

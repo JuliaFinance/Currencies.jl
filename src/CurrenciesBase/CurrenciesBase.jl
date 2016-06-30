@@ -8,7 +8,7 @@ import Base: +, -, *, /, ==
 
 # Exports
 export AbstractMonetary, Monetary
-export currency, decimals, @usingcurrencies
+export currency, decimals, majorunit, @usingcurrencies
 export currencyinfo, iso4217num, iso4217alpha, shortsymbol, longsymbol
 export Basket
 export newcurrency!, @usingcustomcurrency

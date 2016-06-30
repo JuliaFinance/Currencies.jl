@@ -107,15 +107,15 @@ function longsymbol end
 @flexible longsymbol(s::Symbol) = get(LONG_SYMBOL, s, iso4217alpha(s))
 
 """
-longsymbol(s::Symbol)   → Monetary{s}
-longsymbol(m::Monetary) → typeof(m)
-longsymbol(t::DataType) → t
+    majorunit(s::Symbol)   → Monetary{s}
+    majorunit(m::Monetary) → typeof(m)
+    majorunit(t::DataType) → t
 
 Get the major unit of the currency. This function may be called with either a
 symbol, a `Monetary` type, or a `Monetary` object.
 """
-function unit end
-unit(s::Symbol) = unit(Monetary{s})
-unit{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(convert(U, 10)^V)
-unit{T<:Monetary}(::Type{T}) = unit(filltype(T))
-unit(x::Monetary) = unit(typeof(x))
+function majorunit end
+majorunit(s::Symbol) = majorunit(Monetary{s})
+majorunit{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(convert(U, 10)^V)
+majorunit{T<:Monetary}(::Type{T}) = majorunit(filltype(T))
+majorunit(x::Monetary) = majorunit(typeof(x))

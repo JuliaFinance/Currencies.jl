@@ -22,7 +22,7 @@ Base.show(io::IO, b::Basket) = show(io, "text/plain", b)
 
 function Base.show(io::IO, ::MIME"text/plain", m::Monetary)
     if get(io, :compact, false)
-        print(io, m / CurrenciesBase.unit(m), currency(m))
+        print(io, m / majorunit(m), currency(m))
     else
         print(io, format(m; styles=[:plain]))
     end

@@ -1,7 +1,5 @@
 using Currencies
 
-import Currencies.CurrenciesBase: unit
-
 if VERSION ≥ v"0.5-"
     using Base.Test
 else

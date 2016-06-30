@@ -54,7 +54,7 @@ function Monetary(T::Symbol; precision=decimals(T), storage=Int)
     if precision == -1
         throw(ArgumentError("Must provide precision for currency $T."))
     else
-        unit(Monetary{T, storage, precision})
+        majorunit(Monetary{T, storage, precision})
     end
 end
 

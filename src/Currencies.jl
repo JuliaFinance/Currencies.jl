@@ -4,7 +4,7 @@ module Currencies
 
 # Exports
 export AbstractMonetary, Monetary
-export currency, decimals, @usingcurrencies
+export currency, decimals, majorunit, @usingcurrencies
 export currencyinfo, iso4217num, iso4217alpha, shortsymbol, longsymbol
 export valuate, ExchangeRateTable, ecbrates
 export Basket, StaticBasket, DynamicBasket
