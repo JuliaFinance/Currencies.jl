@@ -35,3 +35,6 @@ pages:
     - Rounding: rounding.md
     - Notes on Performance: performance.md
   - Reference: reference.md
+
+extra:
+  - version: 0.5.0
