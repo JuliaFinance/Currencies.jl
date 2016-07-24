@@ -47,9 +47,7 @@ function ecbrates_fresh(datestr::AbstractString)
     table[Symbol(resp["base"])] = 1.0
 
     # cache and return
-    ert = ExchangeRateTable(date, table)
-    ECBCache[date] = ert
-    return ert
+    ECBCache[date] = ExchangeRateTable(date, table)
 end
 ecbrates_fresh(date::Date) = ecbrates_fresh(string(date))
 ecbrates_fresh() = ecbrates_fresh("latest")
