@@ -1,29 +1,3 @@
-# helper methods
-iszero(x) = x == zero(x)
-function deleteifzero!{T}(d::Associative{T}, k)
-    if iszero(d[k])
-        delete!(d, k)
-    end
-    d
-end
-
-# build monetary table
-typealias SMDict Dict{Symbol, Monetary}
-function buildtable!(table::SMDict, m::Monetary)
-    cur = currency(m)
-    if haskey(table, cur)
-        table[cur] += m
-    else
-        table[cur] = m
-    end
-    deleteifzero!(table, cur)
-end
-buildtable!(table::SMDict, m::Number) =
-    throw(ArgumentError("Numbers not supported in Baskets"))
-buildtable!(table::SMDict, ms) = foldl(buildtable!, table, ms)
-buildtable(ms) = buildtable!(SMDict(), ms)
-
-
 """
 A mutable collection of `Monetary` values of various currencies. Like regular
 `Monetary` values, `Basket` values support basic arithmetic operations, with

@@ -8,16 +8,12 @@ import Base: +, -, *, /, ==
 export AbstractMonetary, Monetary
 export currency, decimals, majorunit, @usingcurrencies
 export currencyinfo, iso4217num, iso4217alpha, shortsymbol, longsymbol
-export Basket
 export newcurrency!, @usingcustomcurrency
 
 # Monetary type, currencies, and arithmetic
 include("monetary.jl")
 include("currency.jl")
 include("arithmetic.jl")
-
-# Baskets
-include("basket.jl")
 include("mixed.jl")
 
 # Custom currencies and macros

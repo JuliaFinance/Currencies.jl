@@ -1,4 +1,4 @@
-## Promotions and conversions
+# Mixed precision monetary arithmetic
 
 # Promote to larger type if precision same
 function Base.promote_rule{A,B,C,D}(
@@ -12,13 +12,6 @@ function Base.promote_rule{A,B,C,D,E}(
         ::Type{Monetary{A,B,D}},
         ::Type{Monetary{A,C,E}})
     Monetary{A, BigInt, max(D, E)}
-end
-
-# Promote to Basket otherwise
-function Base.promote_rule{A<:AbstractMonetary, B<:AbstractMonetary}(
-        ::Type{A},
-        ::Type{B})
-    Basket
 end
 
 # Convert with same kind of currency
@@ -37,30 +30,7 @@ function Base.convert{A,B,C,D,E}(::Type{Monetary{A,B,C}}, m::Monetary{A,D,E})
     Monetary{A,B,C}(val)
 end
 
-# Convert to basket
-Base.convert(::Type{Basket}, m::AbstractMonetary) = Basket((m,))
-
-# Convert to Monetary
-function Base.convert{T<:Monetary}(::Type{T}, b::Basket)
-    len = length(b)
-    if len == 0
-        zero(T)
-    elseif len == 1
-        convert(T, first(b))
-    else
-        throw(InexactError())
-    end
-end
-
-
-## Functions that promote
-Base. ==(b::AbstractMonetary, c::AbstractMonetary) = iszero(-(promote(b, c)...))
 Base.isless{T}(m::Monetary{T}, n::Monetary{T}) = isless(promote(m, n)...)
-
-b::Basket           + c::AbstractMonetary = +(promote(b, c)...)
-b::AbstractMonetary + c::Basket           = c + b
-b::AbstractMonetary - c::AbstractMonetary = b + (-c)
-
 +{T}(m::Monetary{T}, n::Monetary{T}) = +(promote(m, n)...)
 /{T}(m::Monetary{T}, n::Monetary{T}) = /(promote(m, n)...)
 

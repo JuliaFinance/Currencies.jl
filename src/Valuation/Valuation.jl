@@ -3,6 +3,7 @@ module Valuation
 using Requests
 
 using ..CurrenciesBase
+using ..Baskets
 import ..CurrenciesBase: filltype
 
 export valuate, ExchangeRateTable, ecbrates

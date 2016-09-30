@@ -22,6 +22,9 @@ include("CurrencyData/CurrencyData.jl")
 include("CurrenciesBase/CurrenciesBase.jl")
 using .CurrenciesBase
 
+include("Baskets/Basket.jl")
+using .Baskets
+
 include("Valuation/Valuation.jl")
 using .Valuation
 

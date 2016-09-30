@@ -21,6 +21,8 @@ Base.one{T<:AbstractMonetary}(::T) = one(T)
 
 # comparisons
 =={T<:Monetary}(m::T, n::T) = m.val == n.val
+=={T}(m::Monetary{T}, n::Monetary{T}) = (m - n).val == 0
+m::Monetary == n::Monetary = m.val == n.val == 0
 Base.isless{T<:Monetary}(m::T, n::T) = isless(m.val, n.val)
 
 # unary plus/minus

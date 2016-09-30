@@ -1,0 +1,30 @@
+## Promotions and conversions
+
+# Promote to Basket
+function Base.promote_rule{B<:AbstractMonetary}(
+        ::Type{Basket},
+        ::Type{B})
+    Basket
+end
+
+# Convert to basket
+Base.convert(::Type{Basket}, m::AbstractMonetary) = Basket((m,))
+
+# Convert to Monetary
+function Base.convert{T<:Monetary}(::Type{T}, b::Basket)
+    len = length(b)
+    if len == 0
+        zero(T)
+    elseif len == 1
+        convert(T, first(b))
+    else
+        throw(InexactError())
+    end
+end
+
+## Functions that promote
+b::AbstractMonetary == c::AbstractMonetary = iszero(-(promote(b, c)...))
+
+b::Basket            + c::AbstractMonetary = +(promote(b, c)...)
+b::AbstractMonetary  + c::Basket           = c + b
+b::AbstractMonetary  - c::AbstractMonetary = b + (-c)

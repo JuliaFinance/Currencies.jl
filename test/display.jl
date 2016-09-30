@@ -39,7 +39,7 @@ end
 @testset "text/markdown" begin
     basketstr = stringmime("text/markdown", Basket([USD, 20CAD, -10JPY]))
 
-    @test contains(basketstr, "`Currencies.CurrenciesBase.Basket`")
+    @test contains(basketstr, "`Currencies.Baskets.Basket`")
     @test contains(basketstr, "\$3\$-currency")
     @test contains(basketstr, " - \$-10\\,\\mathrm{JPY}\$")
 end
