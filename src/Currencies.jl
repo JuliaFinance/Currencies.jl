@@ -12,9 +12,6 @@ export simplefv, compoundfv
 export newcurrency!, @usingcustomcurrency
 export format
 
-# Extra compatibility code
-include("CurrenciesCompat/CurrenciesCompat.jl")
-
 # DeclarativeFormatting (not specific to Currencies; under development)
 include("DeclarativeFormatting/DeclarativeFormatting.jl")
 

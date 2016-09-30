@@ -1,7 +1,5 @@
 module DeclarativeFormatting
 
-using Compat
-
 export FormatRequirement, IncompatibleFormatException, allowable, best,
        takenonzero, conflict, reconcile, FormatSpecification
 
@@ -9,7 +7,7 @@ export FormatRequirement, IncompatibleFormatException, allowable, best,
 abstract FormatRequirement
 
 type IncompatibleFormatException <: Exception
-    msg::Compat.UTF8String
+    msg::String
 end
 
 #= Format helpers =#

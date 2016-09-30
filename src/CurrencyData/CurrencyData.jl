@@ -1,7 +1,5 @@
 module CurrencyData
 
-using Compat
-
 include("currencies.jl")
 include("locale.jl")
 include("symbols.jl")

@@ -1,8 +1,5 @@
 module CurrencyFormatting
 
-using Compat
-
-using ..CurrenciesCompat
 using ..CurrenciesBase
 using ..CurrencyData
 using ..DeclarativeFormatting

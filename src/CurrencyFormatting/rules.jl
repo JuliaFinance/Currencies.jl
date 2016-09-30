@@ -4,13 +4,13 @@ end
 ParenthesizeNegative() = ParenthesizeNegative(:unspecified)
 
 immutable DigitSeparator <: FormatRequirement
-    sep::Compat.UTF8String        # e.g. ",", ".", "'", " "; "\0" for unspecified
+    sep::String        # e.g. ",", ".", "'", " "; "\0" for unspecified
     rule::Tuple{Int, Int}  # first, rest, e.g. (3, 3); (0, 0) for unspecified
 end
 DigitSeparator(c::AbstractString) = DigitSeparator(c, (3, 3))
 
 immutable DecimalSeparator <: FormatRequirement
-    sep::Compat.UTF8String  # e.g. ",", "."; "\0" for unspecified
+    sep::String  # e.g. ",", "."; "\0" for unspecified
 end
 
 immutable CurrencySymbol <: FormatRequirement
@@ -30,7 +30,7 @@ end
 
 immutable RenderAs <: FormatRequirement
     sym::Symbol                            # name of symbol to require
-    options::Dict{Compat.UTF8String, Int}  # Allowable symbols => priority
+    options::Dict{String, Int}  # Allowable symbols => priority
 end
 
 reconcile(p::ParenthesizeNegative, p′::ParenthesizeNegative) =
@@ -66,7 +66,7 @@ function getsymboltable(spec::FormatSpecification)
         :minus_sign => "−",
         :zero_dash => "—",
         :thin_space => " ")
-    table = Dict{Symbol, Dict{Compat.UTF8String, Int}}()
+    table = Dict{Symbol, Dict{String, Int}}()
     for req in spec.reqs
         if isa(req, RenderAs)
             table[req.sym] = req.options

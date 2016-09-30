@@ -121,5 +121,5 @@ function format(m::Monetary, spec::FormatSpecification)
     template = loweramount(spec, m)
     template = symbolize(template, spec, m)
     template = render(template, spec, m)
-    join(template) |> Compat.UTF8String
+    join(template) |> String
 end

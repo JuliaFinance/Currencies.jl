@@ -78,7 +78,7 @@ function may be called with either a symbol, a `Monetary` type, or a `Monetary`
 object.
 """
 function iso4217alpha end
-@flexible iso4217alpha(s::Symbol) = string(s) |> Compat.UTF8String
+@flexible iso4217alpha(s::Symbol) = string(s) |> String
 
 
 """
