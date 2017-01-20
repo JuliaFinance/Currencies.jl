@@ -1,5 +1,6 @@
 module CurrenciesBase
 
+import ..Currencies
 using ..CurrencyData
 
 import Base: +, -, *, /, ==

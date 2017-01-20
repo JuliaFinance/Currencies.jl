@@ -5,10 +5,16 @@ macro flexible(assignment)
     @assert assignment.head == :(=)
     symb = assignment.args[1].args[1]
     quote
-        $assignment
-        $symb{U<:Monetary}(::Type{U}) = $symb(U.parameters[1])
-        $symb(m::Monetary) = $symb(typeof(m))
-    end |> esc
+        $(esc(assignment))
+        if VERSION < v"0.6.0-dev.2123"
+            $(esc(symb)){U<:Monetary}(::Type{U}) = $(esc(symb))(U.parameters[1])
+        else
+            include_string("""
+            $($(esc(symb)))(::Type{U}) where U <: Monetary{S} where S = $($(esc(symb)))(S)
+            """)
+        end
+        $(esc(symb))(m::Monetary) = $(esc(symb))(typeof(m))
+    end
 end
 
 """

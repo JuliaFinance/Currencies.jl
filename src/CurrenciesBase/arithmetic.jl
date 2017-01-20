@@ -23,16 +23,16 @@ Base.one{T<:AbstractMonetary}(::T) = one(T)
 =={T<:Monetary}(m::T, n::T) = m.val == n.val
 =={T}(m::Monetary{T}, n::Monetary{T}) = (m - n).val == 0
 m::Monetary == n::Monetary = m.val == n.val == 0
-Base.isless{T<:Monetary}(m::T, n::T) = isless(m.val, n.val)
+Base.isless{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = isless(m.val, n.val)
 
 # unary plus/minus
 + m::AbstractMonetary = m
 -{T<:Monetary}(m::T) = T(-m.val)
 
 # arithmetic operations on two monetary values
-+{T<:Monetary}(m::T, n::T) = T(m.val + n.val)
--{T<:Monetary}(m::T, n::T) = T(m.val - n.val)
-/{T<:Monetary}(m::T, n::T) = m.val / n.val
++{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = Monetary{T,U,V}(m.val + n.val)
+-{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = Monetary{T,U,V}(m.val - n.val)
+/{T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) = m.val / n.val
 
 # arithmetic operations on monetary and dimensionless values
 *{T<:Monetary}(m::T, i::Integer) = T(m.val * i)
@@ -57,7 +57,8 @@ for (dv, rm, dvrm) in DIVS
         quotient, remainder = $(dvrm)(m.val, n.val)
         quotient, Monetary{T,U,V}(remainder)
     end
-    @eval Base.$(dv){T<:Monetary}(m::T, n::T) = $(dv)(m.val, n.val)
+    @eval Base.$(dv){T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
+        $(dv)(m.val, n.val)
     @eval Base.$(rm){T,U,V}(m::Monetary{T,U,V}, n::Monetary{T,U,V}) =
         Monetary{T,U,V}($(rm)(m.val, n.val))
 end
