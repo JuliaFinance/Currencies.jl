@@ -62,7 +62,12 @@ end
 # somewhat strange because Baskets behave like collections and like numbers...
 # maybe add! is a better name
 Base.push!(b::Basket, m::Monetary) = (b[currency(m)] += m; b)
-Base.push!(b::Basket, c::Basket)   = foldl(push!, b, c)
+function Base.push!(b::Basket, c::Basket)
+    for m in c
+        push!(b, m)
+    end
+    b
+end
 
 # other methods (eltype, iszero, zero, ==)
           iszero(b::Basket) = isempty(b)

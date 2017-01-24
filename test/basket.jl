@@ -89,7 +89,7 @@ basket_dyn = Basket() + basket_g
     @test !haskey(basket_dyn, :CAD)  # zero keys should act invisible
     @test length(collect(basket_dyn)) == 3
     push!(basket_dyn, Basket([25USD, 25EUR]))
-    @test_skip basket_dyn == Basket([50USD, 10EUR, 15JPY])
+    @test basket_dyn == Basket([50USD, 10EUR, 15JPY])
 end
 
 # Errors
