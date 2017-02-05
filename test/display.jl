@@ -25,7 +25,7 @@
     # with compact IOContext
     buf = IOBuffer()
     show(IOContext(buf, :compact => true), "text/plain", 1USD)
-    @test takebuf_string(buf) == "1.0USD"
+    @test String(take!(buf)) == "1.0USD"
 end
 
 @testset "text/latex" begin
