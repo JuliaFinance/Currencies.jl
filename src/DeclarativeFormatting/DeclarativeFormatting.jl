@@ -3,8 +3,10 @@ module DeclarativeFormatting
 export FormatRequirement, IncompatibleFormatException, allowable, best,
        takenonzero, conflict, reconcile, FormatSpecification
 
+using Compat
+
 #= Format Specification rules =#
-abstract FormatRequirement
+@compat abstract type FormatRequirement end
 
 type IncompatibleFormatException <: Exception
     msg::String

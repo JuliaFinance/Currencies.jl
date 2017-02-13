@@ -8,7 +8,7 @@ function deleteifzero!{T}(d::Associative{T}, k)
 end
 
 # build monetary table
-typealias SMDict Dict{Symbol, Monetary}
+const SMDict = Dict{Symbol, Monetary}
 function buildtable!(table::SMDict, m::Monetary)
     cur = currency(m)
     if haskey(table, cur)
