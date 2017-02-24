@@ -1,4 +1,5 @@
 using Currencies
+using Currencies.FixedPointDecimals
 
 if VERSION ≥ v"0.5-"
     using Base.Test
@@ -10,6 +11,11 @@ end
 # Get currencies for tests
 @usingcurrencies USD, CAD, EUR, GBP, JPY, AUD, INR
 @usingcurrencies CNY  # test one-currency version
+
+# Fixed point numbers tests
+@testset "Fixed Point" begin
+    include("fixed-point.jl")
+end
 
 # Data tests
 include("data.jl")

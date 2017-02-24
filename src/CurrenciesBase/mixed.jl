@@ -16,18 +16,7 @@ end
 
 # Convert with same kind of currency
 function Base.convert{A,B,C,D,E}(::Type{Monetary{A,B,C}}, m::Monetary{A,D,E})
-    val = if C ≥ E
-        convert(B, m.val * big(10)^(C - E))
-    else
-        sf = big(10)^(E - C)
-        q, r = divrem(m.val, sf)
-        if r ≠ 0
-            throw(InexactError())
-        else
-            convert(B, q)
-        end
-    end
-    Monetary{A,B,C}(val)
+    Monetary{A,B,C}(m.val)
 end
 
 Base.isless{T}(m::Monetary{T}, n::Monetary{T}) = isless(promote(m, n)...)

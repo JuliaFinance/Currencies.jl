@@ -49,13 +49,17 @@ example:
 
 ```julia
 @usingcurrencies USD
-money = 1USD                   # 1 USD
-magn = money.val               # 100
-symb = currency(money)         # :USD
-a = π * magn                   # 314.159265...
-b = π * a                      # 986.960440...
-Monetary(symb, round(Int, b))  # 9.87 USD
+money = 1USD                     # 1 USD
+magn = money.val                 # 1.00
+symb = currency(money)           # :USD
+a = π^2 * magn                   # 9.86960440...
+Monetary(symb, round(Int, 100a)) # 9.87 USD
 ```
+
+!!! warning
+    The `.val` field access is expected to be deprecated in the future. It is
+    highly recommended that it not be used. A better replacement will become
+    available in the future.
 
 ## Custom Precision
 

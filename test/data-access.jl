@@ -55,11 +55,11 @@ end
 
 # Decimals
 @testset ".val" begin
-    @test (-USD).val == -100
+    @test (-USD).val == -1
     @test (100JPY).val == 100
-    @test (100USD).val == 10000
-    @test Monetary(:USD, 25000; precision=3).val == 25000
-    @test Monetary(:USD; precision=6).val == 1000000
+    @test (100USD).val == 100
+    @test Monetary(:USD, 25000; precision=3).val == 25
+    @test Monetary(:USD; precision=6).val == 1
     @test zero(Monetary{:USD, Int, 8}).val == 0
 end
 

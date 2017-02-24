@@ -1,4 +1,5 @@
 #= Monetary type, and low-level operations =#
+using ..FixedPointDecimals
 
 # Abstract class for Monetary-like things
 """
@@ -39,7 +40,13 @@ number of decimal points to keep after the major denomination:
     Monetary(:USD, BigInt(10000); precision=4)  # 1.0000 USD
 """
 immutable Monetary{T, U, V} <: AbstractMonetary
-    val::U
+    val::FixedDecimal{U, V}
+
+    # TODO: deprecate this constructor
+    (::Type{Monetary{T, U, V}}){T,U,V}(x::Integer) =
+        new{T,U,V}(reinterpret(FixedDecimal{U,V}, x))
+    (::Type{Monetary{T, U, V}}){T,U,V}(x::Real) =
+        new{T,U,V}(FixedDecimal{U,V}(x))
 end
 
 function Monetary(T::Symbol, x; precision=decimals(T))

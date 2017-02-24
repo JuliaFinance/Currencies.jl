@@ -85,8 +85,8 @@ function render(template::Vector, spec::FormatSpecification, m::Monetary)
     digisep = get(spec, DigitSeparator, DigitSeparator(""))
 
     prec = decimals(m)
-    intpart = abs(m.val) ÷ 10^prec
-    floatpart = abs(m.val) % 10^prec
+    intpart = trunc(Int, abs(m.val))
+    floatpart = round(Int, big(10)^prec * (abs(m.val) - intpart))
 
     syms = getsymboltable(spec)
     next_template = []

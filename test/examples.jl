@@ -4,8 +4,7 @@
 money = 1USD
 magn = money.val
 symb = currency(money)
-a = π * magn
-b = π * a
+a = π^2 * magn
 
 # Give change
 COINS = [500EUR, 200EUR, 100EUR, 50EUR, 20EUR, 10EUR, 5EUR, 2EUR, 1EUR, 0.5EUR,
@@ -19,6 +18,6 @@ function change(amount::Monetary{:EUR,Int})
 end
 
 @testset "Doc Examples" begin
-    @test Monetary(symb, round(Int, b)) == 9.87USD
+    @test Monetary(symb, round(Int, 100a)) == 9.87USD
     @test sum([k*v for (k, v) in change(167.25EUR)]) == 167.25EUR
 end
