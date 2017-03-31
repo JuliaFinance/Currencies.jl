@@ -1,9 +1,11 @@
 module Valuation
 
-using Requests
+using HTTP
+using JSON
 
 using ..CurrenciesBase
 using ..Baskets
+using Compat: take!
 import ..CurrenciesBase: filltype
 
 export valuate, ExchangeRateTable, ecbrates
@@ -39,7 +41,7 @@ const ECBCache = Dict{Date, ExchangeRateTable}()
 
 function ecbrates_fresh(datestr::AbstractString)
     # get fixer.io data
-    resp = Requests.json(get("https://api.fixer.io/$datestr", timeout=15))
+    resp = JSON.parse(String(take!(HTTP.get("https://api.fixer.io/$datestr"))))
     date = Date(resp["date"])
     table = Dict{Symbol, Float64}()
     for (k, v) in resp["rates"]
