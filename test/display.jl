@@ -141,4 +141,7 @@ end  # testset output
     # can't combine US & european
     @test_throws Currencies.DeclarativeFormatting.IncompatibleFormatException format(
         USD, styles=[:us, :european])
+
+    # big numbers
+    @test format(Monetary{:USD,BigInt,10}(1e4)) == "10000.0000000000 USD"
 end
