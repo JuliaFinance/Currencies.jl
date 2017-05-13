@@ -9,7 +9,7 @@ Modules = [Currencies.CurrenciesBase]
 ## Formatting
 
 ```@autodocs
-Modules = [Currencies.CurrencyFormat]
+Modules = [Currencies.CurrencyFormatting]
 ```
 
 ## Valuation
