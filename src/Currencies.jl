@@ -12,9 +12,6 @@ export simplefv, compoundfv
 export newcurrency!, @usingcustomcurrency
 export format
 
-# FixedPointDecimals.jl
-include("FixedPointDecimals/FixedPointDecimals.jl")
-
 # DeclarativeFormatting (not specific to Currencies; under development)
 include("DeclarativeFormatting/DeclarativeFormatting.jl")
 

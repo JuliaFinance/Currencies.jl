@@ -1,5 +1,5 @@
 #= Monetary type, and low-level operations =#
-using ..FixedPointDecimals
+using FixedPointDecimals
 
 # Abstract class for Monetary-like things
 """
