@@ -103,4 +103,17 @@ end
     @test_throws ArgumentError basket_dyn[:USD] = 100CAD
 end
 
+@testset "Conversion" begin
+    b = Basket(100CAD)
+    @test convert(Monetary, b) == 100CAD
+    @test convert(Monetary{:CAD}, b) == 100CAD
+    @test_throws Exception convert(Monetary{:USD}, b)
+    @test_throws Exception convert(Monetary{:USD}, b + 100USD)
+    @test_throws Exception convert(Monetary, b + 100USD)
+
+    z = Basket()
+    @test_throws Exception convert(Monetary, z)
+    @test convert(Monetary{:CAD}, z) == 0CAD
+end
+
 end  # testset Basket
