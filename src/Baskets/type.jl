@@ -1,27 +1,35 @@
 """
-A mutable collection of `Monetary` values of various currencies. Like regular
-`Monetary` values, `Basket` values support basic arithmetic operations, with
-both other baskets and with raw monetary values. The constructor for `Basket`
-accepts either a monetary value or a vector of monetary values.
+A mutable collection of `Monetary` values of various currencies.
 
-    basket = Basket([1USD, 5EUR])        # \$1 + 5€
-    basket += 2EUR                       # \$1 + 7€
-    basket \*= 2                          # \$2 + 14€
+Like regular `Monetary` values, `Basket` values support basic arithmetic
+operations, with both other baskets and with raw monetary values. The
+constructor for `Basket` accepts either a monetary value or a vector of
+monetary values.
+
+```julia
+basket = Basket([1USD, 5EUR])        # \$1 + 5€
+basket += 2EUR                       # \$1 + 7€
+basket *= 2                          # \$2 + 14€
+```
 
 `Basket` values also support iteration. The iteration order of currencies is
 undefined. For instance, the following will print `1.00 USD` and `5.00 EUR`, in
 some order. Iteration will skip over any currencies with zero weight in the
 basket.
 
-    for amt in Basket([1USD, 5EUR])
-        println(amt)
-    end
+```julia
+for amt in Basket([1USD, 5EUR])
+    println(amt)
+end
+```
 
 One can also mutate the basket with index notation, or with `push!`.
 
-    basket = Basket([1USD, 2EUR])
-    basket[:USD] = 3USD  # Basket([3USD, 2EUR])
-    push!(basket, 10GBP) # Basket([3USD, 2EUR, 10GBP])
+```julia
+basket = Basket([1USD, 2EUR])
+basket[:USD] = 3USD  # Basket([3USD, 2EUR])
+push!(basket, 10GBP) # Basket([3USD, 2EUR, 10GBP])
+```
 """
 immutable Basket <: AbstractMonetary
     table::SMDict
