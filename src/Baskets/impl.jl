@@ -1,6 +1,6 @@
 # helper methods
 iszero(x) = x == zero(x)
-function deleteifzero!{T}(d::Associative{T}, k)
+function deleteifzero!(d::Associative{T}, k) where T
     if iszero(d[k])
         delete!(d, k)
     end

@@ -7,7 +7,7 @@ The abstract type of objects representing a single value in one currency, or a
 collection of values in a set of currencies. These objects should behave like
 `Monetary` or `Basket` objects.
 """
-@compat abstract type AbstractMonetary end
+abstract type AbstractMonetary end
 
 """
 A representation of a monetary value, denominated in some currency. The currency
@@ -39,13 +39,13 @@ number of decimal points to keep after the major denomination:
     Monetary{:USD, BigInt, 4}(10000)            # 1.0000 USD
     Monetary(:USD, BigInt(10000); precision=4)  # 1.0000 USD
 """
-immutable Monetary{T, U, V} <: AbstractMonetary
+struct Monetary{T, U, V} <: AbstractMonetary
     val::FixedDecimal{U, V}
 
     # TODO: deprecate this constructor
-    (::Type{Monetary{T, U, V}}){T,U,V}(x::Integer) =
+    Monetary{T, U, V}(x::Integer) where {T,U,V} =
         new{T,U,V}(reinterpret(FixedDecimal{U,V}, x))
-    (::Type{Monetary{T, U, V}}){T,U,V}(x::Real) =
+    Monetary{T, U, V}(x::Real) where {T,U,V} =
         new{T,U,V}(FixedDecimal{U,V}(x))
 end
 
@@ -71,5 +71,5 @@ end
 Fill in default type parameters to get a fully-specified concrete type from a
 partially-specified one.
 """
-filltype{T}(::Type{Monetary{T}}) = Monetary{T, Int, decimals(T)}
-filltype{T,U}(::Type{Monetary{T,U}}) = Monetary{T, U, decimals(T)}
+filltype(::Type{Monetary{T}}) where {T} = Monetary{T, Int, decimals(T)}
+filltype(::Type{Monetary{T,U}}) where {T,U} = Monetary{T, U, decimals(T)}

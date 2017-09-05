@@ -1,9 +1,9 @@
 ## Promotions and conversions
 
 # Promote to Basket
-function Base.promote_rule{B<:AbstractMonetary}(
+function Base.promote_rule(
         ::Type{Basket},
-        ::Type{B})
+        ::Type{B}) where B<:AbstractMonetary
     Basket
 end
 
@@ -11,7 +11,7 @@ end
 Base.convert(::Type{Basket}, m::AbstractMonetary) = Basket((m,))
 
 # Convert to Monetary
-function Base.convert{T<:Monetary}(::Type{T}, b::Basket)
+function Base.convert(::Type{T}, b::Basket) where T<:Monetary
     len = length(b)
     if len == 0
         zero(T)

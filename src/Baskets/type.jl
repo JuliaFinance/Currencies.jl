@@ -31,7 +31,7 @@ basket[:USD] = 3USD  # Basket([3USD, 2EUR])
 push!(basket, 10GBP) # Basket([3USD, 2EUR, 10GBP])
 ```
 """
-immutable Basket <: AbstractMonetary
+struct Basket <: AbstractMonetary
     table::SMDict
     Basket(ms::Union{AbstractArray,Tuple}) = new(buildtable(ms))
 end

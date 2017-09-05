@@ -20,7 +20,7 @@ same currency. The denomination currency need not even exist in the table.
 Optionally, `ExchangeRateTable` objects may contain information about the date
 for which they apply. If this isn't provided, then the current date is used.
 """
-immutable ExchangeRateTable <: Associative{Symbol, Float64}
+struct ExchangeRateTable <: Associative{Symbol, Float64}
     date::Date
     table::Dict{Symbol, Float64}
 end
@@ -96,12 +96,12 @@ exchange rate table can either be an `ExchangeRateTable` or any other
     rates = ExchangeRateTable(:USD => 1.0, :CAD => 0.75)
     valuate(rates, :CAD, 21USD)  # 28CAD
 """
-function valuate{T,U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Monetary{T})
+function valuate(table, as::Type{Monetary{U,V,W}}, amount::Monetary{T}) where {T,U,V,W}
     rate = table[T] / table[U]
     amount / majorunit(amount) * rate * majorunit(as)
 end
 
-function valuate{U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Basket)
+function valuate(table, as::Type{Monetary{U,V,W}}, amount::Basket) where {U,V,W}
     acc = 0.0
     for m in amount
         from = currency(m)
@@ -110,7 +110,7 @@ function valuate{U,V,W}(table, as::Type{Monetary{U,V,W}}, amount::Basket)
     acc / table[U] * majorunit(as)
 end
 
-function valuate{U<:Monetary}(table, ::Type{U}, amount::AbstractMonetary)
+function valuate(table, ::Type{U}, amount::AbstractMonetary) where U<:Monetary
     valuate(table, filltype(U), amount)
 end
 

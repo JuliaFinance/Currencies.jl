@@ -6,9 +6,9 @@ export FormatRequirement, IncompatibleFormatException, allowable, best,
 using Compat
 
 #= Format Specification rules =#
-@compat abstract type FormatRequirement end
+abstract type FormatRequirement end
 
-type IncompatibleFormatException <: Exception
+mutable struct IncompatibleFormatException <: Exception
     msg::String
 end
 
@@ -60,7 +60,7 @@ function reconcile end
 """
 A collection of `FormatRequirement`s.
 """
-immutable FormatSpecification
+struct FormatSpecification
     reqs::Vector{FormatRequirement}
 end
 
@@ -90,7 +90,7 @@ function Base.union(x::FormatSpecification, y::FormatSpecification)
     result
 end
 
-function Base.get{T<:FormatRequirement}(spec::FormatSpecification, ::Type{T}, d)
+function Base.get(spec::FormatSpecification, ::Type{T}, d) where T<:FormatRequirement
     for req in spec.reqs
         if isa(req, T)
             return req

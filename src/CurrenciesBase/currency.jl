@@ -6,13 +6,9 @@ macro flexible(assignment)
     symb = assignment.args[1].args[1]
     quote
         $(esc(assignment))
-        if VERSION < v"0.6.0-dev.2123"
-            $(esc(symb)){U<:Monetary}(::Type{U}) = $(esc(symb))(U.parameters[1])
-        else
-            include_string("""
+        include_string("""
             $($(esc(symb)))(::Type{U}) where U <: Monetary{S} where S = $($(esc(symb)))(S)
             """)
-        end
         $(esc(symb))(m::Monetary) = $(esc(symb))(typeof(m))
     end
 end
@@ -27,7 +23,7 @@ the returned symbol should contain only lowercase letters.
 
 Prefer `iso4217alpha` to this function if a string is desired.
 """
-currency{T}(::Monetary{T}) = T
+currency(::Monetary{T}) where {T} = T
 
 """
     decimals(m::Monetary) → Int
@@ -41,9 +37,9 @@ minor currency unit) for that symbol. Return `-1` if there is no sane minor
 unit, such as for several kinds of precious metal.
 """
 decimals(c::Symbol) = ISO4217[c][1]
-decimals{T,U,V}(::Monetary{T,U,V}) = V
-decimals{T,U,V}(::Type{Monetary{T,U,V}}) = V
-decimals{T<:Monetary}(::Type{T}) = decimals(filltype(T))
+decimals(::Monetary{T,U,V}) where {T,U,V} = V
+decimals(::Type{Monetary{T,U,V}}) where {T,U,V} = V
+decimals(::Type{T}) where {T<:Monetary} = decimals(filltype(T))
 
 """
 Get a brief human-readable English-language description of the currency. The
@@ -122,6 +118,6 @@ symbol, a `Monetary` type, or a `Monetary` object.
 """
 function majorunit end
 majorunit(s::Symbol) = majorunit(Monetary{s})
-majorunit{T,U,V}(::Type{Monetary{T,U,V}}) = Monetary{T,U,V}(convert(U, 10)^V)
-majorunit{T<:Monetary}(::Type{T}) = majorunit(filltype(T))
+majorunit(::Type{Monetary{T,U,V}}) where {T,U,V} = Monetary{T,U,V}(convert(U, 10)^V)
+majorunit(::Type{T}) where {T<:Monetary} = majorunit(filltype(T))
 majorunit(x::Monetary) = majorunit(typeof(x))

@@ -1,19 +1,19 @@
-immutable ParenthesizeNegative <: FormatRequirement
+struct ParenthesizeNegative <: FormatRequirement
     symloc::Symbol  # :inside, :outside, or :unspecified
 end
 ParenthesizeNegative() = ParenthesizeNegative(:unspecified)
 
-immutable DigitSeparator <: FormatRequirement
+struct DigitSeparator <: FormatRequirement
     sep::String        # e.g. ",", ".", "'", " "; "\0" for unspecified
     rule::Tuple{Int, Int}  # first, rest, e.g. (3, 3); (0, 0) for unspecified
 end
 DigitSeparator(c::AbstractString) = DigitSeparator(c, (3, 3))
 
-immutable DecimalSeparator <: FormatRequirement
+struct DecimalSeparator <: FormatRequirement
     sep::String  # e.g. ",", "."; "\0" for unspecified
 end
 
-immutable CurrencySymbol <: FormatRequirement
+struct CurrencySymbol <: FormatRequirement
     symtype::Symbol   # :short, :long, :iso4217, or :unspecified
     location::Symbol  # :before, :after, :none, :dependent, or :unspecified
     spacing::Symbol   # :space, :none, :dependent, or :unspecified
@@ -28,7 +28,7 @@ function CurrencySymbol(;
     CurrencySymbol(symtype, location, spacing, glued, compose)
 end
 
-immutable RenderAs <: FormatRequirement
+struct RenderAs <: FormatRequirement
     sym::Symbol                            # name of symbol to require
     options::Dict{String, Int}  # Allowable symbols => priority
 end
