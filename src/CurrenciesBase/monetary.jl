@@ -10,6 +10,20 @@ collection of values in a set of currencies. These objects should behave like
 abstract type AbstractMonetary end
 
 """
+A simpler variant of `Monetary` that is expected to eventually be the default.
+The currency represented is part of the type and not the object. The value is
+internally represented as a quantity of some number type. The usual way to
+construct a `Currency` directly, if needed, is:
+
+    Currency{:USD}(FixedDecimal{Int, 2}(1))  # 1.00 USD
+"""
+struct Currency{C, T} <: AbstractMonetary
+    val::T
+
+    (::Type{Currency{C}}){C}(x::Real) = new{C,typeof(x)}(x)
+end
+
+"""
 A representation of a monetary value, denominated in some currency. The currency
 used is part of the type and not the object. The value is internally represented
 as a quantity of some integer type. The usual way to construct a `Monetary`
@@ -39,15 +53,14 @@ number of decimal points to keep after the major denomination:
     Monetary{:USD, BigInt, 4}(10000)            # 1.0000 USD
     Monetary(:USD, BigInt(10000); precision=4)  # 1.0000 USD
 """
-struct Monetary{T, U, V} <: AbstractMonetary
-    val::FixedDecimal{U, V}
 
-    # TODO: deprecate this constructor
-    Monetary{T, U, V}(x::Integer) where {T,U,V} =
-        new{T,U,V}(reinterpret(FixedDecimal{U,V}, x))
-    Monetary{T, U, V}(x::Real) where {T,U,V} =
-        new{T,U,V}(FixedDecimal{U,V}(x))
-end
+Monetary{C, I, f} = Currency{C, FixedDecimal{I, f}}
+
+# TODO: deprecate this constructor
+(::Type{Monetary{C, I, f}}){C,I,f}(x::Integer) =
+    Currency{C}(reinterpret(FixedDecimal{I,f}, x))
+(::Type{Monetary{C, I, f}}){C,I,f}(x::Real) =
+    Currency{C}(FixedDecimal{I,f}(x))
 
 function Monetary(T::Symbol, x; precision=decimals(T))
     if precision == -1
