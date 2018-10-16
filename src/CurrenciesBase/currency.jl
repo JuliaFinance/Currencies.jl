@@ -6,9 +6,7 @@ macro flexible(assignment)
     symb = assignment.args[1].args[1]
     quote
         $(esc(assignment))
-        include_string("""
-            $($(esc(symb)))(::Type{U}) where U <: Monetary{S} where S = $($(esc(symb)))(S)
-            """)
+        $(esc(symb))(::Type{U}) where U <: Monetary{S} where S = $(esc(symb))(S)
         $(esc(symb))(m::Monetary) = $(esc(symb))(typeof(m))
     end
 end

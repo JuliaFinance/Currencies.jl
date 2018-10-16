@@ -36,19 +36,15 @@ struct Basket <: AbstractMonetary
     Basket(ms::Union{AbstractArray,Tuple}) = new(buildtable(ms))
 end
 
-# basket outer constructor
+# basket outer constructor and convert-constructor
 Basket() = Basket(())
+(::Type{T})(x) where T <: Basket = convert(T, x)
 
 # access methods
 Base.length(b::Basket) = length(b.table)
 Base.haskey(b::Basket, k) = haskey(b.table, k) && !iszero(b.table[k])
 Base.getindex(b::Basket, T::Symbol) = get(b.table, T, zero(Monetary{T}))
-Base.start(b::Basket) = start(b.table)
-function Base.next(b::Basket, s)
-    (_, v), s = next(b.table, s)
-    v, s
-end
-Base.done(b::Basket, s) = done(b.table, s)
+Base.iterate(b::Basket, s...) = iterate(values(b.table), s...)
 
 # arithmetic methods (for static & dynamic baskets)
 - b::Basket = Basket([-x for x in b])

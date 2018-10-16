@@ -1,7 +1,8 @@
 using Currencies
 using FixedPointDecimals
 
-using Base.Test
+using Test
+using Dates
 
 # Get currencies for tests
 @usingcurrencies USD, CAD, EUR, GBP, JPY, AUD, INR

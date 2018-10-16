@@ -19,7 +19,7 @@ Base.show(io::IO, m::Monetary) =
 
 function Base.show(io::IO, b::Basket)
     write(io, "$(typeof(b))([")
-    write(io, join([sprint(showcompact, c) for c in b], ","))
+    write(io, join([sprint(show, c; context=:compact => true) for c in b], ","))
     print(io, "])")
 end
 

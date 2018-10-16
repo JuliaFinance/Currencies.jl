@@ -53,7 +53,7 @@ end
 function symbolize(template::Vector, spec::FormatSpecification, m::Monetary)
     symreq = compile(get(spec, CurrencySymbol, CurrencySymbol()), m)
     desired_symbol = foldl(
-        |>, resolve_symbol(symreq.symtype, m), symreq.compose)
+        |>, symreq.compose; init=resolve_symbol(symreq.symtype, m))
     spacing = symreq.spacing == :none ? "" : :thin_space
 
     next_template = []

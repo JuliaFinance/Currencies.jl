@@ -2,6 +2,7 @@ module Valuation
 
 using HTTP
 using JSON
+using Dates
 
 using ..CurrenciesBase
 using ..Baskets
@@ -20,7 +21,7 @@ same currency. The denomination currency need not even exist in the table.
 Optionally, `ExchangeRateTable` objects may contain information about the date
 for which they apply. If this isn't provided, then the current date is used.
 """
-struct ExchangeRateTable <: Associative{Symbol, Float64}
+struct ExchangeRateTable <: AbstractDict{Symbol, Float64}
     date::Date
     table::Dict{Symbol, Float64}
 end
@@ -30,9 +31,7 @@ ExchangeRateTable(entries::Pair{Symbol, Float64}...) =
 ExchangeRateTable(date::Date, entries::Pair{Symbol, Float64}...) =
     ExchangeRateTable(date, Dict(entries...))
 
-Base.start(ert::ExchangeRateTable) = start(ert.table)
-Base.next(ert::ExchangeRateTable, s) = next(ert.table, s)
-Base.done(ert::ExchangeRateTable, s) = done(ert.table, s)
+Base.iterate(ert::ExchangeRateTable, s...) = iterate(ert.table, s...)
 Base.length(ert::ExchangeRateTable) = length(ert.table)
 Base.haskey(ert::ExchangeRateTable, k) = haskey(ert.table, k)
 Base.getindex(ert::ExchangeRateTable, k) = ert.table[k]
@@ -40,6 +39,7 @@ Base.getindex(ert::ExchangeRateTable, k) = ert.table[k]
 const ECBCache = Dict{Date, ExchangeRateTable}()
 
 function ecbrates_fresh(datestr::AbstractString)
+    error("ECB rates data not supported yet")
     # get fixer.io data
     resp = JSON.parse(String(take!(HTTP.get("https://api.fixer.io/$datestr"))))
     date = Date(resp["date"])

@@ -1,17 +1,18 @@
 # Display methods (show & print & writemime) tests
+using Base64
 
 @testset "Output" begin
 
 @testset "text/plain" begin
-    @test contains(stringmime("text/plain", 1USD), "1.00")
-    @test contains(stringmime("text/plain", 1JPY), "1")
-    @test contains(stringmime("text/plain", Basket([1USD, 1CAD])), "CAD")
-    @test contains(stringmime("text/plain", Basket([1USD, 1CAD])), "USD")
-    @test contains(
-        stringmime("text/plain", Basket([100USD, 200EUR])),
-        "200.00 EUR")
-    @test !contains(
-        stringmime("text/plain", Basket([1USD, 1CAD, -1CAD])), "CAD")
+    @test occursin("1.00", stringmime("text/plain", 1USD))
+    @test occursin("1", stringmime("text/plain", 1JPY))
+    @test occursin("CAD", stringmime("text/plain", Basket([1USD, 1CAD])))
+    @test occursin("USD", stringmime("text/plain", Basket([1USD, 1CAD])))
+    @test occursin(
+        "200.00 EUR",
+        stringmime("text/plain", Basket([100USD, 200EUR])))
+    @test !occursin(
+        "CAD", stringmime("text/plain", Basket([1USD, 1CAD, -1CAD])))
     @test stringmime("text/plain", +USD) == "1.00 USD"
     @test stringmime("text/plain", -USD) == "−1.00 USD"
 
@@ -39,9 +40,9 @@ end
 @testset "text/markdown" begin
     basketstr = stringmime("text/markdown", Basket([USD, 20CAD, -10JPY]))
 
-    @test contains(basketstr, "`Currencies.Baskets.Basket`")
-    @test contains(basketstr, "\$3\$-currency")
-    @test contains(basketstr, " - \$-10\\,\\mathrm{JPY}\$")
+    @test occursin("`Basket`", basketstr)
+    @test occursin("\$3\$-currency", basketstr)
+    @test occursin(" - \$-10\\,\\mathrm{JPY}\$", basketstr)
 end
 
 @testset "print & show" begin
@@ -51,9 +52,9 @@ end
 
     # this test is a bit complicated because order is undefined
     basketstr = string(Basket([USD, 20CAD, -10JPY]))
-    @test contains(basketstr, "Basket([")
-    @test contains(basketstr, "-10.0JPY")
-    @test contains(basketstr, "20.0CAD")
+    @test occursin("Basket([", basketstr)
+    @test occursin("-10.0JPY", basketstr)
+    @test occursin("20.0CAD", basketstr)
 
     # test compatibility between show & print
     @test sprint(show, 0.02USD) == string(0.02USD)

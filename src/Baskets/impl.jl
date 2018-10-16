@@ -1,6 +1,6 @@
 # helper methods
 iszero(x) = x == zero(x)
-function deleteifzero!(d::Associative{T}, k) where T
+function deleteifzero!(d::AbstractDict{T}, k) where T
     if iszero(d[k])
         delete!(d, k)
     end
@@ -20,5 +20,5 @@ function buildtable!(table::SMDict, m::Monetary)
 end
 buildtable!(table::SMDict, m::Number) =
     throw(ArgumentError("Numbers not supported in Baskets"))
-buildtable!(table::SMDict, ms) = foldl(buildtable!, table, ms)
+buildtable!(table::SMDict, ms) = foldl(buildtable!, ms; init=table)
 buildtable(ms) = buildtable!(SMDict(), ms)

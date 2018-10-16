@@ -6,8 +6,8 @@
 custom = newcurrency!(:custom, "Custom Currency", 6)
 
 @testset "@usingcustomcurrency" begin
-    @test contains(stringmime("text/plain", 10xbt), "xbt")
-    @test contains(stringmime("text/plain", 10xbt), "10.00")
+    @test occursin("xbt", stringmime("text/plain", 10xbt))
+    @test occursin("10.00", stringmime("text/plain", 10xbt))
     @test 10xbt - 5xbt == 5xbt
     @test format(-1111.11xbt, styles=[:us, :finance]) == "xbt (1,111.11)"
     @test Basket([10xbt, 10USD]) - 10USD == 10xbt

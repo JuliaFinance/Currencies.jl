@@ -144,7 +144,7 @@ end
     @test typeof(flatusd / millusd) == BigFloat
 
     # Special metals — precision required
-    @test_throws ArgumentError @usingcurrencies XAU
+    @test_throws ArgumentError eval(:(@usingcurrencies XAU))
     @test_throws ArgumentError Monetary(:XAU)
     @test_throws ArgumentError Monetary(:XAU, 100)
 

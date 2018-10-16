@@ -18,7 +18,7 @@ function Base.convert(::Type{T}, b::Basket) where T<:Monetary
     elseif len == 1
         convert(T, first(b))
     else
-        throw(InexactError())
+        throw(InexactError(:convert, T, b))
     end
 end
 

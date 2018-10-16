@@ -73,12 +73,18 @@ function Base.push!(spec::FormatSpecification, nextreq::FormatRequirement)
             # reconcile the two conflicting requirements
             # then add the mutally agreed requirements
             altreqs = reconcile(nextreq, req)
-            foldl(push!, spec, altreqs)
+            append!(spec, altreqs)
             return spec
         end
     end
     # no conflict, return with new requirement
     push!(spec.reqs, nextreq)
+    spec
+end
+function Base.append!(spec::FormatSpecification, reqs)
+    for req in reqs
+        push!(spec, req)
+    end
     spec
 end
 

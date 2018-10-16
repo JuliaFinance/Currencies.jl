@@ -20,7 +20,7 @@ construct a `Currency` directly, if needed, is:
 struct Currency{C, T} <: AbstractMonetary
     val::T
 
-    (::Type{Currency{C}}){C}(x::Real) = new{C,typeof(x)}(x)
+    (::Type{Currency{C}})(x::Real) where C = new{C,typeof(x)}(x)
 end
 
 """
@@ -53,13 +53,12 @@ number of decimal points to keep after the major denomination:
     Monetary{:USD, BigInt, 4}(10000)            # 1.0000 USD
     Monetary(:USD, BigInt(10000); precision=4)  # 1.0000 USD
 """
-
 Monetary{C, I, f} = Currency{C, FixedDecimal{I, f}}
 
 # TODO: deprecate this constructor
-(::Type{Monetary{C, I, f}}){C,I,f}(x::Integer) =
+(::Type{Monetary{C, I, f}})(x::Integer) where {C, I, f} =
     Currency{C}(reinterpret(FixedDecimal{I,f}, x))
-(::Type{Monetary{C, I, f}}){C,I,f}(x::Real) =
+(::Type{Monetary{C, I, f}})(x::Real) where {C, I, f} =
     Currency{C}(FixedDecimal{I,f}(x))
 
 function Monetary(T::Symbol, x; precision=decimals(T))
