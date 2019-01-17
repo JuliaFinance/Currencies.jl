@@ -1,7 +1,7 @@
 name = "Currencies"
 uuid = "7c0750f0-1680-11e9-0151-4dee51660760"
 authors = ["Eric Forgy <Eric.Forgy@coherentasia.com>"]
-version = "0.1.0"
+version = "0.10.0"
 
 [deps]
 CurrenciesBase = "a33ca353-0707-5c2b-b398-646075a850cd"
