@@ -2,6 +2,8 @@ __precompile__()
 
 module Currencies
 
+using CurrenciesBase
+
 # Exports
 export AbstractMonetary, Monetary
 export currency, decimals, majorunit, @usingcurrencies
@@ -14,13 +16,6 @@ export format
 
 # DeclarativeFormatting (not specific to Currencies; under development)
 include("DeclarativeFormatting/DeclarativeFormatting.jl")
-
-# Currency data
-include("CurrencyData/CurrencyData.jl")
-
-# Core features
-include("CurrenciesBase/CurrenciesBase.jl")
-using .CurrenciesBase
 
 include("Baskets/Basket.jl")
 using .Baskets

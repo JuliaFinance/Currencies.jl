@@ -4,15 +4,15 @@ os:
     - linux
     - osx
 julia:
-    - 0.6
+    - 1.0
     - nightly
 branches:
     only:
         - master
 after_success:
-    - julia -e 'cd(Pkg.dir("Currencies")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
-    - julia -e 'cd(Pkg.dir("Currencies")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
-    - julia -e 'Pkg.add("Documenter")'
-    - julia -e 'cd(Pkg.dir("Currencies")); include(joinpath("docs", "make.jl"))'
+    - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
+    - julia -e 'using Pkg; Pkg.dir("Currencies")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+    - julia -e 'using Pkg; Pkg.add("Documenter")'
+    - julia -e 'using Pkg; include(joinpath("docs", "make.jl"))'
 git:
     depth: 99999

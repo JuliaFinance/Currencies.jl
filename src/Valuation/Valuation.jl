@@ -6,7 +6,6 @@ using Dates
 
 using ..CurrenciesBase
 using ..Baskets
-using Compat: take!
 import ..CurrenciesBase: filltype
 
 export valuate, ExchangeRateTable, ecbrates

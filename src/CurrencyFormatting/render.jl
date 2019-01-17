@@ -36,7 +36,7 @@ In the simplified form, the `location` field is guaranteed to take the value of
 """
 function compile(symreq::CurrencySymbol, m::Monetary)
     loc = if symreq.location == :dependent
-        get(LOCAL_SYMBOL_LOCATION, currency(m), :after)
+        get(CurrenciesBase.LOCAL_SYMBOL_LOCATION, currency(m), :after)
     elseif symreq.location == :before
         :before
     else  # :unspecified or :after

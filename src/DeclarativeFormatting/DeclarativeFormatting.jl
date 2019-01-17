@@ -3,8 +3,6 @@ module DeclarativeFormatting
 export FormatRequirement, IncompatibleFormatException, allowable, best,
        takenonzero, conflict, reconcile, FormatSpecification
 
-using Compat
-
 #= Format Specification rules =#
 abstract type FormatRequirement end
 
