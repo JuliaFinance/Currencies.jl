@@ -1,32 +1,15 @@
 using Currencies
-using FixedPointDecimals
+import Currencies: unit, name, code, USD, PHP, HKD, SGD
 
 using Test
-using Dates
 
-# Get currencies for tests
-@usingcurrencies USD, CAD, EUR, GBP, JPY, AUD, INR
-@usingcurrencies CNY  # test one-currency version
+currencies = [USD,PHP,HKD,SGD]
+units = [2,2,2,2]
+names = ["US Dollar","Philippine Piso","Hong Kong Dollar","Singapore Dollar"]
+codes = [840,608,344,702]
 
-# Data tests
-include("data.jl")
-
-# Basic functionality tests
-include("monetary.jl")
-include("basket.jl")
-include("mixed.jl")
-
-# Currencies
-include("data-access.jl")
-
-# Display tests
-include("display.jl")
-
-# Custom currencies
-include("custom.jl")
-
-# Computations tests
-include("valuation.jl")
-
-# README & Doc examples
-include("examples.jl")
+for (ccy,u,n,c) in zip(currencies,units,names,codes)
+    @test unit(ccy) == u
+    @test name(ccy) == n
+    @test code(ccy) == c
+end

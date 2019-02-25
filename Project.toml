@@ -1,17 +1,13 @@
 name = "Currencies"
-uuid = "7c0750f0-1680-11e9-0151-4dee51660760"
+uuid = "0fd90b74-7c1f-579e-9252-02cd883047b9"
 authors = ["Eric Forgy <Eric.Forgy@coherentasia.com>"]
-version = "0.10.0"
+version = "0.11.0"
 
 [deps]
-CurrenciesBase = "a33ca353-0707-5c2b-b398-646075a850cd"
-Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
-HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
-JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
 [extras]
-FixedPointDecimals = "fb4d412d-6eee-574d-9565-ede6634db7b0"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "FixedPointDecimals"]
+test = ["Test"]

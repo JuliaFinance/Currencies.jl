@@ -1,33 +1,33 @@
-__precompile__()
-
 module Currencies
 
-using CurrenciesBase
+# Data obtained from https://datahub.io/core/country-codes
+# Consider downloading data in build.jl?
 
-# Exports
-export AbstractMonetary, Monetary
-export currency, decimals, majorunit, @usingcurrencies
-export currencyinfo, iso4217num, iso4217alpha, shortsymbol, longsymbol
-export valuate, ExchangeRateTable, ecbrates
-export Basket, StaticBasket, DynamicBasket
-export simplefv, compoundfv
-export newcurrency!, @usingcustomcurrency
-export format
+using DelimitedFiles
 
-# DeclarativeFormatting (not specific to Currencies; under development)
-include("DeclarativeFormatting/DeclarativeFormatting.jl")
+export Currency
 
-include("Baskets/Basket.jl")
-using .Baskets
+const (data,headers) = readdlm(joinpath(@__DIR__,"data","country-codes.csv"),',',header=true)
 
-include("Valuation/Valuation.jl")
-using .Valuation
+struct Currency{T} end
 
-# Interface (display/formatting, convenience macro)
-include("CurrencyFormatting/CurrencyFormatting.jl")
-using .CurrencyFormatting
+const (nrow,ncol) = size(data)
+for i in 1:nrow
+    currencies = split(data[i,10],",")
+    currency_units = split(string(data[i,12]),",")
+    currency_names = split(data[i,13],",")
+    currency_codes = split(string(data[i,14]),",")
+    for (currency,currency_unit,currency_name,currency_code) in zip(currencies,currency_units,currency_names,currency_codes)
+        if (length(currency) == 3) & !isdefined(Currencies,Symbol(currency))
+            @eval Currencies begin
+                $(Symbol(currency)) = Currency{Symbol($(currency))}()
+                unit(::Currency{Symbol($(currency))}) = parse(Int,$(currency_unit))
+                name(::Currency{Symbol($(currency))}) = $(currency_name)
+                code(::Currency{Symbol($(currency))}) = parse(Int,$(currency_code))
+                Base.show(io::Base.IO,::Currency{Symbol($(currency))}) = print(io,$(currency))
+            end
+        end
+    end
+end
 
-# Deprecations
-include("deprecated.jl")
-
-end # module
+end
