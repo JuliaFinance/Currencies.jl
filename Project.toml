@@ -1,7 +1,7 @@
 name = "Currencies"
 uuid = "0fd90b74-7c1f-579e-9252-02cd883047b9"
 authors = ["Eric Forgy <Eric.Forgy@coherentasia.com>"]
-version = "0.11.0"
+version = "0.12.0"
 
 [deps]
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
