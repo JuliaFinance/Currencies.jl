@@ -1,6 +1,6 @@
 name = "Currencies"
 uuid = "0fd90b74-7c1f-579e-9252-02cd883047b9"
-authors = ["Eric Forgy <Eric.Forgy@coherentasia.com>"]
+authors = ["Eric Forgy <Eric.Forgy@cavalre.com>"]
 version = "0.12.0"
 
 [deps]
