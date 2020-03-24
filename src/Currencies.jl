@@ -18,6 +18,8 @@ struct Currency{T}
 end
 const list = Dict{Symbol,Currency}()
 
+symbol(::Type{Currency{T}}) where T = T
+
 const (nrow,ncol) = size(data)
 for i in 1:nrow
     currencies = split(data[i,10],",")
