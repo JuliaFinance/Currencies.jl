@@ -32,6 +32,7 @@ for i in 1:nrow
                 name(::Currency{Symbol($(currency))}) = $(currency_name)
                 code(::Currency{Symbol($(currency))}) = parse(Int,$(currency_code))
                 Base.show(io::Base.IO,::Currency{Symbol($(currency))}) = print(io,$(currency))
+                Base.show(io::Base.IO,::MIME"text/plain",::Currency{Symbol($(currency))}) = print(io,$(currency))
             end
         end
     end
