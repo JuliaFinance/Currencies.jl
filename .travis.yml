@@ -5,9 +5,21 @@ os:
   - osx
 julia:
   - 1.0
+  - latest
+  - nightly
 notifications:
   email: false
-# uncomment the following lines to override the default test script
-#script:
-#  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-#  - julia -e 'Pkg.clone(pwd()); Pkg.build("Pages"); Pkg.test("Pages"; coverage=true)'
+git:
+  depth: 99999999
+
+## uncomment the following lines to allow failures on nightly julia
+## (tests will run but not make your overall status red)
+matrix:
+  allow_failures:
+   - julia: nightly
+
+## uncomment the following lines to override the default test script
+
+after_success:
+  # push coverage results to Codecov
+  - julia -e 'using Pkg; cd(Pkg.dir("Currencies")); using Coverage; Codecov.submit(Codecov.process_folder())'

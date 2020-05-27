@@ -2,9 +2,10 @@
 Currencies
 
 This package provides the `Currency` singleton type, based on the ISO 4167 standard
-together with four methods:
+together with five methods:
 
 - `symbol`: The symbol of the currency.
+- `currency`: The singleton type instance for a particular currency symbol
 - `name`: The full name of the currency.
 - `code`: The ISO 4167 code for the currency.
 - `unit`: The minor unit, i.e. number of decimal places, for the currency.
@@ -23,19 +24,21 @@ export Currency
 This is a singleton type, intended to be used as a label for dispatch purposes
 """
 struct Currency{S} end
-function Currency(symbol::Symbol,unit::Int,code::Int,name::String)
-    ccy = Currency{symbol}()
-    list[symbol] = (unit,code,name)
-    return ccy
-end
-const list = Dict{Symbol,Tuple{Int,Int,String}}()
 
-include(joinpath(@__DIR__, "..", "deps", "currencies.jl"))
+Currency(symbol::Symbol, unit::Integer, code::Integer, name::AbstractString) =
+    (get!(_currency_data, symbol) do ; (Currency{symbol}(), unit, code, name) ; end)[1]
+
+include(joinpath(@__DIR__, "..", "deps", "currency-data.jl"))
 
 """
 Returns the symbol associated with this value
 """
 function symbol end
+
+"""
+Returns an instance of the singleton type Currency{sym}
+"""
+function currency end
 
 """
 Returns the minor unit associated with this value
@@ -53,11 +56,16 @@ Returns the ISO 4167 name associated with this value
 function name end
 
 symbol(::Currency{S}) where {S} = S
-unit(S::Symbol) = list[S][1]
-code(S::Symbol) = list[S][2]
-name(S::Symbol) = list[S][3]
+currency(S::Symbol) = _currency_data[S][1]
+unit(S::Symbol) = _currency_data[S][2]
+code(S::Symbol) = _currency_data[S][3]
+name(S::Symbol) = _currency_data[S][4]
+
 unit(::Currency{S}) where {S} = unit(S)
 code(::Currency{S}) where {S} = code(S)
 name(::Currency{S}) where {S} = name(S)
 
-end
+allsymbols()  = keys(_currency_data)
+allpairs() = pairs(_currency_data)
+
+end # module Currencies
