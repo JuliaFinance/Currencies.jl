@@ -1,43 +1,63 @@
+"""
+Currencies
+
+This package provides the `Currency` singleton type, based on the ISO 4167 standard
+together with four methods:
+
+- `symbol`: The symbol of the currency.
+- `name`: The full name of the currency.
+- `code`: The ISO 4167 code for the currency.
+- `unit`: The minor unit, i.e. number of decimal places, for the currency.
+
+See README.md for the full documentation
+
+Copyright 2019-2020, Eric Forgy, Scott P. Jones and other contributors
+
+Licensed under MIT License, see LICENSE.md
+"""
 module Currencies
-
-# Data obtained from https://datahub.io/core/country-codes
-# Consider downloading data in build.jl?
-
-using DelimitedFiles
 
 export Currency
 
-const (data,headers) = readdlm(joinpath(@__DIR__,"data","country-codes.csv"),',',header=true)
-
-struct Currency{T} 
-    function Currency{T}() where T
-        c = new()
-        list[T] = c
-        return c
-    end
+"""
+This is a singleton type, intended to be used as a label for dispatch purposes
+"""
+struct Currency{S} end
+function Currency(symbol::Symbol,unit::Int,code::Int,name::String)
+    ccy = Currency{symbol}()
+    list[symbol] = (unit,code,name)
+    return ccy
 end
-const list = Dict{Symbol,Currency}()
+const list = Dict{Symbol,Tuple{Int,Int,String}}()
 
-symbol(::Type{Currency{T}}) where T = T
+include(joinpath(@__DIR__, "..", "deps", "currencies.jl"))
 
-const (nrow,ncol) = size(data)
-for i in 1:nrow
-    currencies = split(data[i,10],",")
-    currency_units = split(string(data[i,12]),",")
-    currency_names = split(data[i,13],",")
-    currency_codes = split(string(data[i,14]),",")
-    for (currency,currency_unit,currency_name,currency_code) in zip(currencies,currency_units,currency_names,currency_codes)
-        if (length(currency) == 3) & !isdefined(Currencies,Symbol(currency))
-            @eval Currencies begin
-                $(Symbol(currency)) = Currency{Symbol($(currency))}()
-                unit(::Currency{Symbol($(currency))}) = parse(Int,$(currency_unit))
-                name(::Currency{Symbol($(currency))}) = $(currency_name)
-                code(::Currency{Symbol($(currency))}) = parse(Int,$(currency_code))
-                Base.show(io::Base.IO,::Currency{Symbol($(currency))}) = print(io,$(currency))
-                Base.show(io::Base.IO,::MIME"text/plain",::Currency{Symbol($(currency))}) = print(io,$(currency))
-            end
-        end
-    end
-end
+"""
+Returns the symbol associated with this value
+"""
+function symbol end
+
+"""
+Returns the minor unit associated with this value
+"""
+function unit end
+
+"""
+Returns the ISO 4167 code associated with this value
+"""
+function code end
+
+"""
+Returns the ISO 4167 name associated with this value
+"""
+function name end
+
+symbol(::Currency{S}) where {S} = S
+unit(S::Symbol) = list[S][1]
+code(S::Symbol) = list[S][2]
+name(S::Symbol) = list[S][3]
+unit(::Currency{S}) where {S} = unit(S)
+code(::Currency{S}) where {S} = code(S)
+name(::Currency{S}) where {S} = name(S)
 
 end
