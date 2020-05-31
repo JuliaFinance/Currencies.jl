@@ -4,9 +4,9 @@ os:
   - linux
   - osx
 julia:
-  - 1.0
-  - latest
-  - nightly
+  - 1.0      # LTS
+  - 1        # stable
+  - nightly  # master
 notifications:
   email: false
 git:
