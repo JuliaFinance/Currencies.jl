@@ -33,7 +33,7 @@
 | **Info** | **Windows** | **Linux & MacOS** | **Package Evaluator** | **Coverage** |
 |:------------------:|:------------------:|:---------------------:|:-----------------:|:---------------------:|
 | [![][julia-release]][julia-url] | [![][app-s-img]][app-s-url] | [![][travis-s-img]][travis-url] | [![][eval-img]][eval-url] | [![][cov-s-img]][cov-url]
-| [![Master][]][julia-url] | [![][app-m-img]][app-m-url] | [![][travis-m-img]][travis-url] | [![][eval-img]][eval-url] | [![][cov-s-img]][cov-url]
+| Master | [![][app-m-img]][app-m-url] | [![][travis-m-img]][travis-url] | [![][eval-img]][eval-url] | [![][cov-s-img]][cov-url]
 
 This is a core package for the JuliaFinance ecosytem. 
 
