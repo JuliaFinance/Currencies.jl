@@ -1,7 +1,7 @@
-outputname = joinpath(@__DIR__, "currency-data.jl")
+const outputname = joinpath(@__DIR__, "currency-data.jl")
 
 # First, check if currency-data.jl already exists
-isfile(outputname) && return
+isfile(outputname) && exit()
 
 # Make sure JSON3 is available
 using Pkg
@@ -10,15 +10,7 @@ using JSON3
 
 const src = "https://pkgstore.datahub.io/core/country-codes/country-codes_json/data/471a2e653140ecdd7243cdcacfd66608/country-codes_json.json"
 
-inputname = joinpath(@__DIR__, "country-codes.json")
-
-# Only download the file from datahub.io if not already present
-if !isfile(inputname)
-    println("Downloading currency data: ", src)
-    download(src, inputname)
-end
-
-const country_list = open(io -> JSON3.read(io), inputname)
+const inputname = joinpath(@__DIR__, "country-codes.json")
 
 const currency_list = Dict{String,Tuple{Int,Int,String}}()
 
@@ -51,5 +43,12 @@ function genfile(io)
     println(io, ")\n")
 end
 
-open(io -> genfile(io), outputname, "w")
+# Only download the file from datahub.io if not already present
+if !isfile(inputname)
+    println("Downloading currency data: ", src)
+    download(src, inputname)
+end
 
+const country_list = open(io -> JSON3.read(io), inputname)
+
+open(io -> genfile(io), outputname, "w")
