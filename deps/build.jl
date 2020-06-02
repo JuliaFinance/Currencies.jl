@@ -1,14 +1,16 @@
-import Pkg; Pkg.add("JSON3") # Just in case
+outputname = joinpath(@__DIR__, "currency-data.jl")
 
+# First, check if currency-data.jl already exists
+isfile(outputname) && return
+
+# Make sure JSON3 is available
+using Pkg
+Pkg.add("JSON3")
 using JSON3
 
 const src = "https://pkgstore.datahub.io/core/country-codes/country-codes_json/data/471a2e653140ecdd7243cdcacfd66608/country-codes_json.json"
 
 inputname = joinpath(@__DIR__, "country-codes.json")
-outputname = joinpath(@__DIR__, "currency-data.jl")
-
-# First, check if currency-data.jl already exists
-isfile(outputname) && return
 
 # Only download the file from datahub.io if not already present
 if !isfile(inputname)
