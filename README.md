@@ -42,7 +42,7 @@ It provides bare singleton types based on the standard ISO 4167 3-character alph
 - `symbol`: The 3-character symbol of the currency.
 - `currency`: The singleton type instance for a particular currency symbol
 - `name`: The full name of the currency.
-- `code`: The ISO 4167 code for the currency.
+- `code`: The ISO 4217 code for the currency.
 - `unit`: The minor unit, i.e. number of decimal places, for the currency.
 
 Within JuliaFinance, currencies are defined in two separate packages:

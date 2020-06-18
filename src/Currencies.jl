@@ -1,13 +1,13 @@
 """
 Currencies
 
-This package provides the `Currency` singleton type, based on the ISO 4167 standard
+This package provides the `Currency` singleton type, based on the ISO 4217 standard
 together with five methods:
 
 - `symbol`: The symbol of the currency.
 - `currency`: The singleton type instance for a particular currency symbol
 - `name`: The full name of the currency.
-- `code`: The ISO 4167 code for the currency.
+- `code`: The ISO 4217 code for the currency.
 - `unit`: The minor unit, i.e. number of decimal places, for the currency.
 
 See README.md for the full documentation
@@ -46,12 +46,12 @@ Returns the minor unit associated with this value
 function unit end
 
 """
-Returns the ISO 4167 code associated with this value
+Returns the ISO 4217 code associated with this value
 """
 function code end
 
 """
-Returns the ISO 4167 name associated with this value
+Returns the ISO 4217 name associated with this value
 """
 function name end
 
