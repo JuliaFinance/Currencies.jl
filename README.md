@@ -37,7 +37,7 @@
 
 This is a core package for the JuliaFinance ecosytem. 
 
-It provides bare singleton types based on the standard ISO 4167 3-character alpha codes to be used primarily for dispatch in other JuliaFinance packages together with five methods:
+It provides bare singleton types based on the standard ISO 4217 3-character alpha codes to be used primarily for dispatch in other JuliaFinance packages together with five methods:
 
 - `symbol`: The 3-character symbol of the currency.
 - `currency`: The singleton type instance for a particular currency symbol
@@ -92,7 +92,7 @@ Code: 368
 Minor Unit: 3
 ```
 
-If all you need is a list of currencies with names, ISO 4167 codes and minor units, e.g. for building a dropdown menu in a user interface, then this lightweight package is what you want.
+If all you need is a list of currencies with names, ISO 4217 codes and minor units, e.g. for building a dropdown menu in a user interface, then this lightweight package is what you want.
 
 ## [Assets.jl](https://github.com/JuliaFinance/Assets.jl)
 

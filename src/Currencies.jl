@@ -55,12 +55,19 @@ Returns the ISO 4217 name associated with this value
 """
 function name end
 
-symbol(::Currency{S}) where {S} = S
 currency(S::Symbol) = _currency_data[S][1]
 unit(S::Symbol) = _currency_data[S][2]
 code(S::Symbol) = _currency_data[S][3]
 name(S::Symbol) = _currency_data[S][4]
 
+symbol(::Type{Currency{S}}) where {S} = S
+currency(::Type{Currency{S}}) where {S} = currency(S)
+unit(::Type{Currency{S}}) where {S} = unit(S)
+code(::Type{Currency{S}}) where {S} = code(S)
+name(::Type{Currency{S}}) where {S} = name(S)
+
+symbol(::Currency{S}) where {S} = S
+currency(c::Currency) = c
 unit(::Currency{S}) where {S} = unit(S)
 code(::Currency{S}) where {S} = code(S)
 name(::Currency{S}) where {S} = name(S)
