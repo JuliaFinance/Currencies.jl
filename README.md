@@ -39,8 +39,8 @@ This is a core package for the JuliaFinance ecosytem.
 
 It provides bare singleton types based on the standard ISO 4217 3-character alpha codes to be used primarily for dispatch in other JuliaFinance packages together with five methods:
 
+- `currency`: The singleton type for a particular currency symbol
 - `symbol`: The 3-character symbol of the currency.
-- `currency`: The singleton type instance for a particular currency symbol
 - `name`: The full name of the currency.
 - `code`: The ISO 4217 code for the currency.
 - `unit`: The minor unit, i.e. number of decimal places, for the currency.
@@ -61,7 +61,10 @@ For example:
 ```julia
 julia> using Currencies
 
-julia> typeof(currency(:USD))
+julia> currency(:USD)
+Currency{:USD}
+
+julia> ccy"USD"
 Currency{:USD}
 
 julia> for ccy in currency.([:USD, :EUR, :JPY, :IQD])
