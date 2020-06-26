@@ -18,18 +18,18 @@ Licensed under MIT License, see LICENSE.md
 """
 module Currencies
 
-export Currency
+export Currency, @ccy_str
 
 """
 This is a singleton type, intended to be used as a label for dispatch purposes
 """
 struct Currency{S}
     function Currency{S}() where {S}
-        haskey(_currency_data,S) && return new{S}()
-        error("Currency $S is not defined.")
+        haskey(_currency_data, S) || error("Currency $S is not defined.")
+        new{S}()
     end
 end
-Currency(S) = Currency{S}()
+Currency(S::Symbol) = Currency{S}()
 
 include(joinpath(@__DIR__, "..", "deps", "currency-data.jl"))
 
@@ -63,19 +63,23 @@ unit(S::Symbol) = _currency_data[S][2]
 code(S::Symbol) = _currency_data[S][3]
 name(S::Symbol) = _currency_data[S][4]
 
+currency(::Type{C}) where {C<:Currency} = C
 symbol(::Type{Currency{S}}) where {S} = S
-currency(::Type{Currency{S}}) where {S} = currency(S)
 unit(::Type{Currency{S}}) where {S} = unit(S)
 code(::Type{Currency{S}}) where {S} = code(S)
 name(::Type{Currency{S}}) where {S} = name(S)
 
+currency(c::C) where {C<:Currency} = C
 symbol(::Currency{S}) where {S} = S
-currency(c::Currency) = c
 unit(::Currency{S}) where {S} = unit(S)
 code(::Currency{S}) where {S} = code(S)
 name(::Currency{S}) where {S} = name(S)
 
 allsymbols()  = keys(_currency_data)
 allpairs() = pairs(_currency_data)
+
+macro ccy_str(str)
+    :( currency(Symbol($(esc(str)))) )
+end
 
 end # module Currencies
