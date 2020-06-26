@@ -38,7 +38,7 @@ function genfile(io)
     end
     println(io, "const _currency_data = Dict(")
     for (curr, val) in currency_list
-        println(io, "    :$curr => (Currency{:$curr}(), $(val[1]), $(lpad(val[2], 4)), \"$(val[3])\"),")
+        println(io, "    :$curr => (Currency{:$curr}, $(val[1]), $(lpad(val[2], 4)), \"$(val[3])\"),")
     end
     println(io, ")\n")
 end

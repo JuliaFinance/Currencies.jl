@@ -10,8 +10,8 @@ currencies = ((:USD, 2, 840, "US Dollar"),
 # This just makes sure that the data was loaded and at least some basic values are set as expected
 @testset "Basic currencies" begin
     for (s, u, c, n) in currencies
-        ccy = Currency{s}()
-        @test currency(s) == ccy
+        ccy = Currency(s)
+        @test currency(s) == typeof(ccy)
         @test symbol(ccy) == s
         @test unit(ccy) == u
         @test name(ccy) == n
@@ -23,7 +23,8 @@ end
 @testset "Validation" begin
     @test length(_currency_data) >= 155
     for (sym, ccy) in _currency_data
-        (cur, uni, cod, nam) = ccy
+        (ctyp, uni, cod, nam) = ccy
+        cur = Currency(sym)
         @test symbol(cur) == sym
         @test length(string(sym)) == 3
         @test uni >= 0

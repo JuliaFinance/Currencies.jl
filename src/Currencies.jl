@@ -23,10 +23,13 @@ export Currency
 """
 This is a singleton type, intended to be used as a label for dispatch purposes
 """
-struct Currency{S} end
-
-Currency(symbol::Symbol, unit::Integer, code::Integer, name::AbstractString) =
-    (get!(_currency_data, symbol) do ; (Currency{symbol}(), unit, code, name) ; end)[1]
+struct Currency{S}
+    function Currency{S}() where {S}
+        haskey(_currency_data,S) && return new{S}()
+        error("Currency $S is not defined.")
+    end
+end
+Currency(S) = Currency{S}()
 
 include(joinpath(@__DIR__, "..", "deps", "currency-data.jl"))
 
