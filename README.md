@@ -86,7 +86,7 @@ julia> 10USD+10JPY
 ERROR: Can't add Positions of different Instruments USD, JPY
 ```
 
-If you need currency as an asset with corresponding asset positions, you want [Assets.jl](https://github.com/JuliaFinance/Assets.jl).
+If you need currency as an asset with corresponding cash positions, you want [Assets.jl](https://github.com/JuliaFinance/Assets.jl).
 
 ## Data Source
 
