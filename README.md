@@ -2,7 +2,7 @@
 
 [travis-url]:   https://travis-ci.org/JuliaFinance/Currencies.jl
 [travis-s-img]: https://travis-ci.org/JuliaFinance/Currencies.jl.svg
-[travis-m-img]: https://travis-ci.org/JuliaFinance/Currencies.jl.svg?branch=master
+[travis-m-img]: https://travis-ci.org/JuliaFinance/Currencies.jl.svg?branch=main
 
 [![][travis-s-img]][travis-url] [![][travis-m-img]][travis-url] 
 
