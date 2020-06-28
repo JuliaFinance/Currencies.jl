@@ -1,43 +1,12 @@
 # Currencies.jl
 
-[pkg-url]: https://github.com/JuliaFinance/Currencies.jl.git
-
-[eval-url]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/report.html
-[eval-img]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/C/Currencies.svg
-
-[release]:      https://img.shields.io/github/release/JuliaFinance/Currencies.jl.svg
-[release-date]: https://img.shields.io/github/release-date/JuliaFinance/Currencies.jl.svg
-
-[julia-url]:    https://github.com/JuliaLang/Julia
-[julia-release]:https://img.shields.io/github/release/JuliaLang/julia.svg
-
-[license-img]:  http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat
-[license-url]:  LICENSE.md
 [travis-url]:   https://travis-ci.org/JuliaFinance/Currencies.jl
 [travis-s-img]: https://travis-ci.org/JuliaFinance/Currencies.jl.svg
 [travis-m-img]: https://travis-ci.org/JuliaFinance/Currencies.jl.svg?branch=master
 
-[app-s-url]:    https://ci.appveyor.com/project/JuliaFinance/currencies-jl
-[app-m-url]:    https://ci.appveyor.com/project/JuliaFinance/currencies-jl/branch/master
-[app-s-img]:    https://ci.appveyor.com/api/projects/status/chnj7xc6r0deux92?svg=true
-[app-m-img]:    https://ci.appveyor.com/api/projects/status/chnj7xc6r0deux92/branch/master?svg=true
+[![][travis-s-img]][travis-url] [![][travis-m-img]][travis-url] 
 
-[cov-url]:  https://codecov.io/gh/JuliaFinance/Currencies.jl
-[cov-s-img]:  https://codecov.io/gh/JuliaFinance/Currencies.jl/badge.svg
-[cov-m-img]:  https://codecov.io/gh/JuliaFinance/Currencies.jl/branch/master/graph/badge.svg
-
-[contrib]:    https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat
-
-[![][release]][pkg-url] [![][release-date]][pkg-url] [![][license-img]][license-url] [![contributions welcome][contrib]](https://github.com/JuliaFinance/Currencies.jl/issues)
-
-| **Info** | **Windows** | **Linux & MacOS** | **Package Evaluator** | **Coverage** |
-|:------------------:|:------------------:|:---------------------:|:-----------------:|:---------------------:|
-| [![][julia-release]][julia-url] | [![][app-s-img]][app-s-url] | [![][travis-s-img]][travis-url] | [![][eval-img]][eval-url] | [![][cov-s-img]][cov-url]
-| Master | [![][app-m-img]][app-m-url] | [![][travis-m-img]][travis-url] | [![][eval-img]][eval-url] | [![][cov-s-img]][cov-url]
-
-This is a core package for the JuliaFinance ecosytem. 
-
-It provides bare singleton types based on the standard ISO 4217 3-character alpha codes to be used primarily for dispatch in other JuliaFinance packages together with five methods:
+This package provides bare singleton types based on the standard ISO 4217 3-character alpha codes to be used primarily for dispatch in other JuliaFinance packages together with five methods:
 
 - `currency`: The singleton type for a particular currency symbol
 - `symbol`: The 3-character symbol of the currency.
@@ -54,7 +23,7 @@ A brief explanation and motivation for each is presented below.
 
 ## [Currencies.jl](https://github.com/JuliaFinance/Currencies.jl)
 
-As mentioned, this package defines standard currencies as primordial singleton types that can be thought of as labels.
+As mentioned, this package defines standard currencies as singleton types that can be thought of as labels.
 
 For example:
 
