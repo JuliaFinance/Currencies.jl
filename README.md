@@ -68,7 +68,7 @@ If all you need is a list of currencies with names, ISO 4217 codes and minor uni
 
 ## [Assets.jl](https://github.com/JuliaFinance/Assets.jl)
 
-When a currency is thought of as an asset (as opposed to a mere label), we choose to refer to it as "Cash" as it would appear in a balance sheet. [Assets.jl](https://github.com/JuliaFinance/Assets.jl) provides a `Cash` asset together with `Position` that allows for basic algebraic manipulations of `Cash` and other financial instrument positions, e.g.
+When a currency is thought of as a financial instrument (as opposed to a mere label), we choose to refer to it as "Cash" as it would appear, for example, in a balance sheet. [Assets.jl](https://github.com/JuliaFinance/Assets.jl) provides a `Cash` instrument together with a specialized `Position` type that allows for basic algebraic manipulations of `Cash` and other financial instrument positions, e.g.
 
 ```julia
 julia> import Assets: USD, JPY
