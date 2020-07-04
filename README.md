@@ -33,9 +33,6 @@ julia> using Currencies
 julia> currency(:USD)
 Currency{:USD}
 
-julia> ccy"USD"
-Currency{:USD}
-
 julia> for ccy in currency.([:USD, :EUR, :JPY, :IQD])
             println("Currency: $(Currencies.symbol(ccy))")
             println("Name: $(Currencies.name(ccy))")
