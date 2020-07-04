@@ -18,7 +18,7 @@ Licensed under MIT License, see LICENSE.md
 """
 module Currencies
 
-export Currency, @ccy_str
+export Currency
 
 """
 This is a singleton type, intended to be used as a label for dispatch purposes
@@ -77,9 +77,5 @@ name(::Currency{S}) where {S} = name(S)
 
 allsymbols()  = keys(_currency_data)
 allpairs() = pairs(_currency_data)
-
-macro ccy_str(str)
-    :( currency(Symbol($(esc(str)))) )
-end
 
 end # module Currencies
