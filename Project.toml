@@ -2,10 +2,10 @@ name = "Currencies"
 uuid = "0fd90b74-7c1f-579e-9252-02cd883047b9"
 license = "MIT"
 authors = ["Eric Forgy <Eric.Forgy@cavalre.com>", "ScottPJones <scottjones@alum.mit.edu>"]
-version = "0.18.1"
+version = "0.18.2"
 
-[deps]
-Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+[compat]
+julia = "1"
 
 [extras]
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
@@ -14,6 +14,3 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 [targets]
 build = ["JSON3"]
 test = ["Test"]
-
-[compat]
-julia = "1"

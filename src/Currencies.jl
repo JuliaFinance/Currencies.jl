@@ -47,23 +47,17 @@ currency(::Type{C}) where {C<:Currency} = C
 "Returns the ISO 4217 minor unit associated with a currency"
 function unit end
 
-unit(S::Symbol) = _currency_data[S][2]
-
-unit(::Type{Currency{S}}) where {S} = unit(S)
-
 "Returns the ISO 4217 code associated with a currency"
 function code end
-
-code(S::Symbol) = _currency_data[S][3]
-
-code(::Type{Currency{S}}) where {S} = code(S)
 
 "Returns the ISO 4217 name associated with a currency"
 function name end
 
-name(S::Symbol) = _currency_data[S][4]
-
-name(::Type{Currency{S}}) where {S} = name(S)
+ms = [:unit, :code, :name]
+for (i,m) in enumerate(ms)
+    @eval $m(S::Symbol) = _currency_data[S][$(i+1)]
+    @eval $m(::Type{Currency{S}}) where {S} = $m(S)
+end
 
 "Returns all currency symbols"
 allsymbols()  = keys(_currency_data)

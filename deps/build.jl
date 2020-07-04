@@ -3,9 +3,6 @@ const outputname = joinpath(@__DIR__, "currency-data.jl")
 # First, check if currency-data.jl already exists
 isfile(outputname) && exit()
 
-# Make sure JSON3 is available
-using Pkg
-Pkg.add("JSON3")
 using JSON3
 
 const src = "https://pkgstore.datahub.io/core/country-codes/country-codes_json/data/471a2e653140ecdd7243cdcacfd66608/country-codes_json.json"
